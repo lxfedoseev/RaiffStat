@@ -54,11 +54,10 @@ public class RaiffStat extends Activity {
 	                    long longDate = cur.getLong(index_Date);  
 	                    int int_Type = cur.getInt(index_Type);  
 	                    
-	                    Log.d(LOG, "strAddress: " + strAddress + " strbody: " + strbody +
-	                    		" intPerson: " + intPerson + " longDate: " + longDate + " int_Type: " + int_Type);
+	                    Log.d(LOG, "strAddress: " + strAddress + " strbody: " + strbody);
 	                    
 	                    //http://developer.android.com/reference/java/text/SimpleDateFormat.html
-	                    String dateString = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy").format(new Date(longDate));
+	                    String dateString = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date(longDate));
 	                    Log.d("LOG", "Date is: " + dateString);
 
 	                    smsBuilder.append("[ ");  
