@@ -19,9 +19,22 @@ public class RaiffStat extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_raiff_stat);
+	}
+	
+	
+
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onResume()
+	 */
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
 		
 		ReadSms();
 	}
+
+
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -54,11 +67,15 @@ public class RaiffStat extends Activity {
 	                    long longDate = cur.getLong(index_Date);  
 	                    int int_Type = cur.getInt(index_Type);  
 	                    
-	                    Log.d(LOG, "strAddress: " + strAddress + " strbody: " + strbody);
+	                    //Log.d(LOG, "strAddress: " + strAddress + " strbody: " + strbody);
 	                    
 	                    //http://developer.android.com/reference/java/text/SimpleDateFormat.html
 	                    String dateString = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date(longDate));
-	                    Log.d("LOG", "Date is: " + dateString);
+	                    //Log.d("LOG", "Date is: " + dateString);
+	                    
+	                    RaiffParser prs = new RaiffParser();
+	                    if(strbody!=null) 
+	                    	prs.parseSmsBody(strbody.trim());
 
 	                    smsBuilder.append("[ ");  
 	                    smsBuilder.append(strAddress + ", ");  
