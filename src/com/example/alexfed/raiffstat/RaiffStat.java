@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.net.Uri;
@@ -67,6 +68,7 @@ public class RaiffStat extends Activity {
     			//startActivity(settingsActivity);
     			return true;
     		case R.id.menu_sms_import:
+    			clearDB();
     			importSms();
     			return true;
     		case R.id.menu_clear_db:
@@ -103,6 +105,7 @@ public class RaiffStat extends Activity {
 		month = c.get(Calendar.MONTH);
 		day = c.get(Calendar.DAY_OF_MONTH);
 
+		//TODO: set minimal sms date
 		dpFrom.init(2011, 1, 1, null);
 		dpTo.init(year, month, day, null);	 
 	}
@@ -112,7 +115,15 @@ public class RaiffStat extends Activity {
 		btnApply.setOnClickListener(new View.OnClickListener() {
 		    @Override
 		    public void onClick(View v) {
-		    	Toast.makeText(getApplicationContext(), "Button click", Toast.LENGTH_LONG).show();
+		    	//Toast.makeText(getApplicationContext(), "Button click", Toast.LENGTH_LONG).show();               
+		    	Intent myIntent;
+		    	myIntent = new Intent(RaiffStat.this, ReportList.class);
+		    	int month = dpFrom.getMonth() + 1;
+		    	myIntent.putExtra("day_from", dpFrom.getDayOfMonth()+"/"+month+"/"+dpFrom.getYear());
+		    	month = dpTo.getMonth() + 1;
+		    	myIntent.putExtra("day_to", dpTo.getDayOfMonth()+"/"+month+"/"+dpTo.getYear());
+		    	
+		    	RaiffStat.this.startActivity(myIntent);
 		    }
 		});
 	}
