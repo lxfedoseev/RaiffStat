@@ -4,5 +4,8 @@
     <string name="app_name">RaiffStat</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
+    <string name="menu_sms_import">Import from SMS</string>
+    <string name="menu_clear_db">Clear DataBase</string>
+    <string name="menu_query">Query DataBase</string>
 
 </resources>

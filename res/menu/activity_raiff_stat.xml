@@ -5,5 +5,23 @@
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/menu_settings"/>
+    
+    <item
+        android:id="@+id/menu_sms_import"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/menu_sms_import"/>
+    
+    <item
+        android:id="@+id/menu_clear_db"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/menu_clear_db"/>
+    
+    <item
+        android:id="@+id/menu_query"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/menu_query"/>
 
 </menu>

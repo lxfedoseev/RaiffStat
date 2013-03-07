@@ -26,22 +26,14 @@ public class RaiffParser {
 
     	String delims = "[;]+"; 
 		String[] tokens = body.split(delims);
-		if(tokens.length>4){
-			
-			Log.d(LOG, tokens[0] + " & " + tokens[1] + " & " + tokens[2] + " & " + tokens[3] + " & " + tokens[4]);
-			
+		if(tokens.length>4){	
 			if(tokens[1].toLowerCase().startsWith("otkaz"))
 				return false;
 			
 			parseCard(tokens[0]);
-			Log.d(LOG, "%"+this._card+"%");
 			parseAmmount(tokens[1]);
-			Log.d(LOG, "%"+this._ammount+"%" + "   " + "%"+this._ammount_curr+"%");
 			parsePlace(tokens[3]);
-			Log.d(LOG, "%"+this._place+"%");
-			parseRemainder(tokens[4]);
-			Log.d(LOG, "%"+this._remainder+"%" + "   " + "%"+this._remainder_curr+"%");
-			
+			parseRemainder(tokens[4]);			
 			return true;
 		}else{
 			return false;

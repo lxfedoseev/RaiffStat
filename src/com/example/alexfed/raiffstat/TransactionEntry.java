@@ -4,7 +4,7 @@ public class TransactionEntry {
 	
     //private variables
     private int _id;
-    private int _date_time;
+    private long _date_time;
     private double _ammount;
     private String _ammount_curr;
     private double _remainder;
@@ -14,10 +14,17 @@ public class TransactionEntry {
  
     // Empty constructor
     public TransactionEntry(){
- 
+    	this._id = -1;
+        this._date_time = 0;
+        this._ammount = 0.0;
+        this._ammount_curr = "UNK";
+        this._remainder = 0.0;
+        this._remainder_curr = "UNK";
+        this._place = "unknown";
+        this._card = "unknown";
     }
     // constructor
-    public TransactionEntry(int id, int date_time, double ammount, String ammount_curr, 
+    public TransactionEntry(int id, long date_time, double ammount, String ammount_curr, 
     						double remainder, String remainder_curr, String place, String card){
         this._id = id;
         this._date_time = date_time;
@@ -30,7 +37,7 @@ public class TransactionEntry {
     }
  
     // constructor
-    public TransactionEntry(int date_time, double ammount, String ammount_curr, 
+    public TransactionEntry(long date_time, double ammount, String ammount_curr, 
     						double remainder, String remainder_curr, String place, String card){
     	this._date_time = date_time;
         this._ammount = ammount;
@@ -51,12 +58,12 @@ public class TransactionEntry {
     }
  
     // getting _date_time
-    public int getDateTime(){
+    public long getDateTime(){
         return this._date_time;
     }
  
     // setting _date_time
-    public void setDateTime(int date_time){
+    public void setDateTime(long date_time){
         this._date_time = date_time;
     }
  
