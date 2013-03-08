@@ -4,7 +4,11 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -26,6 +30,7 @@ public class ReportList extends ListActivity {
 	private List<TransactionEntry> transactions;
 	private String dayFrom;
 	private String dayTo;
+	private String group;
 	
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -37,6 +42,7 @@ public class ReportList extends ListActivity {
 		setContentView(R.layout.activity_raiff_report);
 		dayFrom = getIntent().getStringExtra("day_from");
 		dayTo = getIntent().getStringExtra("day_to");
+		group = getIntent().getStringExtra("group");
 		inflateList();
 	}
 
@@ -54,16 +60,31 @@ public class ReportList extends ListActivity {
 		switch (item.getItemId()) {
     		case R.id.menu_summary:
     			String message = "";
-    			double sum = 0.0;
     			String card = "";
+    			Map<String, Double> sum = new HashMap<String, Double>();
+    			Set<String> currs = new HashSet<String>();
     			for (TransactionEntry t : transactions) {
-    				sum += t.getAmmount();
+    				if(!currs.contains(t.getAmmountCurr())){
+    					currs.add(t.getAmmountCurr());
+    					sum.put(t.getAmmountCurr(), 0.0);
+    				}
+    				sum.put(t.getAmmountCurr(), sum.get(t.getAmmountCurr())+t.getAmmount());
     				card = t.getCard();
     			}
-    			//TODO: correct ammount for different currencies
-    			message = "Card: " + card + "\r\n" +
-    						"Ammount: " + sum + "\r\n" + 
-    					"Transactions number: " + transactions.size();
+    			if(!group.equalsIgnoreCase("All"))
+    				message += "Group: " + group + "\r\n";
+    			message += "Period: " + dayFrom + "~" + dayTo + "\r\n" + 
+    					"Card: " + card + "\r\n" + 
+    					"Ammount: ";
+    			//round sum values
+    			for(String s: currs){
+    				double rndSum = sum.get(s) * 100;
+    				rndSum = Math.round(rndSum);
+    				rndSum /=100;
+    				message += ""+rndSum+ " " + s + ", "; 
+    			}
+    			message = message.substring(0, message.length()-2); // remove last comma[space] ", "
+    			message += "\r\nTransactions number: " + transactions.size();
     			new AlertDialog.Builder(this)
     		    .setMessage(message)
     		    .setPositiveButton("OK", new android.content.DialogInterface.OnClickListener() {                
@@ -81,13 +102,25 @@ public class ReportList extends ListActivity {
 	}
 	
 	private void inflateList(){
-		queryDateInterval(convertStringDate(dayFrom+ " 00:00:00"), convertStringDate(dayTo+ " 23:59:59"));
+		//queryDateInterval(convertStringDate(dayFrom+ " 00:00:00"), convertStringDate(dayTo+ " 23:59:59"));
+		//queryDateIntervalPlace(convertStringDate(dayFrom+ " 00:00:00"), convertStringDate(dayTo+ " 23:59:59"), place);
+		queryDateIntervalGroup(convertStringDate(dayFrom+ " 00:00:00"), convertStringDate(dayTo+ " 23:59:59"), group);
 		setListAdapter(new ReportListAdapter(this, transactions));
 	}
 	
 	private void queryDateInterval(long start, long end){	
 		DatabaseHandler db = new DatabaseHandler(this);
 		transactions = db.getTransactionsDateInterval(start, end);
+	}
+	
+	private void queryDateIntervalPlace(long start, long end, String place){	
+		DatabaseHandler db = new DatabaseHandler(this);
+		transactions = db.getTransactionsDateIntervalPlace(start, end, place);
+	}
+	
+	private void queryDateIntervalGroup(long start, long end, String group){	
+		DatabaseHandler db = new DatabaseHandler(this);
+		transactions = db.getTransactionsDateIntervalGroup(start, end, group);
 	}
 	
 	private long convertStringDate(String strDate){
@@ -164,7 +197,7 @@ public class ReportList extends ListActivity {
                 holder = new ViewHolder();
                 holder.card = (TextView) convertView.findViewById(R.id.card);
                 holder.date_time = (TextView) convertView.findViewById(R.id.date_time);
-                holder.place = (TextView) convertView.findViewById(R.id.place);
+                holder.group = (TextView) convertView.findViewById(R.id.group);
                 holder.ammount = (TextView) convertView.findViewById(R.id.ammount);
 
                 convertView.setTag(holder);
@@ -178,7 +211,7 @@ public class ReportList extends ListActivity {
         }
         
         static class ViewHolder {
-            TextView place;
+            TextView group;
             TextView date_time;
             TextView ammount;
             TextView card;
@@ -191,7 +224,7 @@ public class ReportList extends ListActivity {
         	String timeString = new SimpleDateFormat("HH:mm:ss").format(new Date(longDate));
         	
         	holder.date_time.setText(dayString+"\r\n"+timeString); 
-            holder.place.setText(entry.getPlace()); 
+            holder.group.setText(entry.getGroup()); 
             holder.card.setText("Card: " + entry.getCard());                
             holder.ammount.setText(entry.getAmmount() + " " + entry.getAmmountCurr());
         }

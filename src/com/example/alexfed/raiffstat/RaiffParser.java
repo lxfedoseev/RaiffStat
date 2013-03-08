@@ -11,7 +11,8 @@ public class RaiffParser {
 	private double _remainder;
 	private String _remainder_curr;
     private String _place;
-    private String _card; 
+    private String _card;
+    private String _group; 
     
     RaiffParser(){
     	this._ammount = 0.0;
@@ -20,6 +21,7 @@ public class RaiffParser {
     	this._remainder_curr = "unknown";
     	this._place = "unknown";
     	this._card = "unknown";
+    	this._group = "unknown";
     }
     
     public boolean parseSmsBody(String body){
@@ -65,6 +67,7 @@ public class RaiffParser {
 		String[] tokens = str.split(delims);
 		if(tokens.length>1){
 			this._place = tokens[1].trim();
+			this._group = this._place;
 		}
     }
     
@@ -105,6 +108,10 @@ public class RaiffParser {
     
     public String getCard(){
     	return this._card;
+    }
+    
+    public String getGroup(){
+    	return this._group;
     }
 
 }

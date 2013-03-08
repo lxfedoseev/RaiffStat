@@ -11,6 +11,7 @@ public class TransactionEntry {
     private String _remainder_curr;
     private String _place;
     private String _card;
+    private String _group;
  
     // Empty constructor
     public TransactionEntry(){
@@ -22,10 +23,11 @@ public class TransactionEntry {
         this._remainder_curr = "UNK";
         this._place = "unknown";
         this._card = "unknown";
+        this._group = "unknown";
     }
     // constructor
     public TransactionEntry(int id, long date_time, double ammount, String ammount_curr, 
-    						double remainder, String remainder_curr, String place, String card){
+    						double remainder, String remainder_curr, String place, String card, String group){
         this._id = id;
         this._date_time = date_time;
         this._ammount = ammount;
@@ -34,11 +36,12 @@ public class TransactionEntry {
         this._remainder_curr = remainder_curr;
         this._place = place;
         this._card = card;
+        this._group = group;
     }
  
     // constructor
     public TransactionEntry(long date_time, double ammount, String ammount_curr, 
-    						double remainder, String remainder_curr, String place, String card){
+    						double remainder, String remainder_curr, String place, String card, String group){
     	this._date_time = date_time;
         this._ammount = ammount;
         this._ammount_curr = ammount_curr;
@@ -46,6 +49,7 @@ public class TransactionEntry {
         this._remainder_curr = remainder_curr;
         this._place = place;
         this._card = card;
+        this._group = group;
     }
     // getting ID
     public int getID(){
@@ -125,5 +129,15 @@ public class TransactionEntry {
     // setting _card
     public void setCard(String _card){
         this._card = _card;
+    }
+    
+ // getting _group
+    public String getGroup(){
+        return this._group;
+    }
+ 
+    // setting _group
+    public void setGroup(String _group){
+        this._group = _group;
     }
 }

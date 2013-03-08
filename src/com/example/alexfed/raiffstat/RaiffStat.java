@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -18,8 +19,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 public class RaiffStat extends Activity { 
@@ -28,6 +33,8 @@ public class RaiffStat extends Activity {
 	
 	private DatePicker dpFrom;
 	private DatePicker dpTo;
+	private Spinner spGroup;
+	private String groupName; 
 	private Button btnApply;
 	
 	private int year;
@@ -40,6 +47,8 @@ public class RaiffStat extends Activity {
 		setContentView(R.layout.activity_raiff_stat);
 		
 		setCurrentDateOnView();
+		addItemsOnSpinnerGroup();
+		addListenerOnSpinnerItemSelection();
 		addListenerOnButton();
 	}
 
@@ -70,44 +79,91 @@ public class RaiffStat extends Activity {
     		case R.id.menu_sms_import:
     			clearDB();
     			importSms();
+    			setCurrentDateOnView();
+    			addItemsOnSpinnerGroup();
     			return true;
     		case R.id.menu_clear_db:
     			clearDB();
+    			setCurrentDateOnView();
+    			addItemsOnSpinnerGroup();
     			return true; 
     		case R.id.menu_query:
-    			queryDateInterval(convertStringDate("02/03/2013 00:00:00"), convertStringDate("07/03/2013 23:59:59"));
+    			queryDistinctGroups();
+    			//queryDistinctPlaces();
+    			//queryDateInterval(convertStringDate("02/03/2013 00:00:00"), convertStringDate("07/03/2013 23:59:59"));
     			//queryAmmountInterval(0, 500);
     			//queryAmmountFixed(2077.3);
     			return true;
+    		case R.id.menu_manage_places:
+    			//TODO:
+    			return true; 
     		default:
     			return super.onOptionsItemSelected(item);
 		}
    
 	}
 	
+	public void addItemsOnSpinnerGroup() {
+		spGroup = (Spinner) findViewById(R.id.spinnerGroup);
+		List<String> list = new ArrayList<String>();
+		List<String> distGroups = new ArrayList<String>();
+		list.add("All");
+		distGroups = queryDistinctGroups();
+		for(String s : distGroups){
+			list.add(s);
+		}
+		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+			android.R.layout.simple_spinner_item, list);
+		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spGroup.setAdapter(dataAdapter);
+	  }
+	
 	// display current date
 	public void setCurrentDateOnView() {
 		dpFrom = (DatePicker) findViewById(R.id.datePickerFrom);
 		dpTo = (DatePicker) findViewById(R.id.datePickerTo);
-	 
-		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-		if (currentapiVersion >= 11) {
-		  try {
-		    Method m = dpFrom.getClass().getMethod("setCalendarViewShown", boolean.class);
-		    m.invoke(dpFrom, false);
-		    m.invoke(dpTo, false);
-		  }
-		  catch (Exception e) {} // eat exception in our case
-		}
 		
 		final Calendar c = Calendar.getInstance();
 		year = c.get(Calendar.YEAR);
 		month = c.get(Calendar.MONTH);
 		day = c.get(Calendar.DAY_OF_MONTH);
-
-		//TODO: set minimal sms date
-		dpFrom.init(2011, 1, 1, null);
-		dpTo.init(year, month, day, null);	 
+		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+		
+		DatabaseHandler db = new DatabaseHandler(this);
+		if(db.getTransactionsCount() > 0){// DB is not empty
+		 
+			if (currentapiVersion >= 11) {
+			  try {
+			    Method m = dpFrom.getClass().getMethod("setCalendarViewShown", boolean.class);
+			    m.invoke(dpFrom, false);
+			    m.invoke(dpTo, false);
+			    
+			    m = dpFrom.getClass().getMethod("setMinDate", long.class);
+			    m.invoke(dpFrom, queryMinDate());
+			    m.invoke(dpTo, queryMinDate());
+			  }
+			  catch (Exception e) {} // eat exception in our case
+			}
+			
+			dpFrom.init(Integer.valueOf(new SimpleDateFormat("yyyy").format(new Date(queryMinDate()))), 
+					Integer.valueOf(new SimpleDateFormat("MM").format(new Date(queryMinDate())))-1, 
+					Integer.valueOf(new SimpleDateFormat("dd").format(new Date(queryMinDate()))), 
+					null);
+			dpTo.init(year, month, day, null);	
+		}else{
+			Toast.makeText(getApplicationContext(), "DB is empty", Toast.LENGTH_LONG).show(); 
+			if (currentapiVersion >= 11) {
+			  try {
+			    Method m = dpFrom.getClass().getMethod("setCalendarViewShown", boolean.class);
+			    m.invoke(dpFrom, false);
+			    m.invoke(dpTo, false);
+			  }
+			  catch (Exception e) {} // eat exception in our case
+			}
+	
+			dpFrom.init(year, month, day, null);
+			dpTo.init(year, month, day, null);
+		}
 	}
 	
 	public void addListenerOnButton() {
@@ -122,10 +178,28 @@ public class RaiffStat extends Activity {
 		    	myIntent.putExtra("day_from", dpFrom.getDayOfMonth()+"/"+month+"/"+dpFrom.getYear());
 		    	month = dpTo.getMonth() + 1;
 		    	myIntent.putExtra("day_to", dpTo.getDayOfMonth()+"/"+month+"/"+dpTo.getYear());
-		    	
+		    	myIntent.putExtra("group", groupName);
 		    	RaiffStat.this.startActivity(myIntent);
 		    }
 		});
+	}
+	
+	public void addListenerOnSpinnerItemSelection() {
+		spGroup = (Spinner) findViewById(R.id.spinnerGroup);
+		spGroup.setOnItemSelectedListener(new CustomOnItemSelectedListener());
+	  }
+	
+	public class CustomOnItemSelectedListener implements OnItemSelectedListener {
+		 
+		  public void onItemSelected(AdapterView<?> parent, View view, int pos,long id) {
+			  groupName = parent.getItemAtPosition(pos).toString();
+		  }
+		 
+		  @Override
+		  public void onNothingSelected(AdapterView<?> arg0) {
+			// TODO Auto-generated method stub
+		  }
+		 
 	}
 	
 	private void importSms(){
@@ -162,7 +236,7 @@ public class RaiffStat extends Activity {
 	                    if(parsedWell){
 	                    	Log.d(LOG, prs.getCard() + " & " +  prs.getPlace() + " & " + 
 	                    			prs.getAmmount() + " & " + prs.getAmmountCurr() + " & " 
-	                    			+ prs.getRemainder() + " & " + prs.getRemainderCurr() + " & " + dateString);
+	                    			+ prs.getRemainder() + " & " + prs.getRemainderCurr() + " & " + prs.getGroup() + " & " + dateString);
 	                    	
 	                    	addTransactionToDB(longDate, prs);
 	                    }
@@ -184,7 +258,7 @@ public class RaiffStat extends Activity {
 	private void addTransactionToDB(long dateTime, RaiffParser prs){
 		DatabaseHandler db = new DatabaseHandler(this);
 		db.addTransaction(new TransactionEntry(dateTime, prs.getAmmount(), prs.getAmmountCurr(),
-				prs.getRemainder(), prs.getRemainderCurr(), prs.getPlace(), prs.getCard()));  
+				prs.getRemainder(), prs.getRemainderCurr(), prs.getPlace(), prs.getCard(), prs.getGroup()));  
 	}
 
 	private void clearDB(){	
@@ -197,7 +271,7 @@ public class RaiffStat extends Activity {
 			String dateString = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date(t.getDateTime()));
 			Log.d(LOG, t.getID() + " & " + t.getCard() + " & " +  t.getPlace() + " & " + 
 	    			t.getAmmount() + " & " + t.getAmmountCurr() + " & " 
-	    			+ t.getRemainder() + " & " + t.getRemainderCurr() + " & " + dateString);
+	    			+ t.getRemainder() + " & " + t.getRemainderCurr() + " & " +  t.getGroup() +  " & " + dateString);
 		}
 	}
 	
@@ -228,5 +302,23 @@ public class RaiffStat extends Activity {
 			Log.d(LOG, ex.getMessage()); 
 			return 0;
 		}
+	}
+	
+	private List<String> queryDistinctPlaces(){	
+		DatabaseHandler db = new DatabaseHandler(this);
+		return db.getDistinctPlaces();
+		
+	}
+	
+	private List<String> queryDistinctGroups(){	
+		DatabaseHandler db = new DatabaseHandler(this);
+		return db.getDistinctGroups();
+		
+	}
+	
+	private long queryMinDate(){	
+		DatabaseHandler db = new DatabaseHandler(this);
+		return db.getMinDate();
+		
 	}
 }
