@@ -6,22 +6,24 @@ public class RaiffParser {
 	
 	private final String LOG = "RaiffParser";
 	
-	private double _ammount;
-	private String _ammount_curr;
+	private double _amount;
+	private String _amount_curr;
 	private double _remainder;
 	private String _remainder_curr;
     private String _place;
     private String _card;
     private String _group; 
+    private int _in_group;
     
     RaiffParser(){
-    	this._ammount = 0.0;
-    	this._ammount_curr = "unknown";
+    	this._amount = 0.0;
+    	this._amount_curr = "unknown";
     	this._remainder = 0.0;
     	this._remainder_curr = "unknown";
     	this._place = "unknown";
     	this._card = "unknown";
     	this._group = "unknown";
+    	this._in_group = 0;
     }
     
     public boolean parseSmsBody(String body){
@@ -33,7 +35,7 @@ public class RaiffParser {
 				return false;
 			
 			parseCard(tokens[0]);
-			parseAmmount(tokens[1]);
+			parseAmount(tokens[1]);
 			parsePlace(tokens[3]);
 			parseRemainder(tokens[4]);			
 			return true;
@@ -48,7 +50,7 @@ public class RaiffParser {
     	this._card = str.trim().substring(5).trim(); //Skip "Karta"
     }
     
-    private void parseAmmount(String str){
+    private void parseAmount(String str){
     	String strLocal = "";
     	
     	String delims = "[:]+"; 
@@ -57,8 +59,8 @@ public class RaiffParser {
 			//TODO: what if it is neither RUB not USD not EUR (has not 3 letters)
 			tokens[1] = tokens[1].trim();
 			strLocal = tokens[1].substring(0, tokens[1].length()-3); //cut "RUB", "USD", "EUR" in the end
-			this._ammount = Double.parseDouble(strLocal.replace(',', '.'));
-			this._ammount_curr = tokens[1].substring(tokens[1].length()-3, tokens[1].length());
+			this._amount = Double.parseDouble(strLocal.replace(',', '.'));
+			this._amount_curr = tokens[1].substring(tokens[1].length()-3, tokens[1].length());
 		}
     }
     
@@ -68,6 +70,7 @@ public class RaiffParser {
 		if(tokens.length>1){
 			this._place = tokens[1].trim();
 			this._group = this._place;
+			this._in_group = 0;
 		}
     }
     
@@ -86,12 +89,12 @@ public class RaiffParser {
 		}
     }
     
-    public double getAmmount(){
-    	return this._ammount;
+    public double getAmount(){
+    	return this._amount;
     }
     
-    public String getAmmountCurr(){
-    	return this._ammount_curr;
+    public String getAmountCurr(){
+    	return this._amount_curr;
     }
     
     public double getRemainder(){
@@ -114,4 +117,7 @@ public class RaiffParser {
     	return this._group;
     }
 
+    public int getInGroup(){
+    	return this._in_group;
+    }
 }

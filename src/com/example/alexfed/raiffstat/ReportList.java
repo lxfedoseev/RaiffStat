@@ -64,18 +64,18 @@ public class ReportList extends ListActivity {
     			Map<String, Double> sum = new HashMap<String, Double>();
     			Set<String> currs = new HashSet<String>();
     			for (TransactionEntry t : transactions) {
-    				if(!currs.contains(t.getAmmountCurr())){
-    					currs.add(t.getAmmountCurr());
-    					sum.put(t.getAmmountCurr(), 0.0);
+    				if(!currs.contains(t.getAmountCurr())){
+    					currs.add(t.getAmountCurr());
+    					sum.put(t.getAmountCurr(), 0.0);
     				}
-    				sum.put(t.getAmmountCurr(), sum.get(t.getAmmountCurr())+t.getAmmount());
+    				sum.put(t.getAmountCurr(), sum.get(t.getAmountCurr())+t.getAmount());
     				card = t.getCard();
     			}
     			if(!group.equalsIgnoreCase("All"))
     				message += "Group: " + group + "\r\n";
     			message += "Period: " + dayFrom + "~" + dayTo + "\r\n" + 
     					"Card: " + card + "\r\n" + 
-    					"Ammount: ";
+    					"Amount: ";
     			//round sum values
     			for(String s: currs){
     				double rndSum = sum.get(s) * 100;
@@ -198,7 +198,7 @@ public class ReportList extends ListActivity {
                 holder.card = (TextView) convertView.findViewById(R.id.card);
                 holder.date_time = (TextView) convertView.findViewById(R.id.date_time);
                 holder.group = (TextView) convertView.findViewById(R.id.group);
-                holder.ammount = (TextView) convertView.findViewById(R.id.ammount);
+                holder.amount = (TextView) convertView.findViewById(R.id.amount);
 
                 convertView.setTag(holder);
             } else {
@@ -213,7 +213,7 @@ public class ReportList extends ListActivity {
         static class ViewHolder {
             TextView group;
             TextView date_time;
-            TextView ammount;
+            TextView amount;
             TextView card;
         }
         
@@ -226,7 +226,7 @@ public class ReportList extends ListActivity {
         	holder.date_time.setText(dayString+"\r\n"+timeString); 
             holder.group.setText(entry.getGroup()); 
             holder.card.setText("Card: " + entry.getCard());                
-            holder.ammount.setText(entry.getAmmount() + " " + entry.getAmmountCurr());
+            holder.amount.setText(entry.getAmount() + " " + entry.getAmountCurr());
         }
     }
 }

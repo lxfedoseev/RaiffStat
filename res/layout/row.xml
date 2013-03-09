@@ -38,7 +38,7 @@
 			  android:textColor="#008000"/>
 	    
 	    <TextView 
-			  android:id="@+id/ammount"
+			  android:id="@+id/amount"
 			  android:layout_width="wrap_content"
 			  android:layout_height="match_parent"
               android:layout_toRightOf="@+id/file_res"

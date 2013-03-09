@@ -13,7 +13,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 	// All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 7;
  
     // Database Name
     private static final String DATABASE_NAME = "raiffDB";
@@ -24,13 +24,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Transactions Table Columns names
     private static final String KEY_ID = "id";
     private static final String KEY_DATE_TIME = "date_time";
-    private static final String KEY_AMMOUNT = "ammount";
-    private static final String KEY_AMMOUNT_CURR = "ammount_curr";
+    private static final String KEY_AMOUNT = "amount";
+    private static final String KEY_AMOUNT_CURR = "amount_curr";
     private static final String KEY_REMAINDER = "remainder";
     private static final String KEY_REMAINDER_CURR = "remainder_curr";
     private static final String KEY_PLACE = "place";
     private static final String KEY_CARD = "card";
     private static final String KEY_GROUP = "grp";
+    private static final String KEY_IN_GROUP = "in_grp";
  
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -41,13 +42,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_TRANSACTIONS_TABLE = "CREATE TABLE " + TABLE_TRANSACTIONS + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_DATE_TIME + " TEXT,"
-                + KEY_AMMOUNT + " REAL," 
-                + KEY_AMMOUNT_CURR + " TEXT," 
+                + KEY_AMOUNT + " REAL," 
+                + KEY_AMOUNT_CURR + " TEXT," 
                 + KEY_REMAINDER + " REAL," 
                 + KEY_REMAINDER_CURR + " TEXT," 
                 + KEY_PLACE + " TEXT," 
                 + KEY_CARD + " TEXT," 
-                + KEY_GROUP + " TEXT" + ")";
+                + KEY_GROUP + " TEXT," 
+                + KEY_IN_GROUP + "  INTEGER" + ")";
         db.execSQL(CREATE_TRANSACTIONS_TABLE);
     }
  
@@ -71,13 +73,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
  
         ContentValues values = new ContentValues();
         values.put(KEY_DATE_TIME, String.valueOf(t.getDateTime()) );
-        values.put(KEY_AMMOUNT, t.getAmmount()); 
-        values.put(KEY_AMMOUNT_CURR, t.getAmmountCurr());
+        values.put(KEY_AMOUNT, t.getAmount()); 
+        values.put(KEY_AMOUNT_CURR, t.getAmountCurr());
         values.put(KEY_REMAINDER, t.getRemainder()); 
         values.put(KEY_REMAINDER_CURR, t.getRemainderCurr());
         values.put(KEY_CARD, t.getCard());
         values.put(KEY_PLACE, t.getPlace());
         values.put(KEY_GROUP, t.getGroup());
+        values.put(KEY_IN_GROUP, t.getInGroup());
  
         // Inserting Row
         db.insert(TABLE_TRANSACTIONS, null, values);
@@ -89,7 +92,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
  
         Cursor cursor = db.query(TABLE_TRANSACTIONS, new String[] { KEY_ID, KEY_DATE_TIME, 
-        		KEY_AMMOUNT, KEY_AMMOUNT_CURR, KEY_REMAINDER, KEY_REMAINDER_CURR, KEY_PLACE, KEY_CARD, KEY_GROUP }, 
+        		KEY_AMOUNT, KEY_AMOUNT_CURR, KEY_REMAINDER, KEY_REMAINDER_CURR, KEY_PLACE, KEY_CARD, KEY_GROUP, KEY_IN_GROUP }, 
                 KEY_ID + "=?",
                 new String[] { String.valueOf(id) }, null, null, null, null);
         if (cursor != null)
@@ -97,7 +100,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
  
         TransactionEntry t = new TransactionEntry(cursor.getInt(0), Long.valueOf(cursor.getString(1)), 
         		cursor.getDouble(2), cursor.getString(3), cursor.getDouble(4), cursor.getString(5),
-        		cursor.getString(6), cursor.getString(7), cursor.getString(8));
+        		cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getInt(9));
         
         cursor.close();
         // return transaction
@@ -119,13 +122,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             	TransactionEntry t = new TransactionEntry(); 
                 t.setID(cursor.getInt(0));
                 t.setDateTime(Long.valueOf(cursor.getString(1)) );
-                t.setAmmount(cursor.getDouble(2));
-                t.setAmmountCurr(cursor.getString(3));
+                t.setAmount(cursor.getDouble(2));
+                t.setAmountCurr(cursor.getString(3));
                 t.setRemainder(cursor.getDouble(4));
                 t.setRemainderCurr(cursor.getString(5));
                 t.setPlace(cursor.getString(6));
                 t.setCard(cursor.getString(7));
                 t.setGroup(cursor.getString(8));
+                t.setInGroup(cursor.getInt(9));
                 // Adding transaction to list
                 transactionList.add(t);
             } while (cursor.moveToNext());
@@ -141,13 +145,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
  
         ContentValues values = new ContentValues();
         values.put(KEY_DATE_TIME, String.valueOf(t.getDateTime())); 
-        values.put(KEY_AMMOUNT, t.getAmmount());
-        values.put(KEY_AMMOUNT_CURR, t.getAmmountCurr());
+        values.put(KEY_AMOUNT, t.getAmount());
+        values.put(KEY_AMOUNT_CURR, t.getAmountCurr());
         values.put(KEY_REMAINDER, t.getRemainder());
         values.put(KEY_REMAINDER_CURR, t.getRemainderCurr());
         values.put(KEY_PLACE, t.getPlace());
         values.put(KEY_CARD, t.getCard());
         values.put(KEY_GROUP, t.getGroup());
+        values.put(KEY_IN_GROUP, t.getInGroup());
  
         // updating row
         return db.update(TABLE_TRANSACTIONS, values, KEY_ID + " = ?",
@@ -190,13 +195,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             	TransactionEntry t = new TransactionEntry(); 
                 t.setID(cursor.getInt(0));
                 t.setDateTime(Long.valueOf(cursor.getString(1)) );
-                t.setAmmount(cursor.getDouble(2));
-                t.setAmmountCurr(cursor.getString(3));
+                t.setAmount(cursor.getDouble(2));
+                t.setAmountCurr(cursor.getString(3));
                 t.setRemainder(cursor.getDouble(4));
                 t.setRemainderCurr(cursor.getString(5));
                 t.setPlace(cursor.getString(6));
                 t.setCard(cursor.getString(7));
                 t.setGroup(cursor.getString(8));
+                t.setInGroup(cursor.getInt(9));
                 // Adding transaction to list
                 transactionList.add(t);
             } while (cursor.moveToNext());
@@ -206,16 +212,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return transactionList;
     }
 
-    public  List<TransactionEntry> getTransactionsAmountFixed(double ammount){
-    	String countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + " WHERE " + KEY_AMMOUNT + " = ?";
-    	return queryDB(countQuery, new String[] {String.valueOf(ammount)});
+    public  List<TransactionEntry> getTransactionsAmountFixed(double amount){
+    	String countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + " WHERE " + KEY_AMOUNT + " = ?";
+    	return queryDB(countQuery, new String[] {String.valueOf(amount)});
     }
     
-    public List<TransactionEntry> getTransactionsAmountInterval(double ammountStar, double ammountEnd) {
+    public List<TransactionEntry> getTransactionsAmountInterval(double amountStar, double amountEnd) {
     	String countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
-    			" WHERE " + " ( " + KEY_AMMOUNT + " >= ? )" + " AND " + " ( " + KEY_AMMOUNT + " <= ? )" +
+    			" WHERE " + " ( " + KEY_AMOUNT + " >= ? )" + " AND " + " ( " + KEY_AMOUNT + " <= ? )" +
     			" ORDER BY " + KEY_DATE_TIME;
-    	return queryDB(countQuery, new String[] {String.valueOf(ammountStar), String.valueOf(ammountEnd)});
+    	return queryDB(countQuery, new String[] {String.valueOf(amountStar), String.valueOf(amountEnd)});
     }
     
     public List<TransactionEntry> getTransactionsDateInterval(long dateStart, long dateEnd){
@@ -300,5 +306,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
     	cursor.close();
     	return date;
+    }
+    
+    public List<String> getUngroupedDistinctPlaces(){
+    	List<String> distVals = new ArrayList<String>();
+    	SQLiteDatabase db = this.getWritableDatabase();	
+    	String countQuery = "SELECT DISTINCT " + KEY_PLACE + " FROM " + TABLE_TRANSACTIONS +
+    			" WHERE " + KEY_IN_GROUP + " = ? " +
+    			" ORDER BY " + KEY_PLACE; 
+    	Cursor cursor = db.rawQuery(countQuery, new String[] {String.valueOf(0)});
+    	
+    	if (cursor.moveToFirst()) {
+            do {
+            	distVals.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+    	cursor.close();
+    	return distVals;
+    }
+    
+    public  List<TransactionEntry> getTransactionsPlace(String place){
+    	String countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + " WHERE " + KEY_PLACE + " = ?";
+    	return queryDB(countQuery, new String[] {place});
     }
 }

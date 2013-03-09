@@ -27,6 +27,23 @@ import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+
+/* TODO: 
+ * - Add place(s) to a group
+ * - Display and manage groups (rename, delete, exclude items)
+ * - Incoming SMS listener
+ * - If group selected do not display it in every report list item, display on action bar instead
+ * - Make multi language (Russian, English)
+ * - Make a good design (application icon as well)
+ * - Import/Export from/to file.
+ * - Progress bar for time consuming operations
+ * - Sort report by date/amount.
+ * - Save application state (screen rotation, going to background)
+ * - Correct row layouts for different screen sizes
+ * - Remove particular items from report (long touch -> remove)
+ * - Save report to a file (share report)
+ * 
+ */
 public class RaiffStat extends Activity { 
 
 	private final String LOG = "RaiffStat";
@@ -47,18 +64,19 @@ public class RaiffStat extends Activity {
 		setContentView(R.layout.activity_raiff_stat);
 		
 		setCurrentDateOnView();
-		addItemsOnSpinnerGroup();
-		addListenerOnSpinnerItemSelection();
 		addListenerOnButton();
 	}
 
 	/* (non-Javadoc)
-	 * @see android.app.Activity#onResume()
+	 * @see android.app.Activity#onResume() 
 	 */
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		
+		addItemsOnSpinnerGroup();
+		addListenerOnSpinnerItemSelection();
 	}
 
 	@Override
@@ -91,11 +109,13 @@ public class RaiffStat extends Activity {
     			queryDistinctGroups();
     			//queryDistinctPlaces();
     			//queryDateInterval(convertStringDate("02/03/2013 00:00:00"), convertStringDate("07/03/2013 23:59:59"));
-    			//queryAmmountInterval(0, 500);
-    			//queryAmmountFixed(2077.3);
+    			//queryAmountInterval(0, 500);
+    			//queryAmountFixed(2077.3);
     			return true;
     		case R.id.menu_manage_places:
     			//TODO:
+    			Intent placesActivity = new Intent(getBaseContext(), PlacesList.class);
+    			startActivity(placesActivity);
     			return true; 
     		default:
     			return super.onOptionsItemSelected(item);
@@ -233,13 +253,13 @@ public class RaiffStat extends Activity {
 	                if(strbody!=null) 
 	                	parsedWell = prs.parseSmsBody(strbody.trim());
 	                    
-	                    if(parsedWell){
-	                    	Log.d(LOG, prs.getCard() + " & " +  prs.getPlace() + " & " + 
-	                    			prs.getAmmount() + " & " + prs.getAmmountCurr() + " & " 
-	                    			+ prs.getRemainder() + " & " + prs.getRemainderCurr() + " & " + prs.getGroup() + " & " + dateString);
+	                if(parsedWell){
+	                	Log.d(LOG, prs.getCard() + " & " +  prs.getPlace() + " & " + 
+	                			prs.getAmount() + " & " + prs.getAmountCurr() + " & " 
+	                			+ prs.getRemainder() + " & " + prs.getRemainderCurr() + " & " + prs.getGroup() + " & " + prs.getInGroup() + " & " + dateString);
 	                    	
-	                    	addTransactionToDB(longDate, prs);
-	                    }
+	                	addTransactionToDB(longDate, prs);
+	                }
 	                    
 	                } while (cur.moveToNext());  
 
@@ -257,8 +277,8 @@ public class RaiffStat extends Activity {
 	
 	private void addTransactionToDB(long dateTime, RaiffParser prs){
 		DatabaseHandler db = new DatabaseHandler(this);
-		db.addTransaction(new TransactionEntry(dateTime, prs.getAmmount(), prs.getAmmountCurr(),
-				prs.getRemainder(), prs.getRemainderCurr(), prs.getPlace(), prs.getCard(), prs.getGroup()));  
+		db.addTransaction(new TransactionEntry(dateTime, prs.getAmount(), prs.getAmountCurr(),
+				prs.getRemainder(), prs.getRemainderCurr(), prs.getPlace(), prs.getCard(), prs.getGroup(), prs.getInGroup()));  
 	}
 
 	private void clearDB(){	
@@ -270,18 +290,18 @@ public class RaiffStat extends Activity {
 		for (TransactionEntry t : transactions) {
 			String dateString = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date(t.getDateTime()));
 			Log.d(LOG, t.getID() + " & " + t.getCard() + " & " +  t.getPlace() + " & " + 
-	    			t.getAmmount() + " & " + t.getAmmountCurr() + " & " 
-	    			+ t.getRemainder() + " & " + t.getRemainderCurr() + " & " +  t.getGroup() +  " & " + dateString);
+	    			t.getAmount() + " & " + t.getAmountCurr() + " & " 
+	    			+ t.getRemainder() + " & " + t.getRemainderCurr() + " & " +  t.getGroup() +  " & " +  t.getInGroup() +  " & " + dateString);
 		}
 	}
 	
-	private void queryAmmountFixed(double ammount){	
+	private void queryAmountFixed(double amount){	
 		DatabaseHandler db = new DatabaseHandler(this);
-		List<TransactionEntry> transactions = db.getTransactionsAmountFixed(ammount);
+		List<TransactionEntry> transactions = db.getTransactionsAmountFixed(amount);
 		printTransactions(transactions);
 	}
 	
-	private void queryAmmountInterval(double start, double end){
+	private void queryAmountInterval(double start, double end){
 		DatabaseHandler db = new DatabaseHandler(this);
 		List<TransactionEntry> transactions = db.getTransactionsAmountInterval(start, end);
 		printTransactions(transactions);
