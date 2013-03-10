@@ -31,11 +31,10 @@ import android.widget.Toast;
 /* TODO: 
  * - Add place(s) to a group
  * - Display and manage groups (rename, delete, exclude items)
- * - Incoming SMS listener
  * - If group selected do not display it in every report list item, display on action bar instead
  * - Make multi language (Russian, English)
  * - Make a good design (application icon as well)
- * - Import/Export from/to file.
+ * - Import/Export from/to CSV file.
  * - Progress bar for time consuming operations
  * - Sort report by date/amount.
  * - Save application state (screen rotation, going to background)
@@ -44,6 +43,10 @@ import android.widget.Toast;
  * - Save report to a file (share report)
  * - Make a pie chart for time period with all tag
  * - Cache all possible data to DB, including otkaz
+ * - Merge SMS to existed DB (for example when SMS format is changed)
+ * - Radio buttons for interval (1 week, 1 month, period)
+ * - ? Widget (Spent for a group, spent entirely, remainder) ?
+ * - ? Make categories out of groups (Food, Leisure, Clothes, Automobile, Applications, etc., Customly defined) ?
  * 
  */
 public class RaiffStat extends Activity { 

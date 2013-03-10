@@ -220,14 +220,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public List<TransactionEntry> getTransactionsAmountInterval(double amountStar, double amountEnd) {
     	String countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
     			" WHERE " + " ( " + KEY_AMOUNT + " >= ? )" + " AND " + " ( " + KEY_AMOUNT + " <= ? )" +
-    			" ORDER BY " + KEY_DATE_TIME;
+    			" ORDER BY " + KEY_DATE_TIME + " DESC";
     	return queryDB(countQuery, new String[] {String.valueOf(amountStar), String.valueOf(amountEnd)});
     }
     
     public List<TransactionEntry> getTransactionsDateInterval(long dateStart, long dateEnd){
     	String countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
     			" WHERE " + " ( " + KEY_DATE_TIME + " >= ? )" + " AND " + " ( " + KEY_DATE_TIME + " <= ? )" +
-    			" ORDER BY " + KEY_DATE_TIME;
+    			" ORDER BY " + KEY_DATE_TIME + " DESC";
     	return queryDB(countQuery, new String[] {String.valueOf(dateStart), String.valueOf(dateEnd)});
     }
     
@@ -236,13 +236,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	if(place.equalsIgnoreCase("All")){
     		countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
     			" WHERE " + " ( " + KEY_DATE_TIME + " >= ? )" + " AND " + " ( " + KEY_DATE_TIME + " <= ? )" +
-    			" ORDER BY " + KEY_DATE_TIME;
+    			" ORDER BY " + KEY_DATE_TIME + " DESC";
     		return queryDB(countQuery, new String[] {String.valueOf(dateStart), String.valueOf(dateEnd)});
     	}else{
     		countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
         			" WHERE " + " ( " + KEY_DATE_TIME + " >= ? )" + " AND " + " ( " + KEY_DATE_TIME + " <= ? )" + 
     				" AND " + " ( " + KEY_PLACE + " = ? )" +
-        			" ORDER BY " + KEY_DATE_TIME;
+        			" ORDER BY " + KEY_DATE_TIME + " DESC";
     		return queryDB(countQuery, new String[] {String.valueOf(dateStart), String.valueOf(dateEnd), place});
     	}
     }
@@ -252,13 +252,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	if(group.equalsIgnoreCase("All")){
     		countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
     			" WHERE " + " ( " + KEY_DATE_TIME + " >= ? )" + " AND " + " ( " + KEY_DATE_TIME + " <= ? )" +
-    			" ORDER BY " + KEY_DATE_TIME;
+    			" ORDER BY " + KEY_DATE_TIME + " DESC";
     		return queryDB(countQuery, new String[] {String.valueOf(dateStart), String.valueOf(dateEnd)});
     	}else{
     		countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
         			" WHERE " + " ( " + KEY_DATE_TIME + " >= ? )" + " AND " + " ( " + KEY_DATE_TIME + " <= ? )" + 
     				" AND " + " ( " + KEY_GROUP + " = ? )" +
-        			" ORDER BY " + KEY_DATE_TIME;
+        			" ORDER BY " + KEY_DATE_TIME + " DESC";
     		return queryDB(countQuery, new String[] {String.valueOf(dateStart), String.valueOf(dateEnd), group});
     	}
     }
