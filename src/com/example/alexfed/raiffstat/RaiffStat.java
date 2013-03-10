@@ -42,6 +42,8 @@ import android.widget.Toast;
  * - Correct row layouts for different screen sizes
  * - Remove particular items from report (long touch -> remove)
  * - Save report to a file (share report)
+ * - Make a pie chart for time period with all tag
+ * - Cache all possible data to DB, including otkaz
  * 
  */
 public class RaiffStat extends Activity { 
