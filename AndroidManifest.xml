@@ -30,7 +30,7 @@
         </activity>
         
         <activity android:name="TerminalsList"
-              android:label="@string/places_name">
+              android:label="@string/terminals_name">
         </activity>
         
         <receiver android:name=".SMSReceiver" android:enabled="true">
