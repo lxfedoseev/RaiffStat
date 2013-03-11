@@ -10,20 +10,20 @@ public class RaiffParser {
 	private String _amount_curr;
 	private double _remainder;
 	private String _remainder_curr;
-    private String _place;
+    private String _terminal;
     private String _card;
-    private String _group; 
-    private int _in_group;
+    private String _place; 
+    private int _in_place;
     
     RaiffParser(){
     	this._amount = 0.0;
     	this._amount_curr = "unknown";
     	this._remainder = 0.0;
     	this._remainder_curr = "unknown";
-    	this._place = "unknown";
+    	this._terminal = "unknown";
     	this._card = "unknown";
-    	this._group = "unknown";
-    	this._in_group = 0;
+    	this._place = "unknown";
+    	this._in_place = 0;
     }
     
     public boolean parseSmsBody(String body){
@@ -36,7 +36,7 @@ public class RaiffParser {
 			
 			parseCard(tokens[0]);
 			parseAmount(tokens[1]);
-			parsePlace(tokens[3]);
+			parseTerminal(tokens[3]);
 			parseRemainder(tokens[4]);			
 			return true;
 		}else{
@@ -64,13 +64,13 @@ public class RaiffParser {
 		}
     }
     
-    private void parsePlace(String str){
+    private void parseTerminal(String str){
     	String delims = "[:]+"; 
 		String[] tokens = str.split(delims);
 		if(tokens.length>1){
-			this._place = tokens[1].trim();
-			this._group = this._place;
-			this._in_group = 0;
+			this._terminal = tokens[1].trim();
+			this._place = this._terminal;
+			this._in_place = 0;
 		}
     }
     
@@ -105,19 +105,19 @@ public class RaiffParser {
     	return this._remainder_curr;
     }
     
-    public String getPlace(){
-    	return this._place;
+    public String getTerminal(){
+    	return this._terminal;
     }
     
     public String getCard(){
     	return this._card;
     }
     
-    public String getGroup(){
-    	return this._group;
+    public String getPlace(){
+    	return this._place;
     }
 
-    public int getInGroup(){
-    	return this._in_group;
+    public int getInPlace(){
+    	return this._in_place;
     }
 }

@@ -13,7 +13,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 	// All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
  
     // Database Name
     private static final String DATABASE_NAME = "raiffDB";
@@ -28,10 +28,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_AMOUNT_CURR = "amount_curr";
     private static final String KEY_REMAINDER = "remainder";
     private static final String KEY_REMAINDER_CURR = "remainder_curr";
-    private static final String KEY_PLACE = "place";
+    private static final String KEY_TERMINAL = "terminal";
     private static final String KEY_CARD = "card";
-    private static final String KEY_GROUP = "grp";
-    private static final String KEY_IN_GROUP = "in_grp";
+    private static final String KEY_PLACE = "place";
+    private static final String KEY_IN_PLACE = "in_place";
  
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -46,10 +46,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_AMOUNT_CURR + " TEXT," 
                 + KEY_REMAINDER + " REAL," 
                 + KEY_REMAINDER_CURR + " TEXT," 
-                + KEY_PLACE + " TEXT," 
+                + KEY_TERMINAL + " TEXT," 
                 + KEY_CARD + " TEXT," 
-                + KEY_GROUP + " TEXT," 
-                + KEY_IN_GROUP + "  INTEGER" + ")";
+                + KEY_PLACE + " TEXT," 
+                + KEY_IN_PLACE + "  INTEGER" + ")";
         db.execSQL(CREATE_TRANSACTIONS_TABLE);
     }
  
@@ -78,9 +78,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_REMAINDER, t.getRemainder()); 
         values.put(KEY_REMAINDER_CURR, t.getRemainderCurr());
         values.put(KEY_CARD, t.getCard());
+        values.put(KEY_TERMINAL, t.getTerminal());
         values.put(KEY_PLACE, t.getPlace());
-        values.put(KEY_GROUP, t.getGroup());
-        values.put(KEY_IN_GROUP, t.getInGroup());
+        values.put(KEY_IN_PLACE, t.getInPlace());
  
         // Inserting Row
         db.insert(TABLE_TRANSACTIONS, null, values);
@@ -92,7 +92,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
  
         Cursor cursor = db.query(TABLE_TRANSACTIONS, new String[] { KEY_ID, KEY_DATE_TIME, 
-        		KEY_AMOUNT, KEY_AMOUNT_CURR, KEY_REMAINDER, KEY_REMAINDER_CURR, KEY_PLACE, KEY_CARD, KEY_GROUP, KEY_IN_GROUP }, 
+        		KEY_AMOUNT, KEY_AMOUNT_CURR, KEY_REMAINDER, KEY_REMAINDER_CURR, KEY_TERMINAL, KEY_CARD, KEY_PLACE, KEY_IN_PLACE }, 
                 KEY_ID + "=?",
                 new String[] { String.valueOf(id) }, null, null, null, null);
         if (cursor != null)
@@ -126,10 +126,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 t.setAmountCurr(cursor.getString(3));
                 t.setRemainder(cursor.getDouble(4));
                 t.setRemainderCurr(cursor.getString(5));
-                t.setPlace(cursor.getString(6));
+                t.setTerminal(cursor.getString(6));
                 t.setCard(cursor.getString(7));
-                t.setGroup(cursor.getString(8));
-                t.setInGroup(cursor.getInt(9));
+                t.setPlace(cursor.getString(8));
+                t.setInPlace(cursor.getInt(9));
                 // Adding transaction to list
                 transactionList.add(t);
             } while (cursor.moveToNext());
@@ -149,10 +149,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_AMOUNT_CURR, t.getAmountCurr());
         values.put(KEY_REMAINDER, t.getRemainder());
         values.put(KEY_REMAINDER_CURR, t.getRemainderCurr());
-        values.put(KEY_PLACE, t.getPlace());
+        values.put(KEY_TERMINAL, t.getTerminal());
         values.put(KEY_CARD, t.getCard());
-        values.put(KEY_GROUP, t.getGroup());
-        values.put(KEY_IN_GROUP, t.getInGroup());
+        values.put(KEY_PLACE, t.getPlace());
+        values.put(KEY_IN_PLACE, t.getInPlace());
  
         // updating row
         return db.update(TABLE_TRANSACTIONS, values, KEY_ID + " = ?",
@@ -199,10 +199,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 t.setAmountCurr(cursor.getString(3));
                 t.setRemainder(cursor.getDouble(4));
                 t.setRemainderCurr(cursor.getString(5));
-                t.setPlace(cursor.getString(6));
+                t.setTerminal(cursor.getString(6));
                 t.setCard(cursor.getString(7));
-                t.setGroup(cursor.getString(8));
-                t.setInGroup(cursor.getInt(9));
+                t.setPlace(cursor.getString(8));
+                t.setInPlace(cursor.getInt(9));
                 // Adding transaction to list
                 transactionList.add(t);
             } while (cursor.moveToNext());
@@ -231,6 +231,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	return queryDB(countQuery, new String[] {String.valueOf(dateStart), String.valueOf(dateEnd)});
     }
     
+    public List<TransactionEntry> getTransactionsDateIntervalTerminal(long dateStart, long dateEnd, String terminal){
+    	String countQuery;
+    	if(terminal.equalsIgnoreCase("All")){
+    		countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
+    			" WHERE " + " ( " + KEY_DATE_TIME + " >= ? )" + " AND " + " ( " + KEY_DATE_TIME + " <= ? )" +
+    			" ORDER BY " + KEY_DATE_TIME + " DESC";
+    		return queryDB(countQuery, new String[] {String.valueOf(dateStart), String.valueOf(dateEnd)});
+    	}else{
+    		countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
+        			" WHERE " + " ( " + KEY_DATE_TIME + " >= ? )" + " AND " + " ( " + KEY_DATE_TIME + " <= ? )" + 
+    				" AND " + " ( " + KEY_TERMINAL + " = ? )" +
+        			" ORDER BY " + KEY_DATE_TIME + " DESC";
+    		return queryDB(countQuery, new String[] {String.valueOf(dateStart), String.valueOf(dateEnd), terminal});
+    	}
+    }
+    
     public List<TransactionEntry> getTransactionsDateIntervalPlace(long dateStart, long dateEnd, String place){
     	String countQuery;
     	if(place.equalsIgnoreCase("All")){
@@ -247,27 +263,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	}
     }
     
-    public List<TransactionEntry> getTransactionsDateIntervalGroup(long dateStart, long dateEnd, String group){
-    	String countQuery;
-    	if(group.equalsIgnoreCase("All")){
-    		countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
-    			" WHERE " + " ( " + KEY_DATE_TIME + " >= ? )" + " AND " + " ( " + KEY_DATE_TIME + " <= ? )" +
-    			" ORDER BY " + KEY_DATE_TIME + " DESC";
-    		return queryDB(countQuery, new String[] {String.valueOf(dateStart), String.valueOf(dateEnd)});
-    	}else{
-    		countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
-        			" WHERE " + " ( " + KEY_DATE_TIME + " >= ? )" + " AND " + " ( " + KEY_DATE_TIME + " <= ? )" + 
-    				" AND " + " ( " + KEY_GROUP + " = ? )" +
-        			" ORDER BY " + KEY_DATE_TIME + " DESC";
-    		return queryDB(countQuery, new String[] {String.valueOf(dateStart), String.valueOf(dateEnd), group});
-    	}
-    }
-    
-    public List<String> getDistinctPlaces(){
+    public List<String> getDistinctTerminals(){
     	List<String> distVals = new ArrayList<String>();
     	SQLiteDatabase db = this.getWritableDatabase();	
-    	String countQuery = "SELECT DISTINCT " + KEY_PLACE + " FROM " + TABLE_TRANSACTIONS +
-    			" ORDER BY " + KEY_PLACE; 
+    	String countQuery = "SELECT DISTINCT " + KEY_TERMINAL + " FROM " + TABLE_TRANSACTIONS +
+    			" ORDER BY " + KEY_TERMINAL; 
     	Cursor cursor = db.rawQuery(countQuery, null);
     	
     	if (cursor.moveToFirst()) {
@@ -279,11 +279,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	return distVals;
     }
     
-    public List<String> getDistinctGroups(){
+    public List<String> getDistinctPlaces(){
     	List<String> distVals = new ArrayList<String>();
     	SQLiteDatabase db = this.getWritableDatabase();	
-    	String countQuery = "SELECT DISTINCT " + KEY_GROUP + " FROM " + TABLE_TRANSACTIONS +
-    			" ORDER BY " + KEY_GROUP; 
+    	String countQuery = "SELECT DISTINCT " + KEY_PLACE + " FROM " + TABLE_TRANSACTIONS +
+    			" ORDER BY " + KEY_PLACE; 
     	Cursor cursor = db.rawQuery(countQuery, null);
     	
     	if (cursor.moveToFirst()) {
@@ -308,12 +308,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	return date;
     }
     
-    public List<String> getUngroupedDistinctPlaces(){
+    public List<String> getUnplacedDistinctTerminals(){
     	List<String> distVals = new ArrayList<String>();
     	SQLiteDatabase db = this.getWritableDatabase();	
-    	String countQuery = "SELECT DISTINCT " + KEY_PLACE + " FROM " + TABLE_TRANSACTIONS +
-    			" WHERE " + KEY_IN_GROUP + " = ? " +
-    			" ORDER BY " + KEY_PLACE; 
+    	String countQuery = "SELECT DISTINCT " + KEY_TERMINAL + " FROM " + TABLE_TRANSACTIONS +
+    			" WHERE " + KEY_IN_PLACE + " = ? " +
+    			" ORDER BY " + KEY_TERMINAL; 
     	Cursor cursor = db.rawQuery(countQuery, new String[] {String.valueOf(0)});
     	
     	if (cursor.moveToFirst()) {
@@ -325,8 +325,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	return distVals;
     }
     
-    public  List<TransactionEntry> getTransactionsPlace(String place){
-    	String countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + " WHERE " + KEY_PLACE + " = ?";
-    	return queryDB(countQuery, new String[] {place});
+    public  List<TransactionEntry> getTransactionsTerminal(String terminal){
+    	String countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + " WHERE " + KEY_TERMINAL + " = ?";
+    	return queryDB(countQuery, new String[] {terminal});
     }
 }

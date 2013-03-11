@@ -51,9 +51,9 @@ public class SMSReceiver extends BroadcastReceiver {
         	parsedWell = prs.parseSmsBody(body.trim()); 
             
         if(parsedWell){
-        	Log.d(LOG, prs.getCard() + " & " +  prs.getPlace() + " & " + 
+        	Log.d(LOG, prs.getCard() + " & " +  prs.getTerminal() + " & " + 
         			 prs.getAmount() + " & " + prs.getAmountCurr() + " & " 
-        			 + prs.getRemainder() + " & " + prs.getRemainderCurr() + " & " + prs.getGroup() + " & " + prs.getInGroup() + " & " + dateString);
+        			 + prs.getRemainder() + " & " + prs.getRemainderCurr() + " & " + prs.getPlace() + " & " + prs.getInPlace() + " & " + dateString);
             	
         	addTransactionToDB(context, date, prs);
         }
@@ -62,13 +62,13 @@ public class SMSReceiver extends BroadcastReceiver {
 	private void addTransactionToDB(Context context, long dateTime, RaiffParser prs){
 		DatabaseHandler db = new DatabaseHandler(context);
 		
-		List<TransactionEntry> transactions = db.getTransactionsPlace(prs.getPlace());
+		List<TransactionEntry> transactions = db.getTransactionsTerminal(prs.getTerminal());
 		if(!transactions.isEmpty()){
 			db.addTransaction(new TransactionEntry(dateTime, prs.getAmount(), prs.getAmountCurr(),
-					prs.getRemainder(), prs.getRemainderCurr(), prs.getPlace(), prs.getCard(), transactions.get(0).getGroup(), transactions.get(0).getInGroup()));
+					prs.getRemainder(), prs.getRemainderCurr(), prs.getTerminal(), prs.getCard(), transactions.get(0).getPlace(), transactions.get(0).getInPlace()));
 		}else{
 			db.addTransaction(new TransactionEntry(dateTime, prs.getAmount(), prs.getAmountCurr(),
-				prs.getRemainder(), prs.getRemainderCurr(), prs.getPlace(), prs.getCard(), prs.getGroup(), prs.getInGroup()));  
+				prs.getRemainder(), prs.getRemainderCurr(), prs.getTerminal(), prs.getCard(), prs.getPlace(), prs.getInPlace()));  
 		}
 	}
 

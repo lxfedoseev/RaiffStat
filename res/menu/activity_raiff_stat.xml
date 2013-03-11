@@ -19,6 +19,12 @@
         android:title="@string/menu_clear_db"/>
     
     <item
+        android:id="@+id/menu_manage_terminals"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/menu_manage_terminals"/>
+    
+    <item
         android:id="@+id/menu_manage_places"
         android:orderInCategory="100"
         android:showAsAction="never"
@@ -29,5 +35,6 @@
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/menu_query"/>
+    
 
 </menu>

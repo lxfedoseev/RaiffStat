@@ -9,10 +9,10 @@ public class TransactionEntry {
     private String _amount_curr;
     private double _remainder;
     private String _remainder_curr;
-    private String _place;
+    private String _terminal;
     private String _card;
-    private String _group;
-    private int _in_group;
+    private String _place;
+    private int _in_place;
  
     // Empty constructor
     public TransactionEntry(){
@@ -22,40 +22,40 @@ public class TransactionEntry {
         this._amount_curr = "UNK";
         this._remainder = 0.0;
         this._remainder_curr = "UNK";
-        this._place = "unknown";
+        this._terminal = "unknown";
         this._card = "unknown";
-        this._group = "unknown";
-        this._in_group = 0;
+        this._place = "unknown";
+        this._in_place = 0;
     }
     // constructor
     public TransactionEntry(int id, long date_time, double amount, String amount_curr, 
-    						double remainder, String remainder_curr, String place, String card, 
-    						String group, int in_group){
+    						double remainder, String remainder_curr, String terminal, String card, 
+    						String place, int in_place){
         this._id = id;
         this._date_time = date_time;
         this._amount = amount;
         this._amount_curr = amount_curr;
         this._remainder = remainder;
         this._remainder_curr = remainder_curr;
-        this._place = place;
+        this._terminal = terminal;
         this._card = card;
-        this._group = group;
-        this._in_group = in_group;
+        this._place = place;
+        this._in_place = in_place;
     }
  
     // constructor
     public TransactionEntry(long date_time, double amount, String amount_curr, 
-    						double remainder, String remainder_curr, String place, String card, 
-    						String group, int in_group){
+    						double remainder, String remainder_curr, String terminal, String card, 
+    						String place, int in_place){
     	this._date_time = date_time;
         this._amount = amount;
         this._amount_curr = amount_curr;
         this._remainder = remainder;
         this._remainder_curr = remainder_curr;
-        this._place = place;
+        this._terminal = terminal;
         this._card = card;
-        this._group = group;
-        this._in_group = in_group;
+        this._place = place;
+        this._in_place = in_place;
     }
     // getting ID
     public int getID(){
@@ -97,14 +97,14 @@ public class TransactionEntry {
         this._amount_curr = _amount_curr;
     }
     
- // getting _place
-    public String getPlace(){
-        return this._place;
+ // getting _terminal
+    public String getTerminal(){
+        return this._terminal;
     }
  
-    // setting _place
-    public void setPlace(String _place){
-        this._place = _place;
+    // setting _terminal
+    public void setTerminal(String _terminal){
+        this._terminal = _terminal;
     }
     
     // getting _remainder
@@ -137,23 +137,23 @@ public class TransactionEntry {
         this._card = _card;
     }
     
- // getting _group
-    public String getGroup(){
-        return this._group;
+ // getting _place
+    public String getPlace(){
+        return this._place;
     }
  
-    // setting _group
-    public void setGroup(String _group){
-        this._group = _group;
+    // setting _place
+    public void setPlace(String _place){
+        this._place = _place;
     }
     
- // getting in_group
-    public int getInGroup(){
-        return this._in_group;
+ // getting _in_place
+    public int getInPlace(){
+        return this._in_place;
     }
  
-    // setting in_group
-    public void setInGroup(int in_group){
-        this._in_group = in_group;
+    // setting _in_place
+    public void setInPlace(int in_place){
+        this._in_place = in_place;
     }
 }

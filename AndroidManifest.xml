@@ -29,7 +29,7 @@
               android:label="@string/report_name">
         </activity>
         
-        <activity android:name=".PlacesList"
+        <activity android:name="TerminalsList"
               android:label="@string/places_name">
         </activity>
         
@@ -38,6 +38,10 @@
 	        <action android:name="android.provider.Telephony.SMS_RECEIVED" />
 	      </intent-filter>
     	</receiver>
+    	
+        <activity android:name="PlacesList"
+              android:label="@string/places_name">
+        </activity>
     	
     </application>
 

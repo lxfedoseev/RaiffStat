@@ -1,5 +1,6 @@
 package com.example.alexfed.raiffstat;
 
+import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
@@ -21,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
@@ -30,7 +33,7 @@ public class ReportList extends ListActivity {
 	private List<TransactionEntry> transactions;
 	private String dayFrom;
 	private String dayTo;
-	private String group;
+	private String place;
 	
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -42,12 +45,15 @@ public class ReportList extends ListActivity {
 		setContentView(R.layout.activity_raiff_report);
 		dayFrom = getIntent().getStringExtra("day_from");
 		dayTo = getIntent().getStringExtra("day_to");
-		group = getIntent().getStringExtra("group");
+		place = getIntent().getStringExtra("place");
+		if(!place.equalsIgnoreCase("All")){
+			setTitle(place);
+		}
+				
 		inflateList();
 	}
 
-
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -71,8 +77,8 @@ public class ReportList extends ListActivity {
     				sum.put(t.getAmountCurr(), sum.get(t.getAmountCurr())+t.getAmount());
     				card = t.getCard();
     			}
-    			if(!group.equalsIgnoreCase("All"))
-    				message += "Group: " + group + "\r\n";
+    			if(!place.equalsIgnoreCase("All"))
+    				message += "Place: " + place + "\r\n";
     			message += "Period: " + dayFrom + "~" + dayTo + "\r\n" + 
     					"Card: " + card + "\r\n" + 
     					"Amount: ";
@@ -101,11 +107,10 @@ public class ReportList extends ListActivity {
    
 	}
 	
+	
 	private void inflateList(){
-		//queryDateInterval(convertStringDate(dayFrom+ " 00:00:00"), convertStringDate(dayTo+ " 23:59:59"));
-		//queryDateIntervalPlace(convertStringDate(dayFrom+ " 00:00:00"), convertStringDate(dayTo+ " 23:59:59"), place);
-		queryDateIntervalGroup(convertStringDate(dayFrom+ " 00:00:00"), convertStringDate(dayTo+ " 23:59:59"), group);
-		setListAdapter(new ReportListAdapter(this, transactions));
+		queryDateIntervalPlace(convertStringDate(dayFrom+ " 00:00:00"), convertStringDate(dayTo+ " 23:59:59"), place);
+		setListAdapter(new ReportListAdapter(this, transactions, place));
 	}
 	
 	private void queryDateInterval(long start, long end){	
@@ -116,11 +121,6 @@ public class ReportList extends ListActivity {
 	private void queryDateIntervalPlace(long start, long end, String place){	
 		DatabaseHandler db = new DatabaseHandler(this);
 		transactions = db.getTransactionsDateIntervalPlace(start, end, place);
-	}
-	
-	private void queryDateIntervalGroup(long start, long end, String group){	
-		DatabaseHandler db = new DatabaseHandler(this);
-		transactions = db.getTransactionsDateIntervalGroup(start, end, group);
 	}
 	
 	private long convertStringDate(String strDate){
@@ -137,11 +137,13 @@ public class ReportList extends ListActivity {
     private static class ReportListAdapter extends BaseAdapter {
     	private LayoutInflater mInflater;
         private List<TransactionEntry> trs;
+        private String place;
         
-        public ReportListAdapter(Context context, List<TransactionEntry> trs) {
+        public ReportListAdapter(Context context, List<TransactionEntry> trs, String place) {
             // Cache the LayoutInflate to avoid asking for a new one each time.
             mInflater = LayoutInflater.from(context);
             this.trs = trs;
+            this.place = place;
         }
 
         /**
@@ -190,14 +192,20 @@ public class ReportList extends ListActivity {
             // to reinflate it. We only inflate a new View when the convertView supplied
             // by ListView is null.
             if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.row, null);
+            	if(place.equalsIgnoreCase("All")){
+            		convertView = mInflater.inflate(R.layout.row, null);
+            	}else{
+            		convertView = mInflater.inflate(R.layout.row_no_place, null);
+            	}
                
                 // Creates a ViewHolder and store references to the two children views
                 // we want to bind data to.
                 holder = new ViewHolder();
                 holder.card = (TextView) convertView.findViewById(R.id.card);
                 holder.date_time = (TextView) convertView.findViewById(R.id.date_time);
-                holder.group = (TextView) convertView.findViewById(R.id.group);
+                if(place.equalsIgnoreCase("All")){
+                	holder.place = (TextView) convertView.findViewById(R.id.place);
+                }
                 holder.amount = (TextView) convertView.findViewById(R.id.amount);
 
                 convertView.setTag(holder);
@@ -211,7 +219,7 @@ public class ReportList extends ListActivity {
         }
         
         static class ViewHolder {
-            TextView group;
+            TextView place;
             TextView date_time;
             TextView amount;
             TextView card;
@@ -224,7 +232,9 @@ public class ReportList extends ListActivity {
         	String timeString = new SimpleDateFormat("HH:mm:ss").format(new Date(longDate));
         	
         	holder.date_time.setText(dayString+"\r\n"+timeString); 
-            holder.group.setText(entry.getGroup()); 
+        	if(place.equalsIgnoreCase("All")){
+        		holder.place.setText(entry.getPlace());
+        	}
             holder.card.setText("Card: " + entry.getCard());                
             holder.amount.setText(entry.getAmount() + " " + entry.getAmountCurr());
         }

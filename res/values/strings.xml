@@ -9,8 +9,9 @@
     <string name="menu_query">Query DataBase</string>
     <string name="report_name">Report</string>
     <string name="menu_summary">Summary</string>
-    <string name="menu_manage_places">Manage Places</string>
+    <string name="menu_manage_terminals">Manage Terminals</string>
     <string name="places_name">Places</string>
-    <string name="menu_make_group">Make a group</string>
+    <string name="menu_make_place">Make a place</string>
+    <string name="menu_manage_places">Manage Places</string>
 
 </resources>

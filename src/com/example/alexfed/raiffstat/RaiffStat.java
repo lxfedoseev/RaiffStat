@@ -10,11 +10,13 @@ import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,13 +31,11 @@ import android.widget.Toast;
 
 
 /* TODO: 
- * - Add place(s) to a group
- * - Display and manage groups (rename, delete, exclude items)
- * - If group selected do not display it in every report list item, display on action bar instead
+ * - Add terminal(s) to a place
+ * - Display and manage places (rename, delete, exclude items)
  * - Make multi language (Russian, English)
  * - Make a good design (application icon as well)
  * - Import/Export from/to CSV file.
- * - Progress bar for time consuming operations
  * - Sort report by date/amount.
  * - Save application state (screen rotation, going to background)
  * - Correct row layouts for different screen sizes
@@ -45,19 +45,23 @@ import android.widget.Toast;
  * - Cache all possible data to DB, including otkaz
  * - Merge SMS to existed DB (for example when SMS format is changed)
  * - Radio buttons for interval (1 week, 1 month, period)
- * - ? Widget (Spent for a group, spent entirely, remainder) ?
- * - ? Make categories out of groups (Food, Leisure, Clothes, Automobile, Applications, etc., Customly defined) ?
+ * - ? Widget (Spent for a place, spent entirely, remainder) ?
+ * - ? Make categories out of places (Food, Leisure, Clothes, Automobile, Applications, etc., Customly defined) ?
  * 
  */
 public class RaiffStat extends Activity { 
 
 	private final String LOG = "RaiffStat";
+	private final String RAIFF_ADDRESS = "Raiffeisen";
 	
 	private DatePicker dpFrom;
 	private DatePicker dpTo;
-	private Spinner spGroup;
-	private String groupName; 
+	private Spinner spPlace;
+	private String placeName; 
 	private Button btnApply;
+	private ProgressDialog progressBar;
+	private int progressBarStatus = 0;
+	private Handler progressBarHandler = new Handler();
 	
 	private int year;
 	private int month;
@@ -80,7 +84,7 @@ public class RaiffStat extends Activity {
 		// TODO Auto-generated method stub
 		super.onResume();
 		
-		addItemsOnSpinnerGroup();
+		addItemsOnSpinnerPlace();
 		addListenerOnSpinnerItemSelection();
 	}
 
@@ -101,22 +105,24 @@ public class RaiffStat extends Activity {
     			return true;
     		case R.id.menu_sms_import:
     			clearDB();
-    			importSms();
-    			setCurrentDateOnView();
-    			addItemsOnSpinnerGroup();
+    			importSmsWithProgressBar();
     			return true;
     		case R.id.menu_clear_db:
     			clearDB();
     			setCurrentDateOnView();
-    			addItemsOnSpinnerGroup();
+    			addItemsOnSpinnerPlace();
     			return true; 
     		case R.id.menu_query:
-    			queryDistinctGroups();
+    			queryDistinctPlaces();
     			//queryDistinctPlaces();
     			//queryDateInterval(convertStringDate("02/03/2013 00:00:00"), convertStringDate("07/03/2013 23:59:59"));
     			//queryAmountInterval(0, 500);
     			//queryAmountFixed(2077.3);
     			return true;
+    		case R.id.menu_manage_terminals:
+    			Intent terminalsActivity = new Intent(getBaseContext(), TerminalsList.class);
+    			startActivity(terminalsActivity);
+    			return true; 
     		case R.id.menu_manage_places:
     			//TODO:
     			Intent placesActivity = new Intent(getBaseContext(), PlacesList.class);
@@ -128,19 +134,20 @@ public class RaiffStat extends Activity {
    
 	}
 	
-	public void addItemsOnSpinnerGroup() {
-		spGroup = (Spinner) findViewById(R.id.spinnerGroup);
+	
+	public void addItemsOnSpinnerPlace() {
+		spPlace = (Spinner) findViewById(R.id.spinnerPlace);
 		List<String> list = new ArrayList<String>();
-		List<String> distGroups = new ArrayList<String>();
+		List<String> distPlaces = new ArrayList<String>();
 		list.add("All");
-		distGroups = queryDistinctGroups();
-		for(String s : distGroups){
+		distPlaces = queryDistinctPlaces();
+		for(String s : distPlaces){
 			list.add(s);
 		}
 		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
 			android.R.layout.simple_spinner_item, list);
 		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spGroup.setAdapter(dataAdapter);
+		spPlace.setAdapter(dataAdapter);
 	  }
 	
 	// display current date
@@ -203,21 +210,21 @@ public class RaiffStat extends Activity {
 		    	myIntent.putExtra("day_from", dpFrom.getDayOfMonth()+"/"+month+"/"+dpFrom.getYear());
 		    	month = dpTo.getMonth() + 1;
 		    	myIntent.putExtra("day_to", dpTo.getDayOfMonth()+"/"+month+"/"+dpTo.getYear());
-		    	myIntent.putExtra("group", groupName);
+		    	myIntent.putExtra("place", placeName);
 		    	RaiffStat.this.startActivity(myIntent);
 		    }
 		});
 	}
 	
 	public void addListenerOnSpinnerItemSelection() {
-		spGroup = (Spinner) findViewById(R.id.spinnerGroup);
-		spGroup.setOnItemSelectedListener(new CustomOnItemSelectedListener());
+		spPlace = (Spinner) findViewById(R.id.spinnerPlace);
+		spPlace.setOnItemSelectedListener(new CustomOnItemSelectedListener());
 	  }
 	
 	public class CustomOnItemSelectedListener implements OnItemSelectedListener {
 		 
 		  public void onItemSelected(AdapterView<?> parent, View view, int pos,long id) {
-			  groupName = parent.getItemAtPosition(pos).toString();
+			  placeName = parent.getItemAtPosition(pos).toString();
 		  }
 		 
 		  @Override
@@ -227,21 +234,65 @@ public class RaiffStat extends Activity {
 		 
 	}
 	
-	private void importSms(){
+	private void importSmsWithProgressBar(){
+		if(initProgressBar()){
+			new Thread(new Runnable() {
+				  public void run() {
+					  importSms2();
+					  RaiffStat.this.runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								setCurrentDateOnView();
+					    		 addItemsOnSpinnerPlace();
+							}
+						});
+					  
+				  }
+			}).start();
+		}
+	}
+
+	private boolean initProgressBar(){
+	    final String SMS_URI_INBOX = "content://sms/inbox"; 
+	    Cursor cur;
+	    try {  
+	    	Uri uri = Uri.parse(SMS_URI_INBOX);  
+	        String[] projection = new String[] { "_id", "address", "person", "body", "date", "type" }; 
+	        cur = getContentResolver().query(uri, projection, "address" + "='" + RAIFF_ADDRESS + "'", null, "date");
+	    }catch (SQLiteException ex) {  
+	    	Log.d(LOG, ex.getMessage()); 
+	    	return false;
+	    } 
+		progressBar = new ProgressDialog(this);
+		progressBar.setCancelable(false);
+		progressBar.setMessage("SMS importing ...");
+		progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		progressBar.setProgress(0);
+		progressBar.setMax(cur.getCount());
+		progressBar.show();
+		if (!cur.isClosed()) {  
+            cur.close();  
+            cur = null;  
+        } 
+		return true;
+	}
+	
+	private void importSms2(){
 		Log.d(LOG, "importSms");
 	    final String SMS_URI_INBOX = "content://sms/inbox"; 
 	    boolean parsedWell = false;
 	    try {  
 	    	Uri uri = Uri.parse(SMS_URI_INBOX);  
 	        String[] projection = new String[] { "_id", "address", "person", "body", "date", "type" }; 
-	        String raiffAddress = "Raiffeisen";
-	        Cursor cur = getContentResolver().query(uri, projection, "address" + "='" + raiffAddress + "'", null, "date");
+	        Cursor cur = getContentResolver().query(uri, projection, "address" + "='" + RAIFF_ADDRESS + "'", null, "date");
 	        if (cur.moveToFirst()) {  
 	        	int index_Address = cur.getColumnIndex("address");  
 	            int index_Person = cur.getColumnIndex("person");  
 	            int index_Body = cur.getColumnIndex("body");  
 	            int index_Date = cur.getColumnIndex("date");  
-	            int index_Type = cur.getColumnIndex("type");      
+	            int index_Type = cur.getColumnIndex("type");    
+				//reset progress bar status
+				progressBarStatus = 0;
 	           
 	            do {  
 	            	String strAddress = cur.getString(index_Address);  
@@ -261,29 +312,41 @@ public class RaiffStat extends Activity {
 	                if(parsedWell){
 	                	Log.d(LOG, prs.getCard() + " & " +  prs.getPlace() + " & " + 
 	                			prs.getAmount() + " & " + prs.getAmountCurr() + " & " 
-	                			+ prs.getRemainder() + " & " + prs.getRemainderCurr() + " & " + prs.getGroup() + " & " + prs.getInGroup() + " & " + dateString);
+	                			+ prs.getRemainder() + " & " + prs.getRemainderCurr() + " & " + prs.getPlace() + " & " + prs.getInPlace() + " & " + dateString);
 	                    	
 	                	addTransactionToDB(longDate, prs);
 	                }
-	                    
-	                } while (cur.moveToNext());  
+	                
+	                progressBarStatus++;
+	             // Update the progress bar
+	                progressBarHandler.post(new Runnable() {
+	  					public void run() {
+	  					  progressBar.setProgress(progressBarStatus);
+	  					}
+	  				});
+	                
+	            } while (cur.moveToNext());  
 
-	                if (!cur.isClosed()) {  
-	                    cur.close();  
-	                    cur = null;  
-	                }  
+	         // close the progress bar dialog
+				progressBar.dismiss();
+	            if (!cur.isClosed()) {  
+	            	cur.close();  
+	                cur = null;  
+	            }  
 	        } else {  
 	        	Log.d(LOG, "no result!");
 	        } // end if  
 	    } catch (SQLiteException ex) {  
 	    	Log.d(LOG, ex.getMessage());  
 	    }      
+	
+		
 	}
 	
 	private void addTransactionToDB(long dateTime, RaiffParser prs){
 		DatabaseHandler db = new DatabaseHandler(this);
 		db.addTransaction(new TransactionEntry(dateTime, prs.getAmount(), prs.getAmountCurr(),
-				prs.getRemainder(), prs.getRemainderCurr(), prs.getPlace(), prs.getCard(), prs.getGroup(), prs.getInGroup()));  
+				prs.getRemainder(), prs.getRemainderCurr(), prs.getTerminal(), prs.getCard(), prs.getPlace(), prs.getInPlace()));  
 	}
 
 	private void clearDB(){	
@@ -294,9 +357,9 @@ public class RaiffStat extends Activity {
 	private void printTransactions(List<TransactionEntry> transactions){
 		for (TransactionEntry t : transactions) {
 			String dateString = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date(t.getDateTime()));
-			Log.d(LOG, t.getID() + " & " + t.getCard() + " & " +  t.getPlace() + " & " + 
+			Log.d(LOG, t.getID() + " & " + t.getCard() + " & " +  t.getTerminal() + " & " + 
 	    			t.getAmount() + " & " + t.getAmountCurr() + " & " 
-	    			+ t.getRemainder() + " & " + t.getRemainderCurr() + " & " +  t.getGroup() +  " & " +  t.getInGroup() +  " & " + dateString);
+	    			+ t.getRemainder() + " & " + t.getRemainderCurr() + " & " +  t.getPlace() +  " & " +  t.getInPlace() +  " & " + dateString);
 		}
 	}
 	
@@ -329,15 +392,15 @@ public class RaiffStat extends Activity {
 		}
 	}
 	
-	private List<String> queryDistinctPlaces(){	
+	private List<String> queryDistinctTerminals(){	
 		DatabaseHandler db = new DatabaseHandler(this);
-		return db.getDistinctPlaces();
+		return db.getDistinctTerminals();
 		
 	}
 	
-	private List<String> queryDistinctGroups(){	
+	private List<String> queryDistinctPlaces(){	
 		DatabaseHandler db = new DatabaseHandler(this);
-		return db.getDistinctGroups();
+		return db.getDistinctPlaces();
 		
 	}
 	
