@@ -29,7 +29,7 @@
               android:label="@string/report_name">
         </activity>
         
-        <activity android:name="TerminalsList"
+        <activity android:name=".TerminalsList"
               android:label="@string/terminals_name">
         </activity>
         

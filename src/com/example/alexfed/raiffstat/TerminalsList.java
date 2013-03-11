@@ -32,7 +32,7 @@ public class TerminalsList extends ListActivity {
 	  @Override
 		public boolean onCreateOptionsMenu(Menu menu) {
 			// Inflate the menu; this adds items to the action bar if it is present.
-			getMenuInflater().inflate(R.menu.menu_places_list, menu);
+			getMenuInflater().inflate(R.menu.menu_terminals_list, menu);
 			return true;
 		}
 	  
@@ -101,6 +101,11 @@ public class TerminalsList extends ListActivity {
 		    String value = input.getText().toString();
 		    value = value.trim();
 		    if(!value.isEmpty()){
+		    	if(value.equalsIgnoreCase("All")){
+		    		Toast.makeText(getApplicationContext(), "Place " + value + " is not allowed", Toast.LENGTH_LONG).show();
+		    		return;
+		    	}
+		    	
 			    DatabaseHandler db = new DatabaseHandler(context);
 			    for (Model m: modelList){
 			    	if(m.isSelected()){

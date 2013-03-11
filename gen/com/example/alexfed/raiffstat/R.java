@@ -42,7 +42,8 @@ public final class R {
         public static final int activity_raiff_stat=0x7f030001;
         public static final int row=0x7f030002;
         public static final int row_no_place=0x7f030003;
-        public static final int rowbuttonlayout=0x7f030004;
+        public static final int row_place=0x7f030004;
+        public static final int rowbuttonlayout=0x7f030005;
     }
     public static final class menu {
         public static final int activity_raiff_stat=0x7f060000;
@@ -53,6 +54,9 @@ public final class R {
     public static final class string {
         public static final int app_name=0x7f040000;
         public static final int hello_world=0x7f040001;
+        public static final int long_click_ctx_dialog_title=0x7f04000f;
+        public static final int long_click_place_delete=0x7f04000d;
+        public static final int long_click_place_rename=0x7f04000e;
         public static final int menu_clear_db=0x7f040004;
         public static final int menu_make_place=0x7f04000b;
         public static final int menu_manage_places=0x7f04000c;

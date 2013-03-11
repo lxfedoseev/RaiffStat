@@ -32,7 +32,8 @@ import android.widget.Toast;
 
 /* TODO: 
  * - Add terminal(s) to a place
- * - Display and manage places (rename, delete, exclude items)
+ * - Display and manage places (exclude items)
+ * - Progress bar for make/delete/rename places, 
  * - Make multi language (Russian, English)
  * - Make a good design (application icon as well)
  * - Import/Export from/to CSV file.

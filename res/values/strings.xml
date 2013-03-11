@@ -14,5 +14,9 @@
     <string name="places_name">Places</string>
     <string name="menu_make_place">Make a place</string>
     <string name="menu_manage_places">Manage Places</string>
-
+    
+    <string name="long_click_place_delete">Delete Place</string>
+    <string name="long_click_place_rename">Rename Place</string>
+	<string name="long_click_ctx_dialog_title">Context Menu</string>
+	
 </resources>

@@ -295,6 +295,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	return distVals;
     }
     
+    public List<String> getDistinctPlacesForPlaceList(){
+    	List<String> distVals = new ArrayList<String>();
+    	SQLiteDatabase db = this.getWritableDatabase();	
+    	String countQuery = "SELECT DISTINCT " + KEY_PLACE + " FROM " + TABLE_TRANSACTIONS +
+    			" WHERE " + KEY_IN_PLACE + " =1 " +
+    			" ORDER BY " + KEY_PLACE; 
+    	Cursor cursor = db.rawQuery(countQuery, null);
+    	
+    	if (cursor.moveToFirst()) {
+            do {
+            	distVals.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+    	cursor.close();
+    	return distVals;
+    }
+    
     public long getMinDate(){
     	long date = 0;
     	SQLiteDatabase db = this.getWritableDatabase();
@@ -328,5 +345,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public  List<TransactionEntry> getTransactionsTerminal(String terminal){
     	String countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + " WHERE " + KEY_TERMINAL + " = ?";
     	return queryDB(countQuery, new String[] {terminal});
+    }
+    
+    public  List<TransactionEntry> getTransactionsPlaceFixed(String place){
+    	String countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + " WHERE " + "( " + KEY_PLACE + " = ?" + " ) " + " AND "+
+    			" ( " + KEY_IN_PLACE + " = 1 )";
+    	return queryDB(countQuery, new String[] {place});
     }
 }
