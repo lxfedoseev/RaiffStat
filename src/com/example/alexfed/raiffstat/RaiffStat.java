@@ -42,7 +42,7 @@ import android.widget.Toast;
  * - Correct row layouts for different screen sizes
  * - Remove particular items from report (long touch -> remove)
  * - Save report to a file (share report)
- * - Make a pie chart for time period with all tag
+ * - Make a pie chart for time period with all tags
  * - Cache all possible data to DB, including otkaz
  * - Merge SMS to existed DB (for example when SMS format is changed)
  * - Radio buttons for interval (1 week, 1 month, period)
