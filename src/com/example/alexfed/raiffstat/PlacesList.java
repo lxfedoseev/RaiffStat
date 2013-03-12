@@ -146,7 +146,8 @@ public class PlacesList extends ListActivity {
 		    if(!value.isEmpty()){
 		    	if(value.equalsIgnoreCase(getResources().getString(R.string.spinner_all))){
 		    		//Toast.makeText(getApplicationContext(), "Place " + value + " is not allowed", Toast.LENGTH_LONG).show();
-		    		Toast.makeText(getApplicationContext(), R.string.str_place + " " + value + " " + R.string.str_forbidden, Toast.LENGTH_LONG).show();
+		    		Toast.makeText(getApplicationContext(), getResources().getString(R.string.str_place) + " " + value + " " + 
+		    				getResources().getString(R.string.str_forbidden), Toast.LENGTH_LONG).show();
 		    		return;
 		    	}
 		    	
@@ -160,7 +161,7 @@ public class PlacesList extends ListActivity {
 			    db.close();
 			    inflateList();
 			}else{
-		    	Toast.makeText(getApplicationContext(), R.string.str_forbidden_empty_place, Toast.LENGTH_LONG).show(); 
+		    	Toast.makeText(getApplicationContext(), getResources().getString(R.string.str_forbidden_empty_place), Toast.LENGTH_LONG).show(); 
 		    }
 		  }
 		  });

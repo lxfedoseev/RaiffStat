@@ -183,7 +183,7 @@ public class RaiffStat extends Activity {
 					null);
 			dpTo.init(year, month, day, null);	
 		}else{
-			Toast.makeText(getApplicationContext(), R.string.toast_db_empty, Toast.LENGTH_LONG).show(); 
+			Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_db_empty), Toast.LENGTH_LONG).show(); 
 			if (currentapiVersion >= 11) {
 			  try {
 			    Method m = dpFrom.getClass().getMethod("setCalendarViewShown", boolean.class);

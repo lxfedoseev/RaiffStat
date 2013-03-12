@@ -46,8 +46,8 @@ public class PlaceDetailedList extends ListActivity {
 	    		    }
 	    			if(hasSelection){
 	    				excludeFromPlace();
-	    			}else{
-	    				Toast.makeText(getApplicationContext(), R.string.toast_nothing_selected, Toast.LENGTH_LONG).show();
+	    			}else{ 
+	    				Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show();
 	    			}
 	    			return true;
 	    		default:

@@ -52,13 +52,13 @@ public class TerminalsList extends ListActivity {
 	    			if(hasSelection){
 	    				makeNewPlace();
 	    			}else{
-	    				Toast.makeText(getApplicationContext(), R.string.toast_nothing_selected, Toast.LENGTH_LONG).show();
+	    				Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show();
 	    			}
 	    			return true;
 	    		case R.id.menu_add_to_place:
 	    			DatabaseHandler db = new DatabaseHandler(getBaseContext());
 	    			if(db.getDistinctPlacesForPlaceList().size()<1){
-	    				Toast.makeText(getApplicationContext(), R.string.toast_no_place, Toast.LENGTH_LONG).show();
+	    				Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_no_place), Toast.LENGTH_LONG).show();
 	    				db.close();
 	    				return true;
 	    			}
@@ -71,7 +71,7 @@ public class TerminalsList extends ListActivity {
 	    			if(hasSelection){
 	    				addToPlace();
 	    			}else{
-	    				Toast.makeText(getApplicationContext(), R.string.toast_nothing_selected, Toast.LENGTH_LONG).show();
+	    				Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show();
 	    			}
 	    			db.close();
 	    			return true;
@@ -126,7 +126,8 @@ public class TerminalsList extends ListActivity {
 		    value = value.trim();
 		    if(!value.isEmpty()){
 		    	if(value.equalsIgnoreCase(getResources().getString(R.string.spinner_all))){
-		    		Toast.makeText(getApplicationContext(), R.string.str_place + " " + value + " " + R.string.str_forbidden, Toast.LENGTH_LONG).show();
+		    		Toast.makeText(getApplicationContext(), getResources().getString(R.string.str_place) + " " + 
+		    					value + " " + getResources().getString(R.string.str_forbidden), Toast.LENGTH_LONG).show();
 		    		return;
 		    	}
 		    	
@@ -144,7 +145,7 @@ public class TerminalsList extends ListActivity {
 			    db.close();
 			    inflateList();
 		    }else{
-		    	Toast.makeText(getApplicationContext(), R.string.str_forbidden_empty_place, Toast.LENGTH_LONG).show(); 
+		    	Toast.makeText(getApplicationContext(), getResources().getString(R.string.str_forbidden_empty_place), Toast.LENGTH_LONG).show(); 
 		    }
 		  }
 		  });
@@ -196,7 +197,7 @@ public class TerminalsList extends ListActivity {
 					inflateList();
 				}else{
 					db.close();
-					Toast.makeText(getApplicationContext(), R.string.toast_nothing_selected, Toast.LENGTH_LONG).show(); 
+					Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show(); 
 				}
 			}
 		});
