@@ -139,7 +139,7 @@ public class TransactionEntry {
     
  // getting _place
     public String getPlace(){
-        return this._place;
+        return this._place; 
     }
  
     // setting _place

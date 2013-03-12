@@ -21,6 +21,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Transactions table name
     private static final String TABLE_TRANSACTIONS = "transactions";
  
+    private Context context;
+    
     // Transactions Table Columns names
     private static final String KEY_ID = "id";
     private static final String KEY_DATE_TIME = "date_time";
@@ -35,6 +37,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
  
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context;
     }
  
     // Creating Tables
@@ -103,6 +106,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         		cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getInt(9));
         
         cursor.close();
+        db.close();
         // return transaction
         return t;
     }
@@ -135,6 +139,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         cursor.close();
+        db.close();
         // return transaction list
         return transactionList;
     }
@@ -153,10 +158,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_CARD, t.getCard());
         values.put(KEY_PLACE, t.getPlace());
         values.put(KEY_IN_PLACE, t.getInPlace());
- 
-        // updating row
-        return db.update(TABLE_TRANSACTIONS, values, KEY_ID + " = ?",
+        
+     // updating row
+        int ret = db.update(TABLE_TRANSACTIONS, values, KEY_ID + " = ?",
                 new String[] { String.valueOf(t.getID()) });
+        db.close();
+        return ret;
     }
  
     // Deleting single transaction entry
@@ -174,7 +181,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(countQuery, null);
         int ret = cursor.getCount();
         cursor.close();
- 
+        db.close();
         // return count
         return ret;
     }
@@ -182,6 +189,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void clearAll(){
     	SQLiteDatabase db = this.getWritableDatabase();
     	db.execSQL("DELETE FROM " + TABLE_TRANSACTIONS + ";");
+    	db.close();
     }
     
     private List<TransactionEntry> queryDB(String countQuery, String[] args){
@@ -208,6 +216,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         cursor.close();
+        db.close();
         // return transaction list
         return transactionList;
     }
@@ -233,7 +242,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     
     public List<TransactionEntry> getTransactionsDateIntervalTerminal(long dateStart, long dateEnd, String terminal){
     	String countQuery;
-    	if(terminal.equalsIgnoreCase("All")){
+    	if(terminal.equalsIgnoreCase(context.getResources().getString(R.string.spinner_all))){
     		countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
     			" WHERE " + " ( " + KEY_DATE_TIME + " >= ? )" + " AND " + " ( " + KEY_DATE_TIME + " <= ? )" +
     			" ORDER BY " + KEY_DATE_TIME + " DESC";
@@ -249,7 +258,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     
     public List<TransactionEntry> getTransactionsDateIntervalPlace(long dateStart, long dateEnd, String place){
     	String countQuery;
-    	if(place.equalsIgnoreCase("All")){
+    	if(place.equalsIgnoreCase(context.getResources().getString(R.string.spinner_all))){
     		countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
     			" WHERE " + " ( " + KEY_DATE_TIME + " >= ? )" + " AND " + " ( " + KEY_DATE_TIME + " <= ? )" +
     			" ORDER BY " + KEY_DATE_TIME + " DESC";
@@ -276,6 +285,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
     	cursor.close();
+    	db.close();
     	return distVals;
     }
     
@@ -292,6 +302,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
     	cursor.close();
+    	db.close();
     	return distVals;
     }
     
@@ -309,6 +320,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
     	cursor.close();
+    	db.close();
     	return distVals;
     }
     
@@ -322,6 +334,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     		date = Long.valueOf(cursor.getString(0));
         }
     	cursor.close();
+    	db.close();
     	return date;
     }
     
@@ -339,6 +352,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
     	cursor.close();
+    	db.close();
     	return distVals;
     }
     
@@ -367,6 +381,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
     	cursor.close();
+    	db.close();
     	return terminals;
     }
     

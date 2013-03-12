@@ -34,6 +34,8 @@ public class ReportList extends ListActivity {
 	private String dayFrom;
 	private String dayTo;
 	private String place;
+	private String strAll;
+	private String strCard;
 	
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -46,7 +48,9 @@ public class ReportList extends ListActivity {
 		dayFrom = getIntent().getStringExtra("day_from");
 		dayTo = getIntent().getStringExtra("day_to");
 		place = getIntent().getStringExtra("place");
-		if(!place.equalsIgnoreCase("All")){
+		strAll = getResources().getString(R.string.spinner_all);
+		strCard = getResources().getString(R.string.str_card);
+		if(!place.equalsIgnoreCase(getResources().getString(R.string.spinner_all))){
 			setTitle(place);
 		}
 				
@@ -77,11 +81,11 @@ public class ReportList extends ListActivity {
     				sum.put(t.getAmountCurr(), sum.get(t.getAmountCurr())+t.getAmount());
     				card = t.getCard();
     			}
-    			if(!place.equalsIgnoreCase("All"))
-    				message += "Place: " + place + "\r\n";
-    			message += "Period: " + dayFrom + "~" + dayTo + "\r\n" + 
-    					"Card: " + card + "\r\n" + 
-    					"Amount: ";
+    			if(!place.equalsIgnoreCase(getResources().getString(R.string.spinner_all)))
+    				message += getResources().getString(R.string.str_place) + ": " + place + "\r\n";
+    			message += getResources().getString(R.string.str_period) + ": " + dayFrom + "~" + dayTo + "\r\n" + 
+    					getResources().getString(R.string.str_card) + ": " + card + "\r\n" + 
+    					getResources().getString(R.string.str_amount) + ": ";
     			//round sum values
     			for(String s: currs){
     				double rndSum = sum.get(s) * 100;
@@ -90,10 +94,10 @@ public class ReportList extends ListActivity {
     				message += ""+rndSum+ " " + s + ", "; 
     			}
     			message = message.substring(0, message.length()-2); // remove last comma[space] ", "
-    			message += "\r\nTransactions number: " + transactions.size();
+    			message += "\r\n"+ getResources().getString(R.string.str_tr_number) + ": " + transactions.size();
     			new AlertDialog.Builder(this)
     		    .setMessage(message)
-    		    .setPositiveButton("OK", new android.content.DialogInterface.OnClickListener() {                
+    		    .setPositiveButton(R.string.dialog_ok, new android.content.DialogInterface.OnClickListener() {                
     		        @Override
     		        public void onClick(DialogInterface dialog, int which) {
     		                       
@@ -110,7 +114,7 @@ public class ReportList extends ListActivity {
 	
 	private void inflateList(){
 		queryDateIntervalPlace(convertStringDate(dayFrom+ " 00:00:00"), convertStringDate(dayTo+ " 23:59:59"), place);
-		setListAdapter(new ReportListAdapter(this, transactions, place));
+		setListAdapter(new ReportListAdapter(this, transactions, place, strAll, strCard));
 	}
 	
 	private void queryDateInterval(long start, long end){	
@@ -140,12 +144,16 @@ public class ReportList extends ListActivity {
     	private LayoutInflater mInflater;
         private List<TransactionEntry> trs;
         private String place;
+        private String strAll;
+        private String strCard;
         
-        public ReportListAdapter(Context context, List<TransactionEntry> trs, String place) {
+        public ReportListAdapter(Context context, List<TransactionEntry> trs, String place, String all, String card) {
             // Cache the LayoutInflate to avoid asking for a new one each time.
             mInflater = LayoutInflater.from(context);
             this.trs = trs;
             this.place = place; 
+            this.strAll = all;
+            this.strCard = card;
         }
 
         /**
@@ -194,7 +202,7 @@ public class ReportList extends ListActivity {
             // to reinflate it. We only inflate a new View when the convertView supplied
             // by ListView is null.
             if (convertView == null) {
-            	if(place.equalsIgnoreCase("All")){
+            	if(place.equalsIgnoreCase(strAll)){
             		convertView = mInflater.inflate(R.layout.row, null);
             	}else{
             		convertView = mInflater.inflate(R.layout.row_no_place, null);
@@ -205,7 +213,7 @@ public class ReportList extends ListActivity {
                 holder = new ViewHolder();
                 holder.card = (TextView) convertView.findViewById(R.id.card);
                 holder.date_time = (TextView) convertView.findViewById(R.id.date_time);
-                if(place.equalsIgnoreCase("All")){
+                if(place.equalsIgnoreCase(strAll)){
                 	holder.place = (TextView) convertView.findViewById(R.id.place);
                 }
                 holder.amount = (TextView) convertView.findViewById(R.id.amount);
@@ -234,10 +242,10 @@ public class ReportList extends ListActivity {
         	String timeString = new SimpleDateFormat("HH:mm:ss").format(new Date(longDate));
         	
         	holder.date_time.setText(dayString+"\r\n"+timeString); 
-        	if(place.equalsIgnoreCase("All")){
+        	if(place.equalsIgnoreCase(strAll)){
         		holder.place.setText(entry.getPlace());
         	}
-            holder.card.setText("Card: " + entry.getCard());                
+            holder.card.setText(strCard + ": " + entry.getCard());                
             holder.amount.setText(entry.getAmount() + " " + entry.getAmountCurr());
         }
     }

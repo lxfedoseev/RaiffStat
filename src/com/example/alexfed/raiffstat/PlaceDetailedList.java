@@ -47,7 +47,7 @@ public class PlaceDetailedList extends ListActivity {
 	    			if(hasSelection){
 	    				excludeFromPlace();
 	    			}else{
-	    				Toast.makeText(getApplicationContext(), "Nothing selected", Toast.LENGTH_LONG).show();
+	    				Toast.makeText(getApplicationContext(), R.string.toast_nothing_selected, Toast.LENGTH_LONG).show();
 	    			}
 	    			return true;
 	    		default:
@@ -79,7 +79,9 @@ public class PlaceDetailedList extends ListActivity {
 	  
 	  private List<String> queryTerminalsOfPlace(){	
 			DatabaseHandler db = new DatabaseHandler(this);
-			return db.getTerminalsOfPlace(place);		
+			List<String> ls = db.getTerminalsOfPlace(place);
+			db.close();
+			return ls;		
 	  }
 	  
 	  private void excludeFromPlace(){
@@ -95,6 +97,7 @@ public class PlaceDetailedList extends ListActivity {
 		    		}
 		    	}
 		    }
+		    db.close();
 		    inflateList();
 	  }
 	  

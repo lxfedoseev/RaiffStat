@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">RaiffStat</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_sms_import">Import from SMS</string>
+    <string name="menu_clear_db">Clear DataBase</string>
+    <string name="menu_query">Query DataBase</string>
+    <string name="report_name">Report</string>
+    <string name="menu_summary">Summary</string>
+    <string name="menu_manage_terminals">Manage Terminals</string>
+    <string name="terminals_name">Terminals</string>
+    <string name="places_name">Places</string>
+    <string name="place_detailed">Place Detailed</string>
+    <string name="menu_make_place">Make a Place</string>
+    <string name="menu_manage_places">Manage Places</string>
+    <string name="menu_exclude_from_place">Exclude from Place</string>
+    <string name="menu_add_to_place">Add to Place</string>
+    <string name="spinner_all">All</string>
+    
+    <string name="str_place">Place</string>
+    <string name="str_period">Period</string>
+    <string name="str_card">Card</string>
+    <string name="str_amount">Amount</string>
+    <string name="str_tr_number">Transaction number</string>
+    <string name="str_forbidden">forbidden</string>
+    <string name="str_forbidden_empty_place">Place name can\'t be empty</string>
+    
+    <string name="long_click_place_delete">Delete</string>
+    <string name="long_click_place_rename">Rename</string>
+	<string name="long_click_ctx_dialog_title">Context Menu</string>
+	
+	<string name="toast_nothing_selected">Nothing selected</string>
+	<string name="toast_db_empty">DataBase is empty</string>
+	<string name="toast_no_place">You don\'t have any place</string>
+	
+	<string name="ctx_new_place_name">Input new place name</string>
+	<string name="ctx_place_name">Input place name</string>
+	
+	<string name="dialog_ok">OK</string>
+	<string name="dialog_cancel">Cancel</string>
+	
+	<string name="progress_sms_scanning">Scanning SMS ...</string>
+	
+	<string name="btn_apply">Apply</string>
+	
+</resources>

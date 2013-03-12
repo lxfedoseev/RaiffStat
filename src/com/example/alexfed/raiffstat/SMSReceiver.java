@@ -70,6 +70,7 @@ public class SMSReceiver extends BroadcastReceiver {
 			db.addTransaction(new TransactionEntry(dateTime, prs.getAmount(), prs.getAmountCurr(),
 				prs.getRemainder(), prs.getRemainderCurr(), prs.getTerminal(), prs.getCard(), prs.getPlace(), prs.getInPlace()));  
 		}
+		db.close();
 	}
 
 }

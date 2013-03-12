@@ -12,6 +12,7 @@ import java.util.List;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.net.Uri;
@@ -138,7 +139,7 @@ public class RaiffStat extends Activity {
 		spPlace = (Spinner) findViewById(R.id.spinnerPlace);
 		List<String> list = new ArrayList<String>();
 		List<String> distPlaces = new ArrayList<String>();
-		list.add("All");
+		list.add(getResources().getString(R.string.spinner_all));
 		distPlaces = queryDistinctPlaces();
 		for(String s : distPlaces){
 			list.add(s);
@@ -182,7 +183,7 @@ public class RaiffStat extends Activity {
 					null);
 			dpTo.init(year, month, day, null);	
 		}else{
-			Toast.makeText(getApplicationContext(), "DB is empty", Toast.LENGTH_LONG).show(); 
+			Toast.makeText(getApplicationContext(), R.string.toast_db_empty, Toast.LENGTH_LONG).show(); 
 			if (currentapiVersion >= 11) {
 			  try {
 			    Method m = dpFrom.getClass().getMethod("setCalendarViewShown", boolean.class);
@@ -265,7 +266,7 @@ public class RaiffStat extends Activity {
 	    } 
 		progressBar = new ProgressDialog(this);
 		progressBar.setCancelable(false);
-		progressBar.setMessage("SMS importing ...");
+		progressBar.setMessage(getResources().getString(R.string.progress_sms_scanning));
 		progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		progressBar.setProgress(0);
 		progressBar.setMax(cur.getCount());

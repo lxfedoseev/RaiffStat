@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">РайффСтат</string>
+    <string name="hello_world">Привет мир!</string>
+    <string name="menu_settings">Настройки</string>
+    <string name="menu_sms_import">Импротировать из СМС</string>
+    <string name="menu_clear_db">Очистить базу</string>
+    <string name="menu_query">Опросить базу</string>
+    <string name="report_name">Отчет</string>
+    <string name="menu_summary">Резюме</string>
+    <string name="menu_manage_terminals">Управлять терминалами</string>
+    <string name="terminals_name">Терминалы</string>
+    <string name="places_name">Места</string>
+    <string name="place_detailed">Места подробно</string>
+    <string name="menu_make_place">Объединить в место</string>
+    <string name="menu_manage_places">Управлять местами</string>
+    <string name="menu_exclude_from_place">Исключить из мест</string>
+    <string name="menu_add_to_place">Добавить в место</string>
+    <string name="spinner_all">Все</string>
+    
+    <string name="str_place">Место</string>
+    <string name="str_period">Период</string>
+    <string name="str_card">Карта</string>
+    <string name="str_amount">Сумма</string>
+    <string name="str_tr_number">Количество транзакций</string>
+    <string name="str_forbidden">запрещено</string>
+    <string name="str_forbidden_empty_place">Название места не может быть пустым</string>
+    
+    <string name="long_click_place_delete">Удалить</string>
+    <string name="long_click_place_rename">Переименовать</string>
+	<string name="long_click_ctx_dialog_title">Контекстное меню</string>
+	
+	<string name="toast_nothing_selected">Ничего не выбрано</string>
+	<string name="toast_db_empty">База пуста</string>
+	<string name="toast_no_place">Нет созданных мест</string>
+	
+	<string name="ctx_new_place_name">Введите новое название места</string>
+	<string name="ctx_place_name">Введите название места</string>
+	
+	<string name="dialog_ok">Готово</string>
+	<string name="dialog_cancel">Отмена</string>
+	
+	<string name="progress_sms_scanning">Сканирую СМС ...</string>
+	
+	<string name="btn_apply">Применить</string>
+	
+</resources>

@@ -56,6 +56,7 @@ public class PlacesList extends ListActivity {
 	private void queryDistinctPlaces(){	
 		DatabaseHandler db = new DatabaseHandler(this);
 		places = db.getDistinctPlacesForPlaceList();
+		db.close();
 	}
 	
 	private void queryDeletePlace(String place){	
@@ -67,6 +68,7 @@ public class PlacesList extends ListActivity {
 			t.setInPlace(0);
 			db.updateTransaction(t);
 		}
+		db.close();
 	}
 	
 	void setClickListeners(){
@@ -129,20 +131,22 @@ public class PlacesList extends ListActivity {
 	  private void renamePlace(String place){
 		  AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
-		  alert.setTitle("Rename place");
+		  alert.setTitle(R.string.long_click_place_rename);
 		  alert.setMessage("Input new place name");
+		  alert.setMessage(R.string.ctx_new_place_name);
 		  final String localPlace = place;
 		  // Set an EditText view to get user input 
 		  final EditText input = new EditText(this);
 		  alert.setView(input);
 		  final Context context = getBaseContext();
-		  alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+		  alert.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
 		  public void onClick(DialogInterface dialog, int whichButton) {
 		    String value = input.getText().toString();
 		    value = value.trim();
 		    if(!value.isEmpty()){
-		    	if(value.equalsIgnoreCase("All")){
-		    		Toast.makeText(getApplicationContext(), "Place " + value + " is not allowed", Toast.LENGTH_LONG).show();
+		    	if(value.equalsIgnoreCase(getResources().getString(R.string.spinner_all))){
+		    		//Toast.makeText(getApplicationContext(), "Place " + value + " is not allowed", Toast.LENGTH_LONG).show();
+		    		Toast.makeText(getApplicationContext(), R.string.str_place + " " + value + " " + R.string.str_forbidden, Toast.LENGTH_LONG).show();
 		    		return;
 		    	}
 		    	
@@ -153,14 +157,15 @@ public class PlacesList extends ListActivity {
 			    	t.setInPlace(1);
 			    	db.updateTransaction(t);
 			    }
+			    db.close();
 			    inflateList();
 			}else{
-		    	Toast.makeText(getApplicationContext(), "Place name can't be empty", Toast.LENGTH_LONG).show(); 
+		    	Toast.makeText(getApplicationContext(), R.string.str_forbidden_empty_place, Toast.LENGTH_LONG).show(); 
 		    }
 		  }
 		  });
 
-		  alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		  alert.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
 		    public void onClick(DialogInterface dialog, int whichButton) {
 		      // Canceled.
 		    }

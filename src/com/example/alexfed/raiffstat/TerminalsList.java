@@ -52,13 +52,14 @@ public class TerminalsList extends ListActivity {
 	    			if(hasSelection){
 	    				makeNewPlace();
 	    			}else{
-	    				Toast.makeText(getApplicationContext(), "Nothing selected", Toast.LENGTH_LONG).show();
+	    				Toast.makeText(getApplicationContext(), R.string.toast_nothing_selected, Toast.LENGTH_LONG).show();
 	    			}
 	    			return true;
 	    		case R.id.menu_add_to_place:
 	    			DatabaseHandler db = new DatabaseHandler(getBaseContext());
 	    			if(db.getDistinctPlacesForPlaceList().size()<1){
-	    				Toast.makeText(getApplicationContext(), "You don't have any place", Toast.LENGTH_LONG).show();
+	    				Toast.makeText(getApplicationContext(), R.string.toast_no_place, Toast.LENGTH_LONG).show();
+	    				db.close();
 	    				return true;
 	    			}
 	    			for (Model m: modelList){
@@ -70,8 +71,9 @@ public class TerminalsList extends ListActivity {
 	    			if(hasSelection){
 	    				addToPlace();
 	    			}else{
-	    				Toast.makeText(getApplicationContext(), "Nothing selected", Toast.LENGTH_LONG).show();
+	    				Toast.makeText(getApplicationContext(), R.string.toast_nothing_selected, Toast.LENGTH_LONG).show();
 	    			}
+	    			db.close();
 	    			return true;
 	    		default:
 	    			return super.onOptionsItemSelected(item);
@@ -111,20 +113,20 @@ public class TerminalsList extends ListActivity {
 	  private void makeNewPlace(){
 		  AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
-		  alert.setTitle("Place");
-		  alert.setMessage("Input place name");
+		  alert.setTitle(getResources().getString(R.string.str_place));
+		  alert.setMessage(getResources().getString(R.string.ctx_place_name));
 
 		  // Set an EditText view to get user input 
 		  final EditText input = new EditText(this);
 		  alert.setView(input);
 		  final Context context = getBaseContext();
-		  alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+		  alert.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
 		  public void onClick(DialogInterface dialog, int whichButton) {
 		    String value = input.getText().toString();
 		    value = value.trim();
 		    if(!value.isEmpty()){
-		    	if(value.equalsIgnoreCase("All")){
-		    		Toast.makeText(getApplicationContext(), "Place " + value + " is not allowed", Toast.LENGTH_LONG).show();
+		    	if(value.equalsIgnoreCase(getResources().getString(R.string.spinner_all))){
+		    		Toast.makeText(getApplicationContext(), R.string.str_place + " " + value + " " + R.string.str_forbidden, Toast.LENGTH_LONG).show();
 		    		return;
 		    	}
 		    	
@@ -142,12 +144,12 @@ public class TerminalsList extends ListActivity {
 			    db.close();
 			    inflateList();
 		    }else{
-		    	Toast.makeText(getApplicationContext(), "Place name can't be empty", Toast.LENGTH_LONG).show(); 
+		    	Toast.makeText(getApplicationContext(), R.string.str_forbidden_empty_place, Toast.LENGTH_LONG).show(); 
 		    }
 		  }
 		  });
 
-		  alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		  alert.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
 		    public void onClick(DialogInterface dialog, int whichButton) {
 		      // Canceled.
 		    }
@@ -163,7 +165,7 @@ public class TerminalsList extends ListActivity {
 		  List<String> placeList = db.getDistinctPlacesForPlaceList();
 
 		  final CharSequence[] choiceList = placeList.toArray(new CharSequence[placeList.size()]);
-		  alert.setTitle("Places");		  
+		  alert.setTitle(getResources().getString(R.string.str_place));		  
 		  itemIndex = -1;
 		  alert.setSingleChoiceItems(choiceList, -1, new DialogInterface.OnClickListener() {
 			
@@ -174,7 +176,7 @@ public class TerminalsList extends ListActivity {
 			}
 		});
 		alert.setCancelable(false);
-		alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+		alert.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -190,18 +192,20 @@ public class TerminalsList extends ListActivity {
 				    		}
 				    	}
 				    }
+					db.close();
 					inflateList();
 				}else{
-					Toast.makeText(getApplicationContext(), "Nothing selected", Toast.LENGTH_LONG).show(); 
+					db.close();
+					Toast.makeText(getApplicationContext(), R.string.toast_nothing_selected, Toast.LENGTH_LONG).show(); 
 				}
 			}
 		});
-		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		alert.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub
-				
+				db.close();
 			}
 		});
 		  
