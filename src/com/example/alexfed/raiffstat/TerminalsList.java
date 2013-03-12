@@ -102,7 +102,9 @@ public class TerminalsList extends ListActivity {
 	  
 	  private List<String> queryUnplacedDistinctTerminals(){	
 			DatabaseHandler db = new DatabaseHandler(this);
-			return db.getUnplacedDistinctTerminals();
+			List<String> ls = db.getUnplacedDistinctTerminals();
+			db.close();
+			return ls;
 			
 		}
 	  
@@ -137,6 +139,7 @@ public class TerminalsList extends ListActivity {
 			    		}
 			    	}
 			    }
+			    db.close();
 			    inflateList();
 		    }else{
 		    	Toast.makeText(getApplicationContext(), "Place name can't be empty", Toast.LENGTH_LONG).show(); 

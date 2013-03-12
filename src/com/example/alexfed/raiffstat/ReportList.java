@@ -116,11 +116,13 @@ public class ReportList extends ListActivity {
 	private void queryDateInterval(long start, long end){	
 		DatabaseHandler db = new DatabaseHandler(this);
 		transactions = db.getTransactionsDateInterval(start, end);
+		db.close();
 	}
 	
 	private void queryDateIntervalPlace(long start, long end, String place){	
 		DatabaseHandler db = new DatabaseHandler(this);
 		transactions = db.getTransactionsDateIntervalPlace(start, end, place);
+		db.close();
 	}
 	
 	private long convertStringDate(String strDate){
@@ -143,7 +145,7 @@ public class ReportList extends ListActivity {
             // Cache the LayoutInflate to avoid asking for a new one each time.
             mInflater = LayoutInflater.from(context);
             this.trs = trs;
-            this.place = place;
+            this.place = place; 
         }
 
         /**

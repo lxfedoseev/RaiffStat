@@ -194,6 +194,7 @@ public class RaiffStat extends Activity {
 	
 			dpFrom.init(year, month, day, null);
 			dpTo.init(year, month, day, null);
+			db.close();
 		}
 	}
 	
@@ -345,12 +346,14 @@ public class RaiffStat extends Activity {
 	private void addTransactionToDB(long dateTime, RaiffParser prs){
 		DatabaseHandler db = new DatabaseHandler(this);
 		db.addTransaction(new TransactionEntry(dateTime, prs.getAmount(), prs.getAmountCurr(),
-				prs.getRemainder(), prs.getRemainderCurr(), prs.getTerminal(), prs.getCard(), prs.getPlace(), prs.getInPlace()));  
+				prs.getRemainder(), prs.getRemainderCurr(), prs.getTerminal(), prs.getCard(), prs.getPlace(), prs.getInPlace()));
+		db.close();
 	}
 
 	private void clearDB(){	
 		DatabaseHandler db = new DatabaseHandler(this);
 		db.clearAll();
+		db.close();
 	}
 	
 	private void printTransactions(List<TransactionEntry> transactions){
@@ -366,18 +369,21 @@ public class RaiffStat extends Activity {
 		DatabaseHandler db = new DatabaseHandler(this);
 		List<TransactionEntry> transactions = db.getTransactionsAmountFixed(amount);
 		printTransactions(transactions);
+		db.close();
 	}
 	
 	private void queryAmountInterval(double start, double end){
 		DatabaseHandler db = new DatabaseHandler(this);
 		List<TransactionEntry> transactions = db.getTransactionsAmountInterval(start, end);
 		printTransactions(transactions);
+		db.close();
 	}
 	
 	private void queryDateInterval(long start, long end){	
 		DatabaseHandler db = new DatabaseHandler(this);
 		List<TransactionEntry> transactions = db.getTransactionsDateInterval(start, end);
 		printTransactions(transactions);
+		db.close();
 	}
 	
 	private long convertStringDate(String strDate){
@@ -399,13 +405,17 @@ public class RaiffStat extends Activity {
 	
 	private List<String> queryDistinctPlaces(){	
 		DatabaseHandler db = new DatabaseHandler(this);
-		return db.getDistinctPlaces();
+		List <String> ls = db.getDistinctPlaces();
+		db.close();
+		return ls;
 		
 	}
 	
 	private long queryMinDate(){	
 		DatabaseHandler db = new DatabaseHandler(this);
-		return db.getMinDate();
+		long date = db.getMinDate();
+		db.close();
+		return date;
 		
 	}
 }
