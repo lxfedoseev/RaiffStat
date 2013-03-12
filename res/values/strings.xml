@@ -12,8 +12,11 @@
     <string name="menu_manage_terminals">Manage Terminals</string>
     <string name="terminals_name">Terminals</string>
     <string name="places_name">Places</string>
-    <string name="menu_make_place">Make a place</string>
+    <string name="place_detailed">Place Detailed</string>
+    <string name="menu_make_place">Make a Place</string>
     <string name="menu_manage_places">Manage Places</string>
+    <string name="menu_exclude_from_place">Exclude from Place</string>
+    <string name="menu_add_to_place">Add to Place</string>
     
     <string name="long_click_place_delete">Delete Place</string>
     <string name="long_click_place_rename">Rename Place</string>

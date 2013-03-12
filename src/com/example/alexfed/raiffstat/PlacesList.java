@@ -1,15 +1,14 @@
 package com.example.alexfed.raiffstat;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +41,13 @@ public class PlacesList extends ListActivity {
 		setClickListeners();
 	}
 	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		inflateList();
+	}
+
 	private void inflateList(){
 		queryDistinctPlaces();
 		setListAdapter(new PlacesListAdapter(this, places));
@@ -73,6 +79,19 @@ public class PlacesList extends ListActivity {
 	    		         return false; 
 	    		     } 
 	      }); 
+	     
+	     lv.setOnItemClickListener(
+	    		 new AdapterView.OnItemClickListener() {
+
+					@Override
+					public void onItemClick(AdapterView<?> arg0, View arg1,
+							int pos, long id) {
+						Intent myIntent;
+				    	myIntent = new Intent(PlacesList.this, PlaceDetailedList.class);
+				    	myIntent.putExtra("place", places.get(pos));
+				    	PlacesList.this.startActivity(myIntent);
+					} 
+		});
 	}
 	
 	protected void onLongListItemClick(View v, int pos, long id) { 

@@ -5,5 +5,11 @@
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/menu_make_place"/>
+    
+    <item
+        android:id="@+id/menu_add_to_place"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/menu_add_to_place"/>
         
 </menu>

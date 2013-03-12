@@ -12,6 +12,7 @@ public final class R {
     }
     public static final class drawable {
         public static final int ic_launcher=0x7f020000;
+        public static final int ic_launcher_org=0x7f020001;
     }
     public static final class id {
         public static final int amount=0x7f070009;
@@ -24,14 +25,16 @@ public final class R {
         public static final int file_res=0x7f07000a;
         public static final int label=0x7f07000c;
         public static final int linearLayout1=0x7f070005;
+        public static final int menu_add_to_place=0x7f070017;
         public static final int menu_clear_db=0x7f070010;
-        public static final int menu_make_place=0x7f070015;
+        public static final int menu_exclude_from_place=0x7f070014;
+        public static final int menu_make_place=0x7f070016;
         public static final int menu_manage_places=0x7f070012;
         public static final int menu_manage_terminals=0x7f070011;
         public static final int menu_query=0x7f070013;
         public static final int menu_settings=0x7f07000e;
         public static final int menu_sms_import=0x7f07000f;
-        public static final int menu_summary=0x7f070014;
+        public static final int menu_summary=0x7f070015;
         public static final int place=0x7f070006;
         public static final int relativeLayout1=0x7f070007;
         public static final int scroll=0x7f070000;
@@ -47,24 +50,28 @@ public final class R {
     }
     public static final class menu {
         public static final int activity_raiff_stat=0x7f060000;
-        public static final int menu_places_list=0x7f060001;
-        public static final int menu_report_list=0x7f060002;
-        public static final int menu_terminals_list=0x7f060003;
+        public static final int menu_place_detailed_list=0x7f060001;
+        public static final int menu_places_list=0x7f060002;
+        public static final int menu_report_list=0x7f060003;
+        public static final int menu_terminals_list=0x7f060004;
     }
     public static final class string {
         public static final int app_name=0x7f040000;
         public static final int hello_world=0x7f040001;
-        public static final int long_click_ctx_dialog_title=0x7f04000f;
-        public static final int long_click_place_delete=0x7f04000d;
-        public static final int long_click_place_rename=0x7f04000e;
+        public static final int long_click_ctx_dialog_title=0x7f040012;
+        public static final int long_click_place_delete=0x7f040010;
+        public static final int long_click_place_rename=0x7f040011;
+        public static final int menu_add_to_place=0x7f04000f;
         public static final int menu_clear_db=0x7f040004;
-        public static final int menu_make_place=0x7f04000b;
-        public static final int menu_manage_places=0x7f04000c;
+        public static final int menu_exclude_from_place=0x7f04000e;
+        public static final int menu_make_place=0x7f04000c;
+        public static final int menu_manage_places=0x7f04000d;
         public static final int menu_manage_terminals=0x7f040008;
         public static final int menu_query=0x7f040005;
         public static final int menu_settings=0x7f040002;
         public static final int menu_sms_import=0x7f040003;
         public static final int menu_summary=0x7f040007;
+        public static final int place_detailed=0x7f04000b;
         public static final int places_name=0x7f04000a;
         public static final int report_name=0x7f040006;
         public static final int terminals_name=0x7f040009;

@@ -8,6 +8,7 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -20,6 +21,7 @@ public class TerminalsList extends ListActivity {
 	
 	private final String LOG = "TerminalsList";
 	private List<Model> modelList;
+	private int itemIndex = 0;
 	
 	/** Called when the activity is first created. */
 	  public void onCreate(Bundle icicle) {
@@ -38,9 +40,9 @@ public class TerminalsList extends ListActivity {
 	  
 		@Override
 		public boolean onOptionsItemSelected(MenuItem item) {
+			boolean hasSelection = false;
 			switch (item.getItemId()) {
 	    		case R.id.menu_make_place:
-	    			boolean hasSelection = false;
 	    			for (Model m: modelList){
 	    		    	if(m.isSelected()){
 	    		    		hasSelection = true;
@@ -49,6 +51,24 @@ public class TerminalsList extends ListActivity {
 	    		    }
 	    			if(hasSelection){
 	    				makeNewPlace();
+	    			}else{
+	    				Toast.makeText(getApplicationContext(), "Nothing selected", Toast.LENGTH_LONG).show();
+	    			}
+	    			return true;
+	    		case R.id.menu_add_to_place:
+	    			DatabaseHandler db = new DatabaseHandler(getBaseContext());
+	    			if(db.getDistinctPlacesForPlaceList().size()<1){
+	    				Toast.makeText(getApplicationContext(), "You don't have any place", Toast.LENGTH_LONG).show();
+	    				return true;
+	    			}
+	    			for (Model m: modelList){
+	    		    	if(m.isSelected()){
+	    		    		hasSelection = true;
+	    		    		break;
+	    		    	}
+	    		    }
+	    			if(hasSelection){
+	    				addToPlace();
 	    			}else{
 	    				Toast.makeText(getApplicationContext(), "Nothing selected", Toast.LENGTH_LONG).show();
 	    			}
@@ -133,4 +153,55 @@ public class TerminalsList extends ListActivity {
 		  alert.show();
 	  }
 
+	  private void addToPlace(){
+		  AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		  final Context context = getBaseContext();
+		  final DatabaseHandler db = new DatabaseHandler(context);
+		  List<String> placeList = db.getDistinctPlacesForPlaceList();
+
+		  final CharSequence[] choiceList = placeList.toArray(new CharSequence[placeList.size()]);
+		  alert.setTitle("Places");		  
+		  itemIndex = -1;
+		  alert.setSingleChoiceItems(choiceList, -1, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				itemIndex = which;
+			}
+		});
+		alert.setCancelable(false);
+		alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				if(itemIndex > -1){
+					for (Model m: modelList){
+				    	if(m.isSelected()){
+				    		List<TransactionEntry> transactions = db.getTransactionsTerminal(m.getName());
+				    		for(TransactionEntry t : transactions){
+				    			t.setPlace(choiceList[itemIndex].toString());
+				    			t.setInPlace(1);
+				    			db.updateTransaction(t);
+				    		}
+				    	}
+				    }
+					inflateList();
+				}else{
+					Toast.makeText(getApplicationContext(), "Nothing selected", Toast.LENGTH_LONG).show(); 
+				}
+			}
+		});
+		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		  
+		alert.show();
+	  }
 }

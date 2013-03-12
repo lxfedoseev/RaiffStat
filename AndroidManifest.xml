@@ -17,7 +17,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.example.alexfed.raiffstat.RaiffStat"
-            android:label="@string/app_name" >
+            android:label="@string/app_name" 
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,11 +27,13 @@
         </activity>
         
         <activity android:name=".ReportList"
-              android:label="@string/report_name">
+              android:label="@string/report_name"
+              android:screenOrientation="portrait">
         </activity>
         
         <activity android:name=".TerminalsList"
-              android:label="@string/terminals_name">
+              android:label="@string/terminals_name"
+              android:screenOrientation="portrait">
         </activity>
         
         <receiver android:name=".SMSReceiver" android:enabled="true">
@@ -39,8 +42,14 @@
 	      </intent-filter>
     	</receiver>
     	
-        <activity android:name="PlacesList"
-              android:label="@string/places_name">
+        <activity android:name=".PlacesList"
+              android:label="@string/places_name"
+              android:screenOrientation="portrait">
+        </activity>
+        
+        <activity android:name=".PlaceDetailedList"
+              android:label="@string/place_detailed"
+              android:screenOrientation="portrait">
         </activity>
     	
     </application>

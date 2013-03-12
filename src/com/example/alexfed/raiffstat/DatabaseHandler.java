@@ -352,4 +352,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     			" ( " + KEY_IN_PLACE + " = 1 )";
     	return queryDB(countQuery, new String[] {place});
     }
+    
+    public List<String> getTerminalsOfPlace(String place){
+    	List<String> terminals = new ArrayList<String>();
+    	SQLiteDatabase db = this.getWritableDatabase();	
+    	String countQuery = "SELECT DISTINCT " + KEY_TERMINAL + " FROM " + TABLE_TRANSACTIONS +
+    			" WHERE " + KEY_PLACE + " = ? " +
+    			" ORDER BY " + KEY_TERMINAL; 
+    	Cursor cursor = db.rawQuery(countQuery,  new String[] {place});
+    	
+    	if (cursor.moveToFirst()) {
+            do {
+            	terminals.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+    	cursor.close();
+    	return terminals;
+    }
+    
 }
