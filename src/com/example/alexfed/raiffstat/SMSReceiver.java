@@ -48,7 +48,7 @@ public class SMSReceiver extends BroadcastReceiver {
 		RaiffParser prs = new RaiffParser();
 		String dateString = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date(date));
         if(body!=null) 
-        	parsedWell = prs.parseSmsBody(body.trim()); 
+        	parsedWell = prs.parseSmsBody(context, body.trim()); 
             
         if(parsedWell){
         	Log.d(LOG, prs.getCard() + " & " +  prs.getTerminal() + " & " + 

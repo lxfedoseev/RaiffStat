@@ -32,19 +32,18 @@ import android.widget.Toast;
 
 
 /* TODO: 
- * - Progress bar for make/delete/rename places (for all time consuming operations) 
- * - Make a good design (application icon as well)
- * - Import/Export from/to CSV file.
  * - Sort report by date/amount/alphabet.
+ * - Progress bar for make/delete/rename places (for all time consuming operations) 
+ * - Import/Export from/to CSV file.
  * - Save application state (screen rotation, going to background)
- * - Correct row layouts for different screen sizes
- * - Remove particular items from report (long touch -> remove)
+ * - Correct row layouts for different screen sizes 
  * - Save report to a file (share report)
  * - Make a pie chart for time period with all tags
- * - Merge SMS to existed DB (for example when SMS format is changed)
  * - Radio buttons for interval (1 week, 1 month, period)
+ * - Make a good design (application icon as well)
  * - ? Widget (Spent for a place, spent entirely, remainder) ?
  * - ? Make categories out of places (Food, Leisure, Clothes, Automobile, Applications, etc., Customly defined) ?
+ * - ? Remove particular items from report (long touch -> remove) ?
  * 
  */
 public class RaiffStat extends Activity { 
@@ -102,7 +101,7 @@ public class RaiffStat extends Activity {
     			//startActivity(settingsActivity);
     			return true;
     		case R.id.menu_sms_import:
-    			clearDB();
+    			//clearDB();
     			importSmsWithProgressBar();
     			return true;
     		case R.id.menu_clear_db:
@@ -237,7 +236,7 @@ public class RaiffStat extends Activity {
 		if(initProgressBar()){
 			new Thread(new Runnable() {
 				  public void run() {
-					  importSms2();
+					  importSms();
 					  RaiffStat.this.runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
@@ -276,7 +275,7 @@ public class RaiffStat extends Activity {
 		return true;
 	}
 	
-	private void importSms2(){
+	private void importSms(){
 		Log.d(LOG, "importSms");
 	    final String SMS_URI_INBOX = "content://sms/inbox"; 
 	    boolean parsedWell = false;
@@ -306,7 +305,7 @@ public class RaiffStat extends Activity {
 	                    
 	                RaiffParser prs = new RaiffParser();
 	                if(strbody!=null) 
-	                	parsedWell = prs.parseSmsBody(strbody.trim());
+	                	parsedWell = prs.parseSmsBody(getBaseContext(), strbody.trim());
 	                    
 	                if(parsedWell){
 	                	Log.d(LOG, prs.getCard() + " & " +  prs.getPlace() + " & " + 
@@ -314,7 +313,8 @@ public class RaiffStat extends Activity {
 	                			+ prs.getRemainder() + " & " + prs.getRemainderCurr() + " & " + prs.getPlace() + " & " + 
 	                			prs.getInPlace() + " & " + prs.getType() + " & " + dateString);
 	                    	
-	                	addTransactionToDB(longDate, prs);
+	                	//addTransactionToDB(longDate, prs);
+	                	mergeTransactionToDB(longDate, prs);
 	                }
 	                
 	                progressBarStatus++;
@@ -346,6 +346,14 @@ public class RaiffStat extends Activity {
 	private void addTransactionToDB(long dateTime, RaiffParser prs){
 		DatabaseHandler db = new DatabaseHandler(this);
 		db.addTransaction(new TransactionEntry(dateTime, prs.getAmount(), prs.getAmountCurr(),
+				prs.getRemainder(), prs.getRemainderCurr(), prs.getTerminal(), prs.getCard(), 
+				prs.getPlace(), prs.getInPlace(), prs.getType()));
+		db.close();
+	}
+
+	private void mergeTransactionToDB(long dateTime, RaiffParser prs){
+		DatabaseHandler db = new DatabaseHandler(this);
+		db.mergeTransaction(new TransactionEntry(dateTime, prs.getAmount(), prs.getAmountCurr(),
 				prs.getRemainder(), prs.getRemainderCurr(), prs.getTerminal(), prs.getCard(), 
 				prs.getPlace(), prs.getInPlace(), prs.getType()));
 		db.close();

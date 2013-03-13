@@ -279,9 +279,6 @@ public class ReportList extends ListActivity {
         	holder.date_time.setText(dayString+"\r\n"+timeString); 
         	if(place.equalsIgnoreCase(strAll)){
         		holder.place.setText(entry.getPlace());
-        		if(entry.getType() == StaticValues.TRANSACTION_TYPE_INCOME){
-        			holder.place.setText(context.getResources().getString(R.string.str_earned));
-        		}
         	}
             holder.card.setText(strCard + ": " + entry.getCard());                
             holder.amount.setText(entry.getAmount() + " " + entry.getAmountCurr());

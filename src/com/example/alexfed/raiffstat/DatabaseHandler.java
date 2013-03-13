@@ -8,9 +8,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
+	private static final String LOG = "DatabaseHandler";
 	// All Static variables
     // Database Version
     private static final int DATABASE_VERSION = 9;
@@ -93,6 +95,70 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close(); // Closing database connection
     }
  
+ // Merging new transaction
+    void mergeTransaction(TransactionEntry t) {
+        
+        if(transactionExistsInDB(t)){
+        	//Do nothing
+        	return;
+        }else{
+        	//Create new transaction
+        	SQLiteDatabase db = this.getWritableDatabase();
+        	
+	        ContentValues values = new ContentValues();
+	        values.put(KEY_DATE_TIME, String.valueOf(t.getDateTime()) );
+	        values.put(KEY_AMOUNT, t.getAmount()); 
+	        values.put(KEY_AMOUNT_CURR, t.getAmountCurr());
+	        values.put(KEY_REMAINDER, t.getRemainder()); 
+	        values.put(KEY_REMAINDER_CURR, t.getRemainderCurr());
+	        values.put(KEY_CARD, t.getCard());
+	        values.put(KEY_TERMINAL, t.getTerminal());
+	        values.put(KEY_PLACE, t.getPlace());
+	        values.put(KEY_IN_PLACE, t.getInPlace());
+	        values.put(KEY_TYPE, t.getType());
+	        // Inserting Row
+	        db.insert(TABLE_TRANSACTIONS, null, values);
+	        db.close(); // Closing database connection
+	        return;
+        }
+    }
+    
+    private boolean transactionExistsInDB(TransactionEntry t){
+    	
+    	SQLiteDatabase db = this.getReadableDatabase();
+    	boolean ret = false;
+    	
+        Cursor cursor = db.query(TABLE_TRANSACTIONS, new String[] { KEY_ID, KEY_DATE_TIME, 
+        		KEY_AMOUNT, KEY_AMOUNT_CURR, KEY_REMAINDER, KEY_REMAINDER_CURR, KEY_TERMINAL, 
+        		KEY_CARD, KEY_PLACE, KEY_IN_PLACE, KEY_TYPE }, 
+                "( " + KEY_DATE_TIME + "=? ) " + " AND " +
+                "( " + KEY_AMOUNT + "=? ) " + " AND " +
+                "( " + KEY_AMOUNT_CURR + "=? ) " + " AND " +
+                "( " + KEY_REMAINDER + "=? ) " + " AND " +
+                "( " + KEY_REMAINDER_CURR + "=? ) " + " AND " +
+                "( " + KEY_TERMINAL + "=? ) " + " AND " +
+                "( " + KEY_CARD + "=? ) " + " AND " +
+                "( " + KEY_TYPE + "=? ) ",
+                new String[] { 
+        		String.valueOf(t.getDateTime()),
+        		String.valueOf(t.getAmount()),
+        		t.getAmountCurr(),
+        		String.valueOf(t.getRemainder()),
+        		t.getRemainderCurr(),
+        		t.getTerminal(),
+        		t.getCard(),
+        		String.valueOf(t.getType())}, null, null, null, null);
+
+        if(cursor.getCount() > 0)
+        	ret = true;
+        else
+        	ret = false;
+        
+        cursor.close();
+        db.close();
+        return ret;
+    }
+    
     // Getting single transaction entry
     TransactionEntry getTransaction(int id) {
         SQLiteDatabase db = this.getReadableDatabase();

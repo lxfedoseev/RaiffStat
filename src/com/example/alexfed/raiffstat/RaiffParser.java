@@ -1,6 +1,6 @@
 package com.example.alexfed.raiffstat;
 
-import android.util.Log;
+import android.content.Context;
 
 public class RaiffParser {
 	
@@ -28,7 +28,7 @@ public class RaiffParser {
     	this._type = StaticValues.TRANSACTION_TYPE_UNKNOWN;
     }
     
-    public boolean parseSmsBody(String body){
+    public boolean parseSmsBody(Context context, String body){
     	String delims;
     	String[] tokens;
     	if(body.toLowerCase().startsWith("balans")){//Income
@@ -38,6 +38,8 @@ public class RaiffParser {
     			parseIncomeCardAndAmount(tokens[0]);
     			parseRemainder(tokens[1]);
     			this._type = StaticValues.TRANSACTION_TYPE_INCOME;
+    			this._terminal = context.getResources().getString(R.string.str_earned);
+    			this._place = this._terminal;
     			return true;
     		}else{
     			return false;
