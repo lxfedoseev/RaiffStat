@@ -1,6 +1,5 @@
 package com.example.alexfed.raiffstat;
 
-import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,11 +10,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,7 +22,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
@@ -275,6 +273,18 @@ public class ReportList extends ListActivity {
         	long longDate = entry.getDateTime();
         	String dayString = new SimpleDateFormat("dd/MM/yyyy").format(new Date(longDate));
         	String timeString = new SimpleDateFormat("HH:mm:ss").format(new Date(longDate));
+        	
+        	if(entry.getType() == StaticValues.TRANSACTION_TYPE_INCOME){
+        		holder.date_time.setTextColor(Color.GREEN);
+        		holder.card.setTextColor(Color.GREEN);
+        		holder.amount.setTextColor(Color.GREEN);
+        		holder.type.setTextColor(Color.GREEN);
+        	}else{//expense
+        		holder.date_time.setTextColor(Color.RED);
+        		holder.card.setTextColor(Color.RED);
+        		holder.amount.setTextColor(Color.RED);
+        		holder.type.setTextColor(Color.RED);
+        	}
         	
         	holder.date_time.setText(dayString+"\r\n"+timeString); 
         	if(place.equalsIgnoreCase(strAll)){

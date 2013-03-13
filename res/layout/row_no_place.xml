@@ -21,7 +21,7 @@
               android:layout_alignParentTop="true"
               android:paddingRight="20dp"
 			  android:textSize="20sp" 
-			  android:textColor="#000080"/>
+			  android:textColor="#800000"/>
 	    
 	    <TextView 
 			  android:id="@+id/type"
@@ -31,7 +31,7 @@
               android:layout_centerHorizontal="true" 
               android:paddingRight="3dp"
 			  android:textSize="20sp" 
-			  android:textColor="#000080"/>
+			  android:textColor="#800000"/>
 	    
 	    <TextView 
 			  android:id="@+id/amount"
@@ -41,7 +41,7 @@
               android:layout_centerHorizontal="true" 
               android:paddingRight="3dp"
 			  android:textSize="20sp" 
-			  android:textColor="#000080"/>
+			  android:textColor="#800000"/>
             
 		  <TextView 
 			  android:id="@+id/date_time"
@@ -49,7 +49,7 @@
 			  android:layout_height="match_parent"
 			  android:layout_alignParentRight="true"
 			  android:textSize="10sp"
-			  android:textColor="#000080" />
+			  android:textColor="#800000" />
             
 	</RelativeLayout>
 
