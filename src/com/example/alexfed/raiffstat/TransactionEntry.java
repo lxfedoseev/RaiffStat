@@ -13,6 +13,7 @@ public class TransactionEntry {
     private String _card;
     private String _place;
     private int _in_place;
+    private int _type;
  
     // Empty constructor
     public TransactionEntry(){
@@ -26,11 +27,12 @@ public class TransactionEntry {
         this._card = "unknown";
         this._place = "unknown";
         this._in_place = 0;
+        this._type = StaticValues.TRANSACTION_TYPE_UNKNOWN;
     }
     // constructor
     public TransactionEntry(int id, long date_time, double amount, String amount_curr, 
     						double remainder, String remainder_curr, String terminal, String card, 
-    						String place, int in_place){
+    						String place, int in_place, int _type){
         this._id = id;
         this._date_time = date_time;
         this._amount = amount;
@@ -41,12 +43,13 @@ public class TransactionEntry {
         this._card = card;
         this._place = place;
         this._in_place = in_place;
+        this._type = _type;
     }
  
     // constructor
     public TransactionEntry(long date_time, double amount, String amount_curr, 
     						double remainder, String remainder_curr, String terminal, String card, 
-    						String place, int in_place){
+    						String place, int in_place, int type){
     	this._date_time = date_time;
         this._amount = amount;
         this._amount_curr = amount_curr;
@@ -56,6 +59,7 @@ public class TransactionEntry {
         this._card = card;
         this._place = place;
         this._in_place = in_place;
+        this._type = type;
     }
     // getting ID
     public int getID(){
@@ -155,5 +159,15 @@ public class TransactionEntry {
     // setting _in_place
     public void setInPlace(int in_place){
         this._in_place = in_place;
+    }
+    
+ // getting type
+    public int getType(){
+        return this._type;
+    }
+ 
+    // setting type
+    public void setType(int type){
+        this._type = type;
     }
 }

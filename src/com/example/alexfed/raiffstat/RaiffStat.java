@@ -33,16 +33,14 @@ import android.widget.Toast;
 
 /* TODO: 
  * - Progress bar for make/delete/rename places (for all time consuming operations) 
- * - Make multi language (Russian, English)
  * - Make a good design (application icon as well)
  * - Import/Export from/to CSV file.
- * - Sort report by date/amount.
+ * - Sort report by date/amount/alphabet.
  * - Save application state (screen rotation, going to background)
  * - Correct row layouts for different screen sizes
  * - Remove particular items from report (long touch -> remove)
  * - Save report to a file (share report)
  * - Make a pie chart for time period with all tags
- * - Cache all possible data to DB, including otkaz
  * - Merge SMS to existed DB (for example when SMS format is changed)
  * - Radio buttons for interval (1 week, 1 month, period)
  * - ? Widget (Spent for a place, spent entirely, remainder) ?
@@ -71,7 +69,7 @@ public class RaiffStat extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_raiff_stat);
-		
+
 		setCurrentDateOnView();
 		addListenerOnButton();
 	}
@@ -313,7 +311,8 @@ public class RaiffStat extends Activity {
 	                if(parsedWell){
 	                	Log.d(LOG, prs.getCard() + " & " +  prs.getPlace() + " & " + 
 	                			prs.getAmount() + " & " + prs.getAmountCurr() + " & " 
-	                			+ prs.getRemainder() + " & " + prs.getRemainderCurr() + " & " + prs.getPlace() + " & " + prs.getInPlace() + " & " + dateString);
+	                			+ prs.getRemainder() + " & " + prs.getRemainderCurr() + " & " + prs.getPlace() + " & " + 
+	                			prs.getInPlace() + " & " + prs.getType() + " & " + dateString);
 	                    	
 	                	addTransactionToDB(longDate, prs);
 	                }
@@ -347,7 +346,8 @@ public class RaiffStat extends Activity {
 	private void addTransactionToDB(long dateTime, RaiffParser prs){
 		DatabaseHandler db = new DatabaseHandler(this);
 		db.addTransaction(new TransactionEntry(dateTime, prs.getAmount(), prs.getAmountCurr(),
-				prs.getRemainder(), prs.getRemainderCurr(), prs.getTerminal(), prs.getCard(), prs.getPlace(), prs.getInPlace()));
+				prs.getRemainder(), prs.getRemainderCurr(), prs.getTerminal(), prs.getCard(), 
+				prs.getPlace(), prs.getInPlace(), prs.getType()));
 		db.close();
 	}
 
@@ -362,7 +362,8 @@ public class RaiffStat extends Activity {
 			String dateString = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date(t.getDateTime()));
 			Log.d(LOG, t.getID() + " & " + t.getCard() + " & " +  t.getTerminal() + " & " + 
 	    			t.getAmount() + " & " + t.getAmountCurr() + " & " 
-	    			+ t.getRemainder() + " & " + t.getRemainderCurr() + " & " +  t.getPlace() +  " & " +  t.getInPlace() +  " & " + dateString);
+	    			+ t.getRemainder() + " & " + t.getRemainderCurr() + " & " +  t.getPlace() +  " & " +  
+	    			t.getInPlace() +  " & " + t.getType() + " & " + dateString);
 		}
 	}
 	

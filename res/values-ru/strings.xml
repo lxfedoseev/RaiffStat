@@ -4,7 +4,7 @@
     <string name="app_name">РайффСтат</string>
     <string name="hello_world">Привет мир!</string>
     <string name="menu_settings">Настройки</string>
-    <string name="menu_sms_import">Импротировать из СМС</string>
+    <string name="menu_sms_import">Импортировать из СМС</string>
     <string name="menu_clear_db">Очистить базу</string>
     <string name="menu_query">Опросить базу</string>
     <string name="report_name">Отчет</string>
@@ -15,7 +15,7 @@
     <string name="place_detailed">Места подробно</string>
     <string name="menu_make_place">Объединить в место</string>
     <string name="menu_manage_places">Управлять местами</string>
-    <string name="menu_exclude_from_place">Исключить из мест</string>
+    <string name="menu_exclude_from_place">Исключить из места</string>
     <string name="menu_add_to_place">Добавить в место</string>
     <string name="spinner_all">Все</string>
     
@@ -26,6 +26,9 @@
     <string name="str_tr_number">Количество транзакций</string>
     <string name="str_forbidden">запрещено</string>
     <string name="str_forbidden_empty_place">Название места не может быть пустым</string>
+    <string name="str_spent">Потрачено</string>
+    <string name="str_earned">Заработано</string>
+    <string name="str_no_data">Нет данных</string>
     
     <string name="long_click_place_delete">Удалить</string>
     <string name="long_click_place_rename">Переименовать</string>

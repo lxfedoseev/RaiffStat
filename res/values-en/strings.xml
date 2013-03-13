@@ -26,6 +26,9 @@
     <string name="str_tr_number">Transaction number</string>
     <string name="str_forbidden">forbidden</string>
     <string name="str_forbidden_empty_place">Place name can\'t be empty</string>
+    <string name="str_spent">Spent</string>
+    <string name="str_earned">Earned</string>
+    <string name="str_no_data">No Data</string>
     
     <string name="long_click_place_delete">Delete</string>
     <string name="long_click_place_rename">Rename</string>

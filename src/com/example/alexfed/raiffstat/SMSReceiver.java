@@ -65,10 +65,12 @@ public class SMSReceiver extends BroadcastReceiver {
 		List<TransactionEntry> transactions = db.getTransactionsTerminal(prs.getTerminal());
 		if(!transactions.isEmpty()){
 			db.addTransaction(new TransactionEntry(dateTime, prs.getAmount(), prs.getAmountCurr(),
-					prs.getRemainder(), prs.getRemainderCurr(), prs.getTerminal(), prs.getCard(), transactions.get(0).getPlace(), transactions.get(0).getInPlace()));
+					prs.getRemainder(), prs.getRemainderCurr(), prs.getTerminal(), prs.getCard(), 
+					transactions.get(0).getPlace(), transactions.get(0).getInPlace(), prs.getType()));
 		}else{
 			db.addTransaction(new TransactionEntry(dateTime, prs.getAmount(), prs.getAmountCurr(),
-				prs.getRemainder(), prs.getRemainderCurr(), prs.getTerminal(), prs.getCard(), prs.getPlace(), prs.getInPlace()));  
+				prs.getRemainder(), prs.getRemainderCurr(), prs.getTerminal(), prs.getCard(), 
+				prs.getPlace(), prs.getInPlace(), prs.getType()));  
 		}
 		db.close();
 	}

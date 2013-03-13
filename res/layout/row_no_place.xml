@@ -24,10 +24,20 @@
 			  android:textColor="#000080"/>
 	    
 	    <TextView 
-			  android:id="@+id/amount"
+			  android:id="@+id/type"
 			  android:layout_width="wrap_content"
 			  android:layout_height="match_parent"
               android:layout_toRightOf="@+id/card"
+              android:layout_centerHorizontal="true" 
+              android:paddingRight="3dp"
+			  android:textSize="20sp" 
+			  android:textColor="#000080"/>
+	    
+	    <TextView 
+			  android:id="@+id/amount"
+			  android:layout_width="wrap_content"
+			  android:layout_height="match_parent"
+              android:layout_toRightOf="@+id/type"
               android:layout_centerHorizontal="true" 
               android:paddingRight="3dp"
 			  android:textSize="20sp" 

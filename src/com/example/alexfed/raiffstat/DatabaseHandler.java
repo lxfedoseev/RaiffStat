@@ -13,7 +13,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 	// All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 9;
  
     // Database Name
     private static final String DATABASE_NAME = "raiffDB";
@@ -34,6 +34,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_CARD = "card";
     private static final String KEY_PLACE = "place";
     private static final String KEY_IN_PLACE = "in_place";
+    private static final String KEY_TYPE = "type";
  
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -52,7 +53,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_TERMINAL + " TEXT," 
                 + KEY_CARD + " TEXT," 
                 + KEY_PLACE + " TEXT," 
-                + KEY_IN_PLACE + "  INTEGER" + ")";
+                + KEY_IN_PLACE + "  INTEGER,"
+                + KEY_TYPE + "  INTEGER" +")";
         db.execSQL(CREATE_TRANSACTIONS_TABLE);
     }
  
@@ -84,6 +86,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_TERMINAL, t.getTerminal());
         values.put(KEY_PLACE, t.getPlace());
         values.put(KEY_IN_PLACE, t.getInPlace());
+        values.put(KEY_TYPE, t.getType());
  
         // Inserting Row
         db.insert(TABLE_TRANSACTIONS, null, values);
@@ -95,7 +98,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
  
         Cursor cursor = db.query(TABLE_TRANSACTIONS, new String[] { KEY_ID, KEY_DATE_TIME, 
-        		KEY_AMOUNT, KEY_AMOUNT_CURR, KEY_REMAINDER, KEY_REMAINDER_CURR, KEY_TERMINAL, KEY_CARD, KEY_PLACE, KEY_IN_PLACE }, 
+        		KEY_AMOUNT, KEY_AMOUNT_CURR, KEY_REMAINDER, KEY_REMAINDER_CURR, KEY_TERMINAL, 
+        		KEY_CARD, KEY_PLACE, KEY_IN_PLACE, KEY_TYPE }, 
                 KEY_ID + "=?",
                 new String[] { String.valueOf(id) }, null, null, null, null);
         if (cursor != null)
@@ -103,7 +107,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
  
         TransactionEntry t = new TransactionEntry(cursor.getInt(0), Long.valueOf(cursor.getString(1)), 
         		cursor.getDouble(2), cursor.getString(3), cursor.getDouble(4), cursor.getString(5),
-        		cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getInt(9));
+        		cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getInt(9), cursor.getInt(10));
         
         cursor.close();
         db.close();
@@ -134,6 +138,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 t.setCard(cursor.getString(7));
                 t.setPlace(cursor.getString(8));
                 t.setInPlace(cursor.getInt(9));
+                t.setInPlace(cursor.getInt(10));
                 // Adding transaction to list
                 transactionList.add(t);
             } while (cursor.moveToNext());
@@ -158,6 +163,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_CARD, t.getCard());
         values.put(KEY_PLACE, t.getPlace());
         values.put(KEY_IN_PLACE, t.getInPlace());
+        values.put(KEY_TYPE, t.getType());
         
      // updating row
         int ret = db.update(TABLE_TRANSACTIONS, values, KEY_ID + " = ?",
@@ -211,6 +217,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 t.setCard(cursor.getString(7));
                 t.setPlace(cursor.getString(8));
                 t.setInPlace(cursor.getInt(9));
+                t.setType(cursor.getInt(10));
                 // Adding transaction to list
                 transactionList.add(t);
             } while (cursor.moveToNext());
@@ -261,14 +268,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	if(place.equalsIgnoreCase(context.getResources().getString(R.string.spinner_all))){
     		countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
     			" WHERE " + " ( " + KEY_DATE_TIME + " >= ? )" + " AND " + " ( " + KEY_DATE_TIME + " <= ? )" +
+    			" AND " + " ( " + KEY_TYPE + " =?" + " OR " + KEY_TYPE + " =?" + " ) " +
     			" ORDER BY " + KEY_DATE_TIME + " DESC";
-    		return queryDB(countQuery, new String[] {String.valueOf(dateStart), String.valueOf(dateEnd)});
+    		return queryDB(countQuery, new String[] {String.valueOf(dateStart), String.valueOf(dateEnd),
+    														String.valueOf(StaticValues.TRANSACTION_TYPE_EXPENSE),
+    														String.valueOf(StaticValues.TRANSACTION_TYPE_INCOME)});
     	}else{
     		countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
         			" WHERE " + " ( " + KEY_DATE_TIME + " >= ? )" + " AND " + " ( " + KEY_DATE_TIME + " <= ? )" + 
     				" AND " + " ( " + KEY_PLACE + " = ? )" +
+    				" AND " + " ( " + KEY_TYPE + " =?" + " ) " +
         			" ORDER BY " + KEY_DATE_TIME + " DESC";
-    		return queryDB(countQuery, new String[] {String.valueOf(dateStart), String.valueOf(dateEnd), place});
+    		return queryDB(countQuery, new String[] {String.valueOf(dateStart), String.valueOf(dateEnd), place,
+    													String.valueOf(StaticValues.TRANSACTION_TYPE_EXPENSE)});
     	}
     }
     
@@ -293,6 +305,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	List<String> distVals = new ArrayList<String>();
     	SQLiteDatabase db = this.getWritableDatabase();	
     	String countQuery = "SELECT DISTINCT " + KEY_PLACE + " FROM " + TABLE_TRANSACTIONS +
+    			" WHERE " + KEY_TYPE + " =" + StaticValues.TRANSACTION_TYPE_EXPENSE +
     			" ORDER BY " + KEY_PLACE; 
     	Cursor cursor = db.rawQuery(countQuery, null);
     	
@@ -342,7 +355,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	List<String> distVals = new ArrayList<String>();
     	SQLiteDatabase db = this.getWritableDatabase();	
     	String countQuery = "SELECT DISTINCT " + KEY_TERMINAL + " FROM " + TABLE_TRANSACTIONS +
-    			" WHERE " + KEY_IN_PLACE + " = ? " +
+    			" WHERE " + " ( " + KEY_IN_PLACE + " = ? " + " ) " +
+    			" AND " + " ( " + KEY_TYPE + " = " + StaticValues.TRANSACTION_TYPE_EXPENSE + " ) " +
     			" ORDER BY " + KEY_TERMINAL; 
     	Cursor cursor = db.rawQuery(countQuery, new String[] {String.valueOf(0)});
     	

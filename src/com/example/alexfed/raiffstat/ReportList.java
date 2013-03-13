@@ -71,21 +71,39 @@ public class ReportList extends ListActivity {
     		case R.id.menu_summary:
     			String message = "";
     			String card = "";
+    			
     			Map<String, Double> sum = new HashMap<String, Double>();
     			Set<String> currs = new HashSet<String>();
+    			
+    			Map<String, Double> sumIncom = new HashMap<String, Double>();
+    			Set<String> currsIncom = new HashSet<String>();
+    			
     			for (TransactionEntry t : transactions) {
-    				if(!currs.contains(t.getAmountCurr())){
+    				if(!currs.contains(t.getAmountCurr()) &&
+    						(t.getType() == StaticValues.TRANSACTION_TYPE_EXPENSE)){
     					currs.add(t.getAmountCurr());
     					sum.put(t.getAmountCurr(), 0.0);
     				}
-    				sum.put(t.getAmountCurr(), sum.get(t.getAmountCurr())+t.getAmount());
-    				card = t.getCard();
+    				if(!currsIncom.contains(t.getAmountCurr()) && 
+    						(t.getType() == StaticValues.TRANSACTION_TYPE_INCOME)){
+    					currsIncom.add(t.getAmountCurr());
+    					sumIncom.put(t.getAmountCurr(), 0.0);
+    				}
+    				
+    				if(t.getType() == StaticValues.TRANSACTION_TYPE_EXPENSE){
+	    				sum.put(t.getAmountCurr(), sum.get(t.getAmountCurr())+t.getAmount());
+	    				card = t.getCard();
+    				}else if(t.getType() == StaticValues.TRANSACTION_TYPE_INCOME){
+	    				sumIncom.put(t.getAmountCurr(), sumIncom.get(t.getAmountCurr())+t.getAmount());
+	    				card = t.getCard();
+    				}
     			}
+    			
     			if(!place.equalsIgnoreCase(getResources().getString(R.string.spinner_all)))
     				message += getResources().getString(R.string.str_place) + ": " + place + "\r\n";
     			message += getResources().getString(R.string.str_period) + ": " + dayFrom + "~" + dayTo + "\r\n" + 
     					getResources().getString(R.string.str_card) + ": " + card + "\r\n" + 
-    					getResources().getString(R.string.str_amount) + ": ";
+    					getResources().getString(R.string.str_spent) + ": ";
     			//round sum values
     			for(String s: currs){
     				double rndSum = sum.get(s) * 100;
@@ -94,7 +112,20 @@ public class ReportList extends ListActivity {
     				message += ""+rndSum+ " " + s + ", "; 
     			}
     			message = message.substring(0, message.length()-2); // remove last comma[space] ", "
+    			
+    			if(place.equalsIgnoreCase(getResources().getString(R.string.spinner_all))){
+	    			message += "\r\n" + getResources().getString(R.string.str_earned) + ": ";
+	    			for(String s: currsIncom){
+	    				double rndSum = sumIncom.get(s) * 100;
+	    				rndSum = Math.round(rndSum);
+	    				rndSum /=100;
+	    				message += ""+rndSum+ " " + s + ", "; 
+	    			}
+	    			message = message.substring(0, message.length()-2); // remove last comma[space] ", "
+    			}
+    			
     			message += "\r\n"+ getResources().getString(R.string.str_tr_number) + ": " + transactions.size();
+    			
     			new AlertDialog.Builder(this)
     		    .setMessage(message)
     		    .setPositiveButton(R.string.dialog_ok, new android.content.DialogInterface.OnClickListener() {                
@@ -141,11 +172,13 @@ public class ReportList extends ListActivity {
 	}
 
     private static class ReportListAdapter extends BaseAdapter {
+    	private final String LOG = "ReportListAdapter";
     	private LayoutInflater mInflater;
         private List<TransactionEntry> trs;
         private String place;
         private String strAll;
         private String strCard;
+        private Context context;
         
         public ReportListAdapter(Context context, List<TransactionEntry> trs, String place, String all, String card) {
             // Cache the LayoutInflate to avoid asking for a new one each time.
@@ -154,6 +187,7 @@ public class ReportList extends ListActivity {
             this.place = place; 
             this.strAll = all;
             this.strCard = card;
+            this.context = context;
         }
 
         /**
@@ -217,6 +251,7 @@ public class ReportList extends ListActivity {
                 	holder.place = (TextView) convertView.findViewById(R.id.place);
                 }
                 holder.amount = (TextView) convertView.findViewById(R.id.amount);
+                holder.type = (TextView) convertView.findViewById(R.id.type);
 
                 convertView.setTag(holder);
             } else {
@@ -233,10 +268,10 @@ public class ReportList extends ListActivity {
             TextView date_time;
             TextView amount;
             TextView card;
+            TextView type;
         }
         
         private void setListEntry(ViewHolder holder, TransactionEntry entry){
-        	
         	long longDate = entry.getDateTime();
         	String dayString = new SimpleDateFormat("dd/MM/yyyy").format(new Date(longDate));
         	String timeString = new SimpleDateFormat("HH:mm:ss").format(new Date(longDate));
@@ -244,9 +279,18 @@ public class ReportList extends ListActivity {
         	holder.date_time.setText(dayString+"\r\n"+timeString); 
         	if(place.equalsIgnoreCase(strAll)){
         		holder.place.setText(entry.getPlace());
+        		if(entry.getType() == StaticValues.TRANSACTION_TYPE_INCOME){
+        			holder.place.setText(context.getResources().getString(R.string.str_earned));
+        		}
         	}
             holder.card.setText(strCard + ": " + entry.getCard());                
             holder.amount.setText(entry.getAmount() + " " + entry.getAmountCurr());
+            holder.type.setText(""); 
+            if(entry.getType() == StaticValues.TRANSACTION_TYPE_EXPENSE){
+            	holder.type.setText("-");
+            }else if(entry.getType() == StaticValues.TRANSACTION_TYPE_INCOME){
+            	holder.type.setText("+");
+            }
         }
     }
 }

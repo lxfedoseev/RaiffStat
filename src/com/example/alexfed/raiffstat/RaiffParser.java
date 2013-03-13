@@ -14,6 +14,7 @@ public class RaiffParser {
     private String _card;
     private String _place; 
     private int _in_place;
+    private int _type;
     
     RaiffParser(){
     	this._amount = 0.0;
@@ -24,26 +25,48 @@ public class RaiffParser {
     	this._card = "unknown";
     	this._place = "unknown";
     	this._in_place = 0;
+    	this._type = StaticValues.TRANSACTION_TYPE_UNKNOWN;
     }
     
     public boolean parseSmsBody(String body){
-
-    	String delims = "[;]+"; 
-		String[] tokens = body.split(delims);
+    	String delims;
+    	String[] tokens;
+    	if(body.toLowerCase().startsWith("balans")){//Income
+    		delims = "[.]+";
+    		tokens = body.split(delims);
+    		if(tokens.length>2){
+    			parseIncomeCardAndAmount(tokens[0]);
+    			parseRemainder(tokens[1]);
+    			this._type = StaticValues.TRANSACTION_TYPE_INCOME;
+    			return true;
+    		}else{
+    			return false;
+    		}
+    	}
+    	
+    	delims = "[;]+"; 
+		tokens = body.split(delims);
 		if(tokens.length>4){	
-			if(tokens[1].toLowerCase().startsWith("otkaz"))
-				return false;
 			
-			parseCard(tokens[0]);
-			parseAmount(tokens[1]);
-			parseTerminal(tokens[3]);
-			parseRemainder(tokens[4]);			
-			return true;
+			if(tokens[1].toLowerCase().startsWith("otkaz")){ // Denial
+				parseCard(tokens[0]);
+				parseAmount(tokens[2]);
+				parseTerminal(tokens[4]);
+				parseRemainder(tokens[5]);
+				this._type = StaticValues.TRANSACTION_TYPE_DENIAL;
+				return true;
+			}else{//Expense
+				parseCard(tokens[0]);
+				parseAmount(tokens[1]);
+				parseTerminal(tokens[3]);
+				parseRemainder(tokens[4]);
+				this._type = StaticValues.TRANSACTION_TYPE_EXPENSE;
+				return true;
+			}
 		}else{
 			return false;
 		}
-		
-    	
+
     }
     
     private void parseCard(String str){
@@ -89,6 +112,27 @@ public class RaiffParser {
 		}
     }
     
+    private void parseIncomeCardAndAmount(String str){
+    	String strLocal = "";
+    	
+    	String delims = "[:]+"; 
+		String[] tokens = str.split(delims);
+		if(tokens.length>1){
+			//TODO: what if it is neither RUB not USD not EUR (has not 3 letters)
+			tokens[1] = tokens[1].trim();
+			strLocal = tokens[1].substring(0, tokens[1].length()-3); //cut "RUB", "USD", "EUR" in the end
+			this._amount = Double.parseDouble(strLocal.replace(',', '.'));
+			this._amount_curr = tokens[1].substring(tokens[1].length()-3, tokens[1].length());
+			
+			String cardDelims = "[\\s]+";
+			String[] cardTokens = tokens[0].split(cardDelims);
+			if(cardTokens.length>3){
+				this._card = cardTokens[3].trim(); //card
+			}
+		}
+    }
+    
+    
     public double getAmount(){
     	return this._amount;
     }
@@ -119,5 +163,9 @@ public class RaiffParser {
 
     public int getInPlace(){
     	return this._in_place;
+    }
+    
+    public int getType(){
+    	return this._type;
     }
 }
