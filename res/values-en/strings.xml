@@ -49,6 +49,8 @@
 	<string name="toast_dir_failed">Failed to create directory</string>
 	<string name="toast_exp_failed">Export failed</string>
 	<string name="toast_no_files">There are no files</string>
+	<string name="toast_imp_failed">Import failed</string>
+	<string name="toast_pars_failed">Parser failed</string>
 	
 	<string name="ctx_new_place_name">Input new place name</string>
 	<string name="ctx_place_name">Input place name</string>
@@ -61,6 +63,7 @@
 	<string name="dialog_sort_type">Sort Type</string>
 	
 	<string name="progress_sms_scanning">Scanning SMS ...</string>
+	<string name="progress_csv_scanning">Scanning file ...</string>
 	
 	<string name="btn_apply">Apply</string>
 	

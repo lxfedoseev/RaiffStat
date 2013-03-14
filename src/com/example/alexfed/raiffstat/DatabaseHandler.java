@@ -102,9 +102,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         	//Do nothing
         	return;
         }else{
+        	List<TransactionEntry> trs = this.getPlacedTransactionsTerminalFixed(t.getTerminal());
+        	if(trs.size()>0){
+        		t.setPlace(trs.get(0).getPlace());
+        		t.setInPlace(1);
+        	}
+        	
         	//Create new transaction
         	SQLiteDatabase db = this.getWritableDatabase();
-        	
 	        ContentValues values = new ContentValues();
 	        values.put(KEY_DATE_TIME, String.valueOf(t.getDateTime()) );
 	        values.put(KEY_AMOUNT, t.getAmount()); 
@@ -204,7 +209,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 t.setCard(cursor.getString(7));
                 t.setPlace(cursor.getString(8));
                 t.setInPlace(cursor.getInt(9));
-                t.setInPlace(cursor.getInt(10));
+                t.setType(cursor.getInt(10));
                 // Adding transaction to list
                 transactionList.add(t);
             } while (cursor.moveToNext());
@@ -458,6 +463,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	String countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + " WHERE " + "( " + KEY_PLACE + " = ?" + " ) " + " AND "+
     			" ( " + KEY_IN_PLACE + " = 1 )";
     	return queryDB(countQuery, new String[] {place});
+    }
+    
+    public  List<TransactionEntry> getPlacedTransactionsTerminalFixed(String terminal){
+    	String countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + " WHERE " + "( " + KEY_TERMINAL + " = ?" + " ) " + " AND "+
+    			" ( " + KEY_IN_PLACE + " = 1 )";
+    	return queryDB(countQuery, new String[] {terminal});
     }
     
     public List<String> getTerminalsOfPlace(String place){

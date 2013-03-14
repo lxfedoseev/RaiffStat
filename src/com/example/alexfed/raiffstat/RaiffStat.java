@@ -1,8 +1,12 @@
 package com.example.alexfed.raiffstat;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -49,6 +53,7 @@ import android.widget.Toast;
  * - Radio buttons for interval (1 week, 1 month, period)
  * - Make a good design (application icon as well)
  * 
+ * - ? Make failed parsing messages table in DB and ask the user to send them by email to me ?
  * - ? Widget (Spent for a place, spent entirely, remainder) ?
  * - ? Remove particular items from report (long touch -> remove) ?
  * 
@@ -323,7 +328,7 @@ public class RaiffStat extends Activity {
 	                    
 	                RaiffParser prs = new RaiffParser();
 	                if(strbody!=null) 
-	                	parsedWell = prs.parseSmsBody(getBaseContext(), strbody.trim());
+	                	parsedWell = prs.parseSmsBody(getBaseContext(), strbody.trim(), longDate);
 	                    
 	                if(parsedWell){
 	                	Log.d(LOG, prs.getCard() + " & " +  prs.getPlace() + " & " + 
@@ -332,7 +337,18 @@ public class RaiffStat extends Activity {
 	                			prs.getInPlace() + " & " + prs.getType() + " & " + dateString);
 	                    	
 	                	//addTransactionToDB(longDate, prs);
-	                	mergeTransactionToDB(longDate, prs);
+	                	mergeTransactionToDB(prs);
+	                }else{
+	                	//Something went wrong
+	                	//TODO: add this strbody to problem SMS table of DB to be sent later to the developer
+	                	Log.e(LOG, "Problem message: " + strbody);
+	                	//TODO: remove Toast, using now only for test
+	                	RaiffStat.this.runOnUiThread(new Runnable() {
+	    					@Override
+	    					public void run() {
+	    						Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_pars_failed), Toast.LENGTH_SHORT).show();
+	    				}
+	    			});
 	                }
 	                
 	                progressBarStatus++;
@@ -379,7 +395,7 @@ public class RaiffStat extends Activity {
 	    		return;
 	    	}
 	    	
-	    	List<TransactionEntry> trs = db.getAllTransactions();
+	    	List<TransactionEntry> trs = db.getAllTransactions(); 
 	    	db.close();
 	    	try{
 	    		String fName = makeExportFileName();
@@ -396,10 +412,10 @@ public class RaiffStat extends Activity {
 				    		t.getTerminal() + StaticValues.DELIMITER +
 				    		t.getCard() + StaticValues.DELIMITER +
 				    		t.getPlace() + StaticValues.DELIMITER +
-				    		t.getInPlace() + StaticValues.DELIMITER +
-				    		t.getType() + "\r\n");
+				    		t.getInPlace() + StaticValues.DELIMITER + t.getType() + "\r\n");
+	    			out.flush();
 	    		}
-	    		out.close();
+	    		out.close(); 
 	    		Toast.makeText(getApplicationContext(), 
 	    				getResources().getString(R.string.str_file) + " " + fName  + " " +
 	    						getResources().getString(R.string.str_created), Toast.LENGTH_LONG).show();
@@ -440,7 +456,7 @@ public class RaiffStat extends Activity {
 				public void onClick(DialogInterface dialog, int which) {
 					// TODO Auto-generated method stub
 					if(itemIndex > -1){
-						//TODO: run progress bar here
+						importSmsFromFileWithProgressBar(choiceList[itemIndex]);
 					}else{
 						Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show(); 
 					}
@@ -456,6 +472,84 @@ public class RaiffStat extends Activity {
 			  
 		alert.show();
 	}
+	
+	private void importSmsFromFileWithProgressBar(CharSequence fileName){
+		final CharSequence localFileName = fileName;
+		progressBar = new ProgressDialog(this);
+		progressBar.setCancelable(false);
+		progressBar.setMessage(getResources().getString(R.string.progress_csv_scanning));
+		progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progressBar.setProgress(0);
+		progressBar.show();
+		
+		new Thread(new Runnable() {
+			public void run() {
+				importSmsFromCSV(localFileName);
+				RaiffStat.this.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+					setCurrentDateOnView();
+					addItemsOnSpinnerPlace();
+				}
+			});
+					  
+		}
+		}).start();
+	}
+	
+	private void importSmsFromCSV(CharSequence fileName){
+	    
+	    try{
+			FileInputStream fstream = new FileInputStream(Environment.getExternalStorageDirectory()+"/"+dirName+"/"+fileName.toString());
+			DataInputStream in = new DataInputStream(fstream);
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			  
+			String strLine;
+			//Read File Line By Line
+			while ((strLine = br.readLine()) != null)   {	  
+				
+				RaiffParser prs = new RaiffParser();
+                    
+                if(prs.parseCSVLine(strLine.trim())){
+                	String dateString = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date(prs.getDateTime()));
+                	
+                	Log.d(LOG, prs.getCard() + " & " +  prs.getPlace() + " & " + 
+                			prs.getAmount() + " & " + prs.getAmountCurr() + " & " 
+                			+ prs.getRemainder() + " & " + prs.getRemainderCurr() + " & " + prs.getPlace() + " & " + 
+                			prs.getInPlace() + " & " + prs.getType() + " & " + dateString);
+                    	
+                	mergeTransactionToDB(prs);
+                }else{
+                	//Something went wrong.
+                	Log.e(LOG, "Problem message: " + strLine);
+                	//TODO: remove Toast, using now only for test
+                	RaiffStat.this.runOnUiThread(new Runnable() {
+    					@Override
+    					public void run() {
+    						Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_pars_failed), Toast.LENGTH_SHORT).show();
+    				}
+    			});
+                }
+                
+                progressBarStatus++;
+             // Update the progress bar
+                progressBarHandler.post(new Runnable() {
+  					public void run() {
+  					  progressBar.setProgress(progressBarStatus);
+  					}
+  				});
+			}
+			//Close the input stream
+			in.close();
+			// close the progress bar dialog
+			progressBar.dismiss();
+		}catch (Exception e){//Catch exception if any
+			  Log.e(LOG, "Error: " + e.getMessage());
+			  Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_imp_failed), Toast.LENGTH_LONG).show();
+		}
+
+	}
+	
 	
 	private List<String> getCSVFileList(){
 		List<String> fileList = new ArrayList<String>();
@@ -516,9 +610,9 @@ public class RaiffStat extends Activity {
 		db.close();
 	}
 
-	private void mergeTransactionToDB(long dateTime, RaiffParser prs){
+	private void mergeTransactionToDB(RaiffParser prs){
 		DatabaseHandler db = new DatabaseHandler(this);
-		db.mergeTransaction(new TransactionEntry(dateTime, prs.getAmount(), prs.getAmountCurr(),
+		db.mergeTransaction(new TransactionEntry(prs.getDateTime(), prs.getAmount(), prs.getAmountCurr(),
 				prs.getRemainder(), prs.getRemainderCurr(), prs.getTerminal(), prs.getCard(), 
 				prs.getPlace(), prs.getInPlace(), prs.getType()));
 		db.close();

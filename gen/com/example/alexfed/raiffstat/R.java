@@ -60,15 +60,15 @@ public final class R {
     }
     public static final class string {
         public static final int app_name=0x7f040000;
-        public static final int btn_apply=0x7f040034;
-        public static final int ctx_new_place_name=0x7f04002b;
-        public static final int ctx_place_name=0x7f04002c;
-        public static final int dialog_cancel=0x7f04002e;
-        public static final int dialog_ok=0x7f04002d;
-        public static final int dialog_sort_by_amount=0x7f040030;
-        public static final int dialog_sort_by_date=0x7f04002f;
-        public static final int dialog_sort_by_place=0x7f040031;
-        public static final int dialog_sort_type=0x7f040032;
+        public static final int btn_apply=0x7f040037;
+        public static final int ctx_new_place_name=0x7f04002d;
+        public static final int ctx_place_name=0x7f04002e;
+        public static final int dialog_cancel=0x7f040030;
+        public static final int dialog_ok=0x7f04002f;
+        public static final int dialog_sort_by_amount=0x7f040032;
+        public static final int dialog_sort_by_date=0x7f040031;
+        public static final int dialog_sort_by_place=0x7f040033;
+        public static final int dialog_sort_type=0x7f040034;
         public static final int hello_world=0x7f040001;
         public static final int long_click_ctx_dialog_title=0x7f040012;
         public static final int long_click_place_delete=0x7f040010;
@@ -88,7 +88,8 @@ public final class R {
         public static final int menu_summary=0x7f040007;
         public static final int place_detailed=0x7f04000b;
         public static final int places_name=0x7f04000a;
-        public static final int progress_sms_scanning=0x7f040033;
+        public static final int progress_csv_scanning=0x7f040036;
+        public static final int progress_sms_scanning=0x7f040035;
         public static final int report_name=0x7f040006;
         public static final int spinner_all=0x7f040013;
         public static final int str_amount=0x7f04001a;
@@ -108,10 +109,12 @@ public final class R {
         public static final int toast_db_empty=0x7f040025;
         public static final int toast_dir_failed=0x7f040028;
         public static final int toast_exp_failed=0x7f040029;
+        public static final int toast_imp_failed=0x7f04002b;
         public static final int toast_no_files=0x7f04002a;
         public static final int toast_no_place=0x7f040026;
         public static final int toast_no_storage=0x7f040027;
         public static final int toast_nothing_selected=0x7f040024;
+        public static final int toast_pars_failed=0x7f04002c;
     }
     public static final class style {
         /** 

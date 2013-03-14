@@ -48,6 +48,8 @@
 	<string name="toast_dir_failed">Не смог создать директорию</string>
 	<string name="toast_exp_failed">Ошибка экспорта</string>
 	<string name="toast_no_files">Файлы отсутствуют</string>
+	<string name="toast_imp_failed">Ошибка импорта</string>
+	<string name="toast_pars_failed">Ошибка анализатора</string>
 	
 	<string name="ctx_new_place_name">Введите новое название места</string>
 	<string name="ctx_place_name">Введите название места</string>
@@ -60,6 +62,7 @@
 	<string name="dialog_sort_type">Тип сортировки</string>
 	
 	<string name="progress_sms_scanning">Сканирую СМС ...</string>
+	<string name="progress_csv_scanning">Сканирую файл ...</string>
 	
 	<string name="btn_apply">Применить</string>
 	
