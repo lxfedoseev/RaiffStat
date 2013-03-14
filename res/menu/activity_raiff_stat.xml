@@ -36,5 +36,11 @@
         android:showAsAction="never"
         android:title="@string/menu_query"/>
     
+    <item
+        android:id="@+id/menu_csv_export"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/menu_csv_export"/>
+    
 
 </menu>

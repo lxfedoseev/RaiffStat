@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ReportList extends ListActivity {
 
@@ -34,6 +35,8 @@ public class ReportList extends ListActivity {
 	private String place;
 	private String strAll;
 	private String strCard;
+	private int sortItemIndex = 0;
+	private int sortType;
 	
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -51,7 +54,8 @@ public class ReportList extends ListActivity {
 		if(!place.equalsIgnoreCase(getResources().getString(R.string.spinner_all))){
 			setTitle(place);
 		}
-				
+		
+		sortType = StaticValues.SORT_BY_DATE;
 		inflateList();
 	}
 
@@ -67,72 +71,10 @@ public class ReportList extends ListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
     		case R.id.menu_summary:
-    			String message = "";
-    			String card = "";
-    			
-    			Map<String, Double> sum = new HashMap<String, Double>();
-    			Set<String> currs = new HashSet<String>();
-    			
-    			Map<String, Double> sumIncom = new HashMap<String, Double>();
-    			Set<String> currsIncom = new HashSet<String>();
-    			
-    			for (TransactionEntry t : transactions) {
-    				if(!currs.contains(t.getAmountCurr()) &&
-    						(t.getType() == StaticValues.TRANSACTION_TYPE_EXPENSE)){
-    					currs.add(t.getAmountCurr());
-    					sum.put(t.getAmountCurr(), 0.0);
-    				}
-    				if(!currsIncom.contains(t.getAmountCurr()) && 
-    						(t.getType() == StaticValues.TRANSACTION_TYPE_INCOME)){
-    					currsIncom.add(t.getAmountCurr());
-    					sumIncom.put(t.getAmountCurr(), 0.0);
-    				}
-    				
-    				if(t.getType() == StaticValues.TRANSACTION_TYPE_EXPENSE){
-	    				sum.put(t.getAmountCurr(), sum.get(t.getAmountCurr())+t.getAmount());
-	    				card = t.getCard();
-    				}else if(t.getType() == StaticValues.TRANSACTION_TYPE_INCOME){
-	    				sumIncom.put(t.getAmountCurr(), sumIncom.get(t.getAmountCurr())+t.getAmount());
-	    				card = t.getCard();
-    				}
-    			}
-    			
-    			if(!place.equalsIgnoreCase(getResources().getString(R.string.spinner_all)))
-    				message += getResources().getString(R.string.str_place) + ": " + place + "\r\n";
-    			message += getResources().getString(R.string.str_period) + ": " + dayFrom + "~" + dayTo + "\r\n" + 
-    					getResources().getString(R.string.str_card) + ": " + card + "\r\n" + 
-    					getResources().getString(R.string.str_spent) + ": ";
-    			//round sum values
-    			for(String s: currs){
-    				double rndSum = sum.get(s) * 100;
-    				rndSum = Math.round(rndSum);
-    				rndSum /=100;
-    				message += ""+rndSum+ " " + s + ", "; 
-    			}
-    			message = message.substring(0, message.length()-2); // remove last comma[space] ", "
-    			
-    			if(place.equalsIgnoreCase(getResources().getString(R.string.spinner_all))){
-	    			message += "\r\n" + getResources().getString(R.string.str_earned) + ": ";
-	    			for(String s: currsIncom){
-	    				double rndSum = sumIncom.get(s) * 100;
-	    				rndSum = Math.round(rndSum);
-	    				rndSum /=100;
-	    				message += ""+rndSum+ " " + s + ", "; 
-	    			}
-	    			message = message.substring(0, message.length()-2); // remove last comma[space] ", "
-    			}
-    			
-    			message += "\r\n"+ getResources().getString(R.string.str_tr_number) + ": " + transactions.size();
-    			
-    			new AlertDialog.Builder(this)
-    		    .setMessage(message)
-    		    .setPositiveButton(R.string.dialog_ok, new android.content.DialogInterface.OnClickListener() {                
-    		        @Override
-    		        public void onClick(DialogInterface dialog, int which) {
-    		                       
-    		        }
-    		    })
-    		    .show(); 
+    			doSummary();
+    			return true;
+    		case R.id.menu_sort:
+    			doSort();
     			return true;
     		default:
     			return super.onOptionsItemSelected(item);
@@ -154,7 +96,7 @@ public class ReportList extends ListActivity {
 	
 	private void queryDateIntervalPlace(long start, long end, String place){	
 		DatabaseHandler db = new DatabaseHandler(this);
-		transactions = db.getTransactionsDateIntervalPlace(start, end, place);
+		transactions = db.getTransactionsDateIntervalPlace(start, end, place, sortType);
 		db.close();
 	}
 	
@@ -168,6 +110,123 @@ public class ReportList extends ListActivity {
 			return 0;
 		}
 	}
+	
+	private void doSummary(){
+		
+		String message = "";
+		String card = "";
+		
+		Map<String, Double> sum = new HashMap<String, Double>();
+		Set<String> currs = new HashSet<String>();
+		
+		Map<String, Double> sumIncom = new HashMap<String, Double>();
+		Set<String> currsIncom = new HashSet<String>();
+		
+		for (TransactionEntry t : transactions) {
+			if(!currs.contains(t.getAmountCurr()) &&
+					(t.getType() == StaticValues.TRANSACTION_TYPE_EXPENSE)){
+				currs.add(t.getAmountCurr());
+				sum.put(t.getAmountCurr(), 0.0);
+			}
+			if(!currsIncom.contains(t.getAmountCurr()) && 
+					(t.getType() == StaticValues.TRANSACTION_TYPE_INCOME)){
+				currsIncom.add(t.getAmountCurr());
+				sumIncom.put(t.getAmountCurr(), 0.0);
+			}
+			
+			if(t.getType() == StaticValues.TRANSACTION_TYPE_EXPENSE){
+				sum.put(t.getAmountCurr(), sum.get(t.getAmountCurr())+t.getAmount());
+				card = t.getCard();
+			}else if(t.getType() == StaticValues.TRANSACTION_TYPE_INCOME){
+				sumIncom.put(t.getAmountCurr(), sumIncom.get(t.getAmountCurr())+t.getAmount());
+				card = t.getCard();
+			}
+		}
+		
+		if(!place.equalsIgnoreCase(getResources().getString(R.string.spinner_all)))
+			message += getResources().getString(R.string.str_place) + ": " + place + "\r\n";
+		message += getResources().getString(R.string.str_period) + ": " + dayFrom + "~" + dayTo + "\r\n" + 
+				getResources().getString(R.string.str_card) + ": " + card + "\r\n" + 
+				getResources().getString(R.string.str_spent) + ": ";
+		//round sum values
+		for(String s: currs){
+			double rndSum = sum.get(s) * 100;
+			rndSum = Math.round(rndSum);
+			rndSum /=100;
+			message += ""+rndSum+ " " + s + ", "; 
+		}
+		message = message.substring(0, message.length()-2); // remove last comma[space] ", "
+		
+		if(place.equalsIgnoreCase(getResources().getString(R.string.spinner_all))){
+			message += "\r\n" + getResources().getString(R.string.str_earned) + ": ";
+			for(String s: currsIncom){
+				double rndSum = sumIncom.get(s) * 100;
+				rndSum = Math.round(rndSum);
+				rndSum /=100;
+				message += ""+rndSum+ " " + s + ", "; 
+			}
+			message = message.substring(0, message.length()-2); // remove last comma[space] ", "
+		}
+		
+		message += "\r\n"+ getResources().getString(R.string.str_tr_number) + ": " + transactions.size();
+		
+		new AlertDialog.Builder(this)
+	    .setMessage(message)
+	    .setPositiveButton(R.string.dialog_ok, new android.content.DialogInterface.OnClickListener() {                
+	        @Override
+	        public void onClick(DialogInterface dialog, int which) {
+	                       
+	        }
+	    })
+	    .show(); 
+	}
+	
+	  private void doSort(){
+		  AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+		  final CharSequence[] choiceList;
+		  if(place.equalsIgnoreCase(getResources().getString(R.string.spinner_all))){
+			  CharSequence[] choiceListLocal = {getResources().getString(R.string.dialog_sort_by_date),
+					  							getResources().getString(R.string.dialog_sort_by_amount),
+					  							getResources().getString(R.string.dialog_sort_by_place)};
+			  choiceList = choiceListLocal;
+		  }else{
+			  CharSequence[] choiceListLocal = {getResources().getString(R.string.dialog_sort_by_date),
+						getResources().getString(R.string.dialog_sort_by_amount)};
+			  
+			  choiceList = choiceListLocal;
+		  }
+
+		  alert.setTitle(getResources().getString(R.string.dialog_sort_type));		  
+		  sortItemIndex = -1;
+		  alert.setSingleChoiceItems(choiceList, -1, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				sortItemIndex = which; 
+			}
+		});
+		alert.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				if(sortItemIndex > -1){
+					sortType = sortItemIndex;
+					inflateList();
+				}else{
+					Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show(); 
+				}
+			}
+		});
+		alert.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+			}
+		});
+		  
+		alert.show();
+	  }
 
     private static class ReportListAdapter extends BaseAdapter {
     	private final String LOG = "ReportListAdapter";

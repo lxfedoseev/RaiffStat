@@ -1,5 +1,8 @@
 package com.example.alexfed.raiffstat;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -12,11 +15,11 @@ import java.util.List;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
@@ -32,17 +35,17 @@ import android.widget.Toast;
 
 
 /* TODO: 
- * - Sort report by date/amount/alphabet.
- * - Progress bar for make/delete/rename places (for all time consuming operations) 
  * - Import/Export from/to CSV file.
+ * - Progress bar for make/delete/rename places (for all time consuming operations) 
  * - Save application state (screen rotation, going to background)
  * - Correct row layouts for different screen sizes 
  * - Save report to a file (share report)
+ * - Make categories out of places (Food, Leisure, Clothes, Automobile, Applications, etc., Customly defined)
  * - Make a pie chart for time period with all tags
  * - Radio buttons for interval (1 week, 1 month, period)
  * - Make a good design (application icon as well)
+ * 
  * - ? Widget (Spent for a place, spent entirely, remainder) ?
- * - ? Make categories out of places (Food, Leisure, Clothes, Automobile, Applications, etc., Customly defined) ?
  * - ? Remove particular items from report (long touch -> remove) ?
  * 
  */
@@ -63,6 +66,8 @@ public class RaiffStat extends Activity {
 	private int year;
 	private int month;
 	private int day;
+	
+	private String dirName = "RaiffStat";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -121,9 +126,12 @@ public class RaiffStat extends Activity {
     			startActivity(terminalsActivity);
     			return true; 
     		case R.id.menu_manage_places:
-    			//TODO:
     			Intent placesActivity = new Intent(getBaseContext(), PlacesList.class);
     			startActivity(placesActivity);
+    			return true; 
+    		case R.id.menu_csv_export:
+    			//TODO:
+    			doExportToCSV();
     			return true; 
     		default:
     			return super.onOptionsItemSelected(item);
@@ -341,6 +349,76 @@ public class RaiffStat extends Activity {
 	    }      
 	
 		
+	}
+	
+	private void doExportToCSV(){
+		
+		String state = Environment.getExternalStorageState();
+	    if (Environment.MEDIA_MOUNTED.equals(state)) {
+	    	
+	    	DatabaseHandler db = new DatabaseHandler(this);
+	    	if(db.getTransactionsCount() < 1){
+	    		Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_db_empty), Toast.LENGTH_LONG).show();
+	    		db.close();
+	    		return;
+	    	}
+	    	
+	    	if(!createDirIfNotExists(dirName)){
+	    		Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_dir_failed), Toast.LENGTH_LONG).show();
+	    		db.close();
+	    		return;
+	    	}
+	    	
+	    	List<TransactionEntry> trs = db.getAllTransactions();
+	    	db.close();
+	    	try{
+	    		String fName = makeExportFileName();
+	    		FileWriter ostream = new FileWriter(fName);
+	    		BufferedWriter out = new BufferedWriter(ostream);
+	    		
+	    		for(TransactionEntry t : trs){
+	    			out.write(t.getID() + StaticValues.DELIMITER +
+	    					t.getDateTime() + StaticValues.DELIMITER +
+				    		t.getAmount() + StaticValues.DELIMITER +
+				    		t.getAmountCurr() + StaticValues.DELIMITER +
+				    		t.getRemainder() + StaticValues.DELIMITER +
+				    		t.getRemainderCurr() + StaticValues.DELIMITER +
+				    		t.getTerminal() + StaticValues.DELIMITER +
+				    		t.getCard() + StaticValues.DELIMITER +
+				    		t.getPlace() + StaticValues.DELIMITER +
+				    		t.getInPlace() + StaticValues.DELIMITER +
+				    		t.getType() + "\r\n");
+	    		}
+	    		out.close();
+	    		Toast.makeText(getApplicationContext(), 
+	    				getResources().getString(R.string.str_file) + " " + fName  + " " +
+	    						getResources().getString(R.string.str_created), Toast.LENGTH_LONG).show();
+	    	}catch(Exception e){
+	    		Log.d(LOG, e.getMessage());
+	    		Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_exp_failed), Toast.LENGTH_LONG).show();
+	    	}
+	    }else {
+	    	Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_no_storage), Toast.LENGTH_LONG).show();
+	    }
+		
+	}
+	
+	private boolean createDirIfNotExists(String path) {
+	    boolean ret = true;
+
+	    File file = new File(Environment.getExternalStorageDirectory(), path);
+	    if (!file.exists()) {
+	        if (!file.mkdirs()) {
+	            ret = false;
+	        }
+	    }
+	    return ret;
+	}
+	
+	private String makeExportFileName(){
+		Calendar c = Calendar.getInstance();
+		SimpleDateFormat df = new SimpleDateFormat("dd_MM_yyyy__HH_mm_ss");	
+		return Environment.getExternalStorageDirectory()+ "/" + dirName + "/" + df.format(c.getTime())+".csv";
 	}
 	
 	private void addTransactionToDB(long dateTime, RaiffParser prs){

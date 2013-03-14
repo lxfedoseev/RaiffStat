@@ -161,10 +161,10 @@ public class TerminalsList extends ListActivity {
 
 	  private void addToPlace(){
 		  AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		  final Context context = getBaseContext();
-		  final DatabaseHandler db = new DatabaseHandler(context);
+		  DatabaseHandler db = new DatabaseHandler(getBaseContext());
 		  List<String> placeList = db.getDistinctPlacesForPlaceList();
-
+		  db.close();
+		  
 		  final CharSequence[] choiceList = placeList.toArray(new CharSequence[placeList.size()]);
 		  alert.setTitle(getResources().getString(R.string.str_place));		  
 		  itemIndex = -1;
@@ -176,13 +176,13 @@ public class TerminalsList extends ListActivity {
 				itemIndex = which;
 			}
 		});
-		alert.setCancelable(false);
 		alert.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub
 				if(itemIndex > -1){
+					DatabaseHandler db = new DatabaseHandler(getApplicationContext());
 					for (Model m: modelList){
 				    	if(m.isSelected()){
 				    		List<TransactionEntry> transactions = db.getTransactionsTerminal(m.getName());
@@ -196,7 +196,6 @@ public class TerminalsList extends ListActivity {
 					db.close();
 					inflateList();
 				}else{
-					db.close();
 					Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show(); 
 				}
 			}
@@ -206,7 +205,6 @@ public class TerminalsList extends ListActivity {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub
-				db.close();
 			}
 		});
 		  

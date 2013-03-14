@@ -93,7 +93,7 @@ public class RaiffParser {
     	String delims = "[:]+"; 
 		String[] tokens = str.split(delims);
 		if(tokens.length>1){
-			this._terminal = tokens[1].trim();
+			this._terminal = tokens[1].trim().replace(StaticValues.DELIMITER, " ");//need to remove "," to support CSV
 			this._place = this._terminal;
 			this._in_place = 0;
 		}
