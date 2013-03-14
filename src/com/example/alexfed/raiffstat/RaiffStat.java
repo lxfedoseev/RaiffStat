@@ -11,9 +11,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
@@ -68,6 +72,8 @@ public class RaiffStat extends Activity {
 	private int day;
 	
 	private String dirName = "RaiffStat";
+	
+	private int itemIndex = 0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +138,10 @@ public class RaiffStat extends Activity {
     		case R.id.menu_csv_export:
     			//TODO:
     			doExportToCSV();
+    			return true; 
+    		case R.id.menu_csv_import:
+    			//TODO:
+    			doImportFromCSV();
     			return true; 
     		default:
     			return super.onOptionsItemSelected(item);
@@ -403,6 +413,83 @@ public class RaiffStat extends Activity {
 		
 	}
 	
+	private void doImportFromCSV(){
+		
+		List<String> fileList = getCSVFileList();
+		if(fileList.size()<1){
+			Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_no_files), Toast.LENGTH_LONG).show();
+			return;
+		}
+		
+		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		final CharSequence[] choiceList = fileList.toArray(new CharSequence[fileList.size()]);
+		
+		alert.setTitle(getResources().getString(R.string.str_files));		  
+		  itemIndex = -1;
+		  alert.setSingleChoiceItems(choiceList, -1, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				itemIndex = which;
+			}
+		});
+		alert.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					if(itemIndex > -1){
+						//TODO: run progress bar here
+					}else{
+						Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show(); 
+					}
+				}
+			});
+		alert.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+				}
+			});
+			  
+		alert.show();
+	}
+	
+	private List<String> getCSVFileList(){
+		List<String> fileList = new ArrayList<String>();
+		String patternString = "\\d{2}_\\d{2}_\\d{4}__\\d{2}_\\d{2}_\\d{2}.csv";
+		Pattern pattern = Pattern.compile(patternString);
+		
+		File f = new File(Environment.getExternalStorageDirectory()+"/"+dirName);
+		if(!f.exists())
+			return fileList;
+		
+	    File[] files = f.listFiles();
+	    for(int i=0; i < files.length; i++){
+	    	File file = files[i];
+	       
+	    	if(!isCSVFile(file, pattern))
+	    	   continue;
+	    	fileList.add(file.getName());
+	    }
+	    return fileList;
+		
+	}
+	
+	private boolean isCSVFile(File file, Pattern pattern){
+	 		
+	 		if(file.isDirectory())
+	 			return false;
+	 		
+	 		Matcher matcher = pattern.matcher(file.getName());
+	 		if (matcher.matches())
+	            return true;
+	        else
+	            return false;
+	 }
+
 	private boolean createDirIfNotExists(String path) {
 	    boolean ret = true;
 

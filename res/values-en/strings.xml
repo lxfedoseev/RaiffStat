@@ -21,7 +21,8 @@
     <string name="menu_exclude_from_place">Exclude from Place</string>
     <string name="menu_add_to_place">Add to Place</string>
     <string name="menu_sort">Sort</string>
-    <string name="menu_csv_export">Export DB to File</string>
+    <string name="menu_csv_export">Export to File</string>
+    <string name="menu_csv_import">Import from File</string>
     
     <string name="str_place">Place</string>
     <string name="str_period">Period</string>
@@ -35,6 +36,7 @@
     <string name="str_no_data">No Data</string>
     <string name="str_file">File</string>
     <string name="str_created">created</string>
+    <string name="str_files">Files</string>
     
     <string name="long_click_place_delete">Delete</string>
     <string name="long_click_place_rename">Rename</string>
@@ -46,6 +48,7 @@
 	<string name="toast_no_storage">External storage is not available</string>
 	<string name="toast_dir_failed">Failed to create directory</string>
 	<string name="toast_exp_failed">Export failed</string>
+	<string name="toast_no_files">There are no files</string>
 	
 	<string name="ctx_new_place_name">Input new place name</string>
 	<string name="ctx_place_name">Input place name</string>
