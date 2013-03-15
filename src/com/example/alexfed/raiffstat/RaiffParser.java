@@ -68,8 +68,8 @@ public class RaiffParser {
     						this._terminal = context.getResources().getString(R.string.str_earned);
     					}
     					this._place = this._terminal;
-    					
-    				}catch (Exception e) {
+    					return true;
+    				}catch (Exception e) { 
 						return false;
 					}
     				
@@ -257,7 +257,8 @@ public class RaiffParser {
 				
 				this._amount_curr = tokens[7].substring(tokens[7].length()-3, tokens[7].length());
 				if(this._amount_curr.equalsIgnoreCase("rur"))
-					this._amount_curr = StaticValues.CURR_RUB;		
+					this._amount_curr = StaticValues.CURR_RUB;	
+				
 			}catch (Exception e) {
 				throw e;
 			}
