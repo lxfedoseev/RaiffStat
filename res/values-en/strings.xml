@@ -8,21 +8,22 @@
     <string name="places_name">Places</string>
     <string name="place_detailed">Place Detailed</string>
 
-    <string name="spinner_all">All</string>
+    <string name="spinner_all">Select all</string>
 
     <string name="menu_summary">Summary</string>
-    <string name="menu_manage_terminals">Manage Terminals</string>
+    <string name="menu_manage_terminals">Terminals</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_sms_import">Import from SMS</string>
     <string name="menu_clear_db">Clear DataBase</string>
     <string name="menu_query">Query DataBase</string>
     <string name="menu_make_place">Make a Place</string>
-    <string name="menu_manage_places">Manage Places</string>
+    <string name="menu_manage_places">Places</string>
     <string name="menu_exclude_from_place">Exclude from Place</string>
     <string name="menu_add_to_place">Add to Place</string>
     <string name="menu_sort">Sort</string>
     <string name="menu_csv_export">Export to File</string>
     <string name="menu_csv_import">Import from File</string>
+    <string name="menu_graph">Graph</string>
     
     <string name="str_place">Place</string>
     <string name="str_period">Period</string>
@@ -31,8 +32,8 @@
     <string name="str_tr_number">Transaction number</string>
     <string name="str_forbidden">forbidden</string>
     <string name="str_forbidden_empty_place">Place name can\'t be empty</string>
-    <string name="str_spent">Spent</string>
-    <string name="str_earned">Earned</string>
+    <string name="str_spent">Payment</string>
+    <string name="str_earned">Income</string>
     <string name="str_no_data">No Data</string>
     <string name="str_file">File</string>
     <string name="str_created">created</string>
@@ -51,6 +52,7 @@
 	<string name="toast_no_files">There are no files</string>
 	<string name="toast_imp_failed">Import failed</string>
 	<string name="toast_pars_failed">Parser failed</string>
+	<string name="toast_one_value">Only one value</string>
 	
 	<string name="ctx_new_place_name">Input new place name</string>
 	<string name="ctx_place_name">Input place name</string>
@@ -59,7 +61,7 @@
 	<string name="dialog_cancel">Cancel</string>
 	<string name="dialog_sort_by_date">By date</string>
 	<string name="dialog_sort_by_amount">By amount</string>
-	<string name="dialog_sort_by_place">By place</string>
+	<string name="dialog_sort_by_place">By alphabet</string>
 	<string name="dialog_sort_type">Sort Type</string>
 	
 	<string name="progress_sms_scanning">Scanning SMS ...</string>

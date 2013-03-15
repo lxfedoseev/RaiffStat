@@ -27,7 +27,12 @@
             </intent-filter>
         </activity>
         
-        <activity android:name=".ReportList"
+        <activity android:name=".ReportListAll"
+              android:label="@string/report_name"
+              android:screenOrientation="portrait">
+        </activity>
+        
+        <activity android:name=".ReportListPlace"
               android:label="@string/report_name"
               android:screenOrientation="portrait">
         </activity>

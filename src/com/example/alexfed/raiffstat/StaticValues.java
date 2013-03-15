@@ -14,4 +14,6 @@ public class StaticValues {
 	public static int SORT_BY_PLACE = 2;
 	
 	public static String DELIMITER = ",";
+	
+	public static String CURR_RUB = "RUB";
 }

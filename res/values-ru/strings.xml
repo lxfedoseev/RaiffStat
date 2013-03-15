@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">РайффСтат</string>
+    <string name="app_name">RaiffStat</string>
     <string name="hello_world">Привет мир!</string>
     <string name="report_name">Отчет</string>
     <string name="terminals_name">Терминалы</string>
     <string name="places_name">Места</string>
     <string name="place_detailed">Места подробно</string>
-    <string name="spinner_all">Все</string>
+    <string name="spinner_all">Выбрать все</string>
     
     <string name="menu_settings">Настройки</string>
-    <string name="menu_sms_import">Импортировать из СМС</string>
+    <string name="menu_sms_import">Импорт из СМС</string>
     <string name="menu_clear_db">Очистить базу</string>
     <string name="menu_query">Опросить базу</string>
-    <string name="menu_summary">Резюме</string>
-    <string name="menu_manage_terminals">Управлять терминалами</string>
+    <string name="menu_summary">Отчет</string>
+    <string name="menu_manage_terminals">Терминалы</string>
     <string name="menu_make_place">Объединить в место</string>
-    <string name="menu_manage_places">Управлять местами</string>
+    <string name="menu_manage_places">Места</string>
     <string name="menu_exclude_from_place">Исключить из места</string>
     <string name="menu_add_to_place">Добавить в место</string>
     <string name="menu_sort">Сортировать</string>
-    <string name="menu_csv_export">Экспортировать в файл</string>
-    <string name="menu_csv_import">Импортировать из файла</string>
+    <string name="menu_csv_export">Экспорт в файл</string>
+    <string name="menu_csv_import">Импорт из файла</string>
+    <string name="menu_graph">График</string>
     
     <string name="str_place">Место</string>
     <string name="str_period">Период</string>
@@ -30,8 +31,8 @@
     <string name="str_tr_number">Количество транзакций</string>
     <string name="str_forbidden">запрещено</string>
     <string name="str_forbidden_empty_place">Название места не может быть пустым</string>
-    <string name="str_spent">Потрачено</string>
-    <string name="str_earned">Заработано</string>
+    <string name="str_spent">Расход средств</string>
+    <string name="str_earned">Приход средств</string>
     <string name="str_no_data">Нет данных</string>
     <string name="str_file">Файл</string>
     <string name="str_created">создан</string>
@@ -50,6 +51,7 @@
 	<string name="toast_no_files">Файлы отсутствуют</string>
 	<string name="toast_imp_failed">Ошибка импорта</string>
 	<string name="toast_pars_failed">Ошибка анализатора</string>
+	<string name="toast_one_value">Всего одно значение</string>
 	
 	<string name="ctx_new_place_name">Введите новое название места</string>
 	<string name="ctx_place_name">Введите название места</string>
@@ -58,7 +60,7 @@
 	<string name="dialog_cancel">Отмена</string>
 	<string name="dialog_sort_by_date">По дате</string>
 	<string name="dialog_sort_by_amount">По сумме</string>
-	<string name="dialog_sort_by_place">По месту</string>
+	<string name="dialog_sort_by_place">По алфавиту</string>
 	<string name="dialog_sort_type">Тип сортировки</string>
 	
 	<string name="progress_sms_scanning">Сканирую СМС ...</string>

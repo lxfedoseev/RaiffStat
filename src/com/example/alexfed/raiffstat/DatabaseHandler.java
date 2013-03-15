@@ -334,7 +334,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	}
     }
     
-    public List<TransactionEntry> getTransactionsDateIntervalPlace(long dateStart, long dateEnd, String place, int sortType){
+    public List<TransactionEntry> getTransactionsDateIntervalPlace(long dateStart, long dateEnd, String place, 
+    																	int sortType, boolean isDesc){
     	String countQuery;
     	if(place.equalsIgnoreCase(context.getResources().getString(R.string.spinner_all))){
     		countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
@@ -342,11 +343,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     			" AND " + " ( " + KEY_TYPE + " =?" + " OR " + KEY_TYPE + " =?" + " ) ";
     		
     		if(sortType == StaticValues.SORT_BY_AMMOUNT)
-    			countQuery += " ORDER BY " + KEY_AMOUNT + " DESC";
+    			countQuery += " ORDER BY " + KEY_AMOUNT;
     		else if(sortType == StaticValues.SORT_BY_PLACE)
     			countQuery += " ORDER BY " + KEY_PLACE;
     		else
-    			countQuery += " ORDER BY " + KEY_DATE_TIME + " DESC";
+    			countQuery += " ORDER BY " + KEY_DATE_TIME;
+    		
+    		if(isDesc && sortType != StaticValues.SORT_BY_PLACE)
+    			countQuery += " DESC";
     			
     		
     		return queryDB(countQuery, new String[] {String.valueOf(dateStart), String.valueOf(dateEnd),
@@ -359,9 +363,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     				" AND " + " ( " + KEY_TYPE + " =?" + " ) ";
     		
     		if(sortType == StaticValues.SORT_BY_AMMOUNT)
-    			countQuery += " ORDER BY " + KEY_AMOUNT + " DESC";
+    			countQuery += " ORDER BY " + KEY_AMOUNT;
     		else
-    			countQuery += " ORDER BY " + KEY_DATE_TIME + " DESC";
+    			countQuery += " ORDER BY " + KEY_DATE_TIME;
+    		
+    		if(isDesc)
+    			countQuery += " DESC";
     		
     		return queryDB(countQuery, new String[] {String.valueOf(dateStart), String.valueOf(dateEnd), place,
     													String.valueOf(StaticValues.TRANSACTION_TYPE_EXPENSE)});

@@ -31,12 +31,12 @@ public class RaiffParser {
     }
     
     public boolean parseSmsBody(Context context, String body, long date){
-    	//TODO: handle
-    	// Balans vashey karty *1527 izmenilsya 11/08/2012 Popolnenie:135000,00RUR Spisanie:200000,00RUR. Dostupny Ostatok: 42993,78RUR. Raiffeisenbank
+    	
     	this._date_time = date;
     	String delims;
     	String[] tokens;
     	if(body.toLowerCase().startsWith("balans")){//Income
+    		boolean smthIsWrong = false;
     		delims = "[.]+";
     		tokens = body.split(delims);
     		if(tokens.length>2){
@@ -48,8 +48,32 @@ public class RaiffParser {
 	    			this._place = this._terminal;
 	    			return true;
     			}catch (Exception e) {
-					return false;
+    				smthIsWrong = true;
 				}
+    			
+    			if(smthIsWrong){
+    				//Try to process this kind of messages:
+    				//Balans vashey karty *1527 izmenilsya 11/08/2012 Popolnenie:135000,00RUR Spisanie:200000,00RUR. Dostupny Ostatok: 42993,78RUR. Raiffeisenbank
+    				try{
+    					parseIncomeCardAndAmount2(tokens[0]);
+    					parseRemainder(tokens[1]);
+    					
+    					if(this._amount<0){
+    						this._type = StaticValues.TRANSACTION_TYPE_EXPENSE;
+    						this._amount = Math.abs(this._amount);
+    						this._terminal = context.getResources().getString(R.string.str_spent);
+    						
+    					}else{
+    						this._type = StaticValues.TRANSACTION_TYPE_INCOME;
+    						this._terminal = context.getResources().getString(R.string.str_earned);
+    					}
+    					this._place = this._terminal;
+    					
+    				}catch (Exception e) {
+						return false;
+					}
+    				
+    			}
     		}else{
     			return false;
     		}
@@ -60,6 +84,7 @@ public class RaiffParser {
 		if(tokens.length>4){	
 			
 			if(tokens[1].toLowerCase().startsWith("otkaz")){ // Denial
+			//Karta *1527;Otkaz: otkaz v avtorizacii;Summa:343,00RUB;Data:19/10/2012;Mesto: APTEKA RADUGA ST. PETERSBUR;Dostupny Ostatok: 51978,87RUB.Raiffeisenbank
 				try{
 					parseCard(tokens[0]);
 					parseAmount(tokens[2]);
@@ -134,6 +159,8 @@ public class RaiffParser {
 				strLocal = tokens[1].substring(0, tokens[1].length()-3); //cut "RUB", "USD", "EUR" in the end
 				this._amount = Double.parseDouble(strLocal.replace(',', '.'));
 				this._amount_curr = tokens[1].substring(tokens[1].length()-3, tokens[1].length());
+				if(this._amount_curr.equalsIgnoreCase("rur"))
+					this._amount_curr = StaticValues.CURR_RUB;
 			}catch (Exception e) {
 				throw e;
 			}
@@ -167,6 +194,8 @@ public class RaiffParser {
 				strLocal = tokens[1].substring(0, tokens[1].length()-3); //cut "RUB", "USD", "EUR" in the end
 				this._remainder = Double.parseDouble(strLocal.replace(',', '.'));
 				this._remainder_curr = tokens[1].substring(tokens[1].length()-3, tokens[1].length());
+				if(this._remainder_curr.equalsIgnoreCase("rur"))
+					this._remainder_curr = StaticValues.CURR_RUB;
 			}catch (Exception e) {
 				throw e;
 			}
@@ -187,6 +216,8 @@ public class RaiffParser {
 				strLocal = tokens[1].substring(0, tokens[1].length()-3); //cut "RUB", "USD", "EUR" in the end
 				this._amount = Double.parseDouble(strLocal.replace(',', '.'));
 				this._amount_curr = tokens[1].substring(tokens[1].length()-3, tokens[1].length());
+				if(this._amount_curr.equalsIgnoreCase("rur"))
+					this._amount_curr = StaticValues.CURR_RUB;
 			}catch (Exception e) {
 				throw e;
 			}
@@ -200,6 +231,38 @@ public class RaiffParser {
 			}
 		}else{
 			throw new Exception("tokens.length<=1");
+		}
+    }
+    
+    private void parseIncomeCardAndAmount2(String str) throws Exception{
+    	//Balans vashey karty *1527 izmenilsya 11/08/2012 Popolnenie:135000,00RUR Spisanie:200000,00RUR
+    	double inc = 0;
+    	double exp = 0;
+    	String strLocal = "";
+    	
+    	String delims = "[\\s:]+"; 
+		String[] tokens = str.split(delims);
+		if(tokens.length>9){
+			try{
+				this._card = tokens[3].trim(); //card
+				tokens[7] = tokens[7].trim();
+				strLocal = tokens[7].substring(0, tokens[7].length()-3); //cut "RUB", "USD", "EUR" in the end
+				inc = Double.parseDouble(strLocal.replace(',', '.'));
+				
+				tokens[9] = tokens[9].trim();
+				strLocal = tokens[9].substring(0, tokens[9].length()-3); //cut "RUB", "USD", "EUR" in the end
+				exp = Double.parseDouble(strLocal.replace(',', '.'));
+				
+				this._amount = inc - exp;
+				
+				this._amount_curr = tokens[7].substring(tokens[7].length()-3, tokens[7].length());
+				if(this._amount_curr.equalsIgnoreCase("rur"))
+					this._amount_curr = StaticValues.CURR_RUB;		
+			}catch (Exception e) {
+				throw e;
+			}
+		}else{
+			throw new Exception("tokens.length<=9");
 		}
     }
     

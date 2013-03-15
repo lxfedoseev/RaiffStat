@@ -43,13 +43,12 @@ import android.widget.Toast;
 
 
 /* TODO: 
- * - Import/Export from/to CSV file.
  * - Progress bar for make/delete/rename places (for all time consuming operations) 
  * - Save application state (screen rotation, going to background)
  * - Correct row layouts for different screen sizes 
  * - Save report to a file (share report)
  * - Make categories out of places (Food, Leisure, Clothes, Automobile, Applications, etc., Customly defined)
- * - Make a pie chart for time period with all tags
+ * - Make a chart for time period with all tags
  * - Radio buttons for interval (1 week, 1 month, period)
  * - Make a good design (application icon as well)
  * 
@@ -223,15 +222,19 @@ public class RaiffStat extends Activity {
 		btnApply = (Button) findViewById(R.id.btnApply);
 		btnApply.setOnClickListener(new View.OnClickListener() {
 		    @Override
-		    public void onClick(View v) {
+		    public void onClick(View v) { 
 		    	//Toast.makeText(getApplicationContext(), "Button click", Toast.LENGTH_LONG).show();               
 		    	Intent myIntent;
-		    	myIntent = new Intent(RaiffStat.this, ReportList.class);
+		    	if(placeName.equalsIgnoreCase(getResources().getString(R.string.spinner_all))){
+		    		myIntent = new Intent(RaiffStat.this, ReportListAll.class);
+		    	}else{
+		    		myIntent = new Intent(RaiffStat.this, ReportListPlace.class);
+		    		myIntent.putExtra("place", placeName);
+		    	}
 		    	int month = dpFrom.getMonth() + 1;
 		    	myIntent.putExtra("day_from", dpFrom.getDayOfMonth()+"/"+month+"/"+dpFrom.getYear());
 		    	month = dpTo.getMonth() + 1;
 		    	myIntent.putExtra("day_to", dpTo.getDayOfMonth()+"/"+month+"/"+dpTo.getYear());
-		    	myIntent.putExtra("place", placeName);
 		    	RaiffStat.this.startActivity(myIntent);
 		    }
 		});
@@ -281,7 +284,7 @@ public class RaiffStat extends Activity {
 	        String[] projection = new String[] { "_id", "address", "person", "body", "date", "type" }; 
 	        cur = getContentResolver().query(uri, projection, "address" + "='" + RAIFF_ADDRESS + "'", null, "date");
 	    }catch (SQLiteException ex) {  
-	    	Log.d(LOG, ex.getMessage()); 
+	    	myLog.LOGD(LOG, ex.getMessage()); 
 	    	return false;
 	    } 
 		progressBar = new ProgressDialog(this);
@@ -299,7 +302,7 @@ public class RaiffStat extends Activity {
 	}
 	
 	private void importSms(){
-		Log.d(LOG, "importSms");
+		myLog.LOGD(LOG, "importSms");
 	    final String SMS_URI_INBOX = "content://sms/inbox"; 
 	    boolean parsedWell = false;
 	    try {  
@@ -324,14 +327,14 @@ public class RaiffStat extends Activity {
 	                    
 	                //http://developer.android.com/reference/java/text/SimpleDateFormat.html
 	                String dateString = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date(longDate));
-	                //Log.d("LOG", "Date is: " + dateString);
+	                //myLog.LOGD("LOG", "Date is: " + dateString);
 	                    
 	                RaiffParser prs = new RaiffParser();
 	                if(strbody!=null) 
 	                	parsedWell = prs.parseSmsBody(getBaseContext(), strbody.trim(), longDate);
 	                    
 	                if(parsedWell){
-	                	Log.d(LOG, prs.getCard() + " & " +  prs.getPlace() + " & " + 
+	                	myLog.LOGD(LOG, prs.getCard() + " & " +  prs.getPlace() + " & " + 
 	                			prs.getAmount() + " & " + prs.getAmountCurr() + " & " 
 	                			+ prs.getRemainder() + " & " + prs.getRemainderCurr() + " & " + prs.getPlace() + " & " + 
 	                			prs.getInPlace() + " & " + prs.getType() + " & " + dateString);
@@ -341,7 +344,7 @@ public class RaiffStat extends Activity {
 	                }else{
 	                	//Something went wrong
 	                	//TODO: add this strbody to problem SMS table of DB to be sent later to the developer
-	                	Log.e(LOG, "Problem message: " + strbody);
+	                	myLog.LOGE(LOG, "Problem message: " + strbody);
 	                	//TODO: remove Toast, using now only for test
 	                	RaiffStat.this.runOnUiThread(new Runnable() {
 	    					@Override
@@ -368,10 +371,10 @@ public class RaiffStat extends Activity {
 	                cur = null;  
 	            }  
 	        } else {  
-	        	Log.d(LOG, "no result!");
+	        	myLog.LOGD(LOG, "no result!");
 	        } // end if  
 	    } catch (SQLiteException ex) {  
-	    	Log.d(LOG, ex.getMessage());  
+	    	myLog.LOGD(LOG, ex.getMessage());  
 	    }      
 	
 		
@@ -420,7 +423,7 @@ public class RaiffStat extends Activity {
 	    				getResources().getString(R.string.str_file) + " " + fName  + " " +
 	    						getResources().getString(R.string.str_created), Toast.LENGTH_LONG).show();
 	    	}catch(Exception e){
-	    		Log.d(LOG, e.getMessage());
+	    		myLog.LOGD(LOG, e.getMessage());
 	    		Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_exp_failed), Toast.LENGTH_LONG).show();
 	    	}
 	    }else {
@@ -513,7 +516,7 @@ public class RaiffStat extends Activity {
                 if(prs.parseCSVLine(strLine.trim())){
                 	String dateString = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date(prs.getDateTime()));
                 	
-                	Log.d(LOG, prs.getCard() + " & " +  prs.getPlace() + " & " + 
+                	myLog.LOGD(LOG, prs.getCard() + " & " +  prs.getPlace() + " & " + 
                 			prs.getAmount() + " & " + prs.getAmountCurr() + " & " 
                 			+ prs.getRemainder() + " & " + prs.getRemainderCurr() + " & " + prs.getPlace() + " & " + 
                 			prs.getInPlace() + " & " + prs.getType() + " & " + dateString);
@@ -521,7 +524,7 @@ public class RaiffStat extends Activity {
                 	mergeTransactionToDB(prs);
                 }else{
                 	//Something went wrong.
-                	Log.e(LOG, "Problem message: " + strLine);
+                	myLog.LOGE(LOG, "Problem message: " + strLine);
                 	//TODO: remove Toast, using now only for test
                 	RaiffStat.this.runOnUiThread(new Runnable() {
     					@Override
@@ -544,7 +547,7 @@ public class RaiffStat extends Activity {
 			// close the progress bar dialog
 			progressBar.dismiss();
 		}catch (Exception e){//Catch exception if any
-			  Log.e(LOG, "Error: " + e.getMessage());
+			myLog.LOGE(LOG, "Error: " + e.getMessage());
 			  Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_imp_failed), Toast.LENGTH_LONG).show();
 		}
 
@@ -627,7 +630,7 @@ public class RaiffStat extends Activity {
 	private void printTransactions(List<TransactionEntry> transactions){
 		for (TransactionEntry t : transactions) {
 			String dateString = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date(t.getDateTime()));
-			Log.d(LOG, t.getID() + " & " + t.getCard() + " & " +  t.getTerminal() + " & " + 
+			myLog.LOGD(LOG, t.getID() + " & " + t.getCard() + " & " +  t.getTerminal() + " & " + 
 	    			t.getAmount() + " & " + t.getAmountCurr() + " & " 
 	    			+ t.getRemainder() + " & " + t.getRemainderCurr() + " & " +  t.getPlace() +  " & " +  
 	    			t.getInPlace() +  " & " + t.getType() + " & " + dateString);
@@ -661,7 +664,7 @@ public class RaiffStat extends Activity {
 			Date date = (Date)formatter.parse(strDate);
 			return date.getTime();
 		}catch (ParseException ex){
-			Log.d(LOG, ex.getMessage()); 
+			myLog.LOGD(LOG, ex.getMessage()); 
 			return 0;
 		}
 	}

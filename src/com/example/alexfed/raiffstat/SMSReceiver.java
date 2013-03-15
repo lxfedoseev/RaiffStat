@@ -36,7 +36,7 @@ public class SMSReceiver extends BroadcastReceiver {
                 message += msgs[i].getMessageBody().toString();        
             }
             String dateString = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date(date));
-            Log.d(LOG, "Sender: " + sender + " Message: " + message + " Date: " + dateString);
+            myLog.LOGD(LOG, "Sender: " + sender + " Message: " + message + " Date: " + dateString);
             
             if(sender.trim().equals(raiffAddress))
             	parseSmsAddToDb(context, date, message);
@@ -51,7 +51,7 @@ public class SMSReceiver extends BroadcastReceiver {
         	parsedWell = prs.parseSmsBody(context, body.trim(), date); 
             
         if(parsedWell){
-        	Log.d(LOG, prs.getCard() + " & " +  prs.getTerminal() + " & " + 
+        	myLog.LOGD(LOG, prs.getCard() + " & " +  prs.getTerminal() + " & " + 
         			 prs.getAmount() + " & " + prs.getAmountCurr() + " & " 
         			 + prs.getRemainder() + " & " + prs.getRemainderCurr() + " & " + prs.getPlace() + " & " + prs.getInPlace() + " & " + dateString);
             	

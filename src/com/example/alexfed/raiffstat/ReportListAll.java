@@ -26,15 +26,13 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ReportList extends ListActivity {
+public class ReportListAll extends ListActivity {
 
-	private final String LOG = "ReportList";
+
+	private final String LOG = "ReportListAll";
 	private List<TransactionEntry> transactions;
 	private String dayFrom;
 	private String dayTo;
-	private String place;
-	private String strAll;
-	private String strCard;
 	private int sortItemIndex = 0;
 	private int sortType;
 	
@@ -48,12 +46,6 @@ public class ReportList extends ListActivity {
 		setContentView(R.layout.activity_raiff_report);
 		dayFrom = getIntent().getStringExtra("day_from");
 		dayTo = getIntent().getStringExtra("day_to");
-		place = getIntent().getStringExtra("place");
-		strAll = getResources().getString(R.string.spinner_all);
-		strCard = getResources().getString(R.string.str_card);
-		if(!place.equalsIgnoreCase(getResources().getString(R.string.spinner_all))){
-			setTitle(place);
-		}
 		
 		sortType = StaticValues.SORT_BY_DATE;
 		inflateList();
@@ -84,8 +76,8 @@ public class ReportList extends ListActivity {
 	
 	
 	private void inflateList(){
-		queryDateIntervalPlace(convertStringDate(dayFrom+ " 00:00:00"), convertStringDate(dayTo+ " 23:59:59"), place);
-		setListAdapter(new ReportListAdapter(this, transactions, place, strAll, strCard));
+		queryDateIntervalPlace(convertStringDate(dayFrom+ " 00:00:00"), convertStringDate(dayTo+ " 23:59:59"), getResources().getString(R.string.spinner_all));
+		setListAdapter(new ReportListAdapter(this, transactions));
 	}
 	
 	private void queryDateInterval(long start, long end){	
@@ -96,7 +88,7 @@ public class ReportList extends ListActivity {
 	
 	private void queryDateIntervalPlace(long start, long end, String place){	
 		DatabaseHandler db = new DatabaseHandler(this);
-		transactions = db.getTransactionsDateIntervalPlace(start, end, place, sortType);
+		transactions = db.getTransactionsDateIntervalPlace(start, end, place, sortType, true);
 		db.close();
 	}
 	
@@ -106,7 +98,7 @@ public class ReportList extends ListActivity {
 			Date date = (Date)formatter.parse(strDate);
 			return date.getTime();
 		}catch (ParseException ex){
-			Log.d(LOG, ex.getMessage()); 
+			myLog.LOGD(LOG, ex.getMessage()); 
 			return 0;
 		}
 	}
@@ -143,8 +135,6 @@ public class ReportList extends ListActivity {
 			}
 		}
 		
-		if(!place.equalsIgnoreCase(getResources().getString(R.string.spinner_all)))
-			message += getResources().getString(R.string.str_place) + ": " + place + "\r\n";
 		message += getResources().getString(R.string.str_period) + ": " + dayFrom + "~" + dayTo + "\r\n" + 
 				getResources().getString(R.string.str_card) + ": " + card + "\r\n" + 
 				getResources().getString(R.string.str_spent) + ": ";
@@ -157,7 +147,7 @@ public class ReportList extends ListActivity {
 		}
 		message = message.substring(0, message.length()-2); // remove last comma[space] ", "
 		
-		if(place.equalsIgnoreCase(getResources().getString(R.string.spinner_all))){
+		if(currsIncom.size()>0){
 			message += "\r\n" + getResources().getString(R.string.str_earned) + ": ";
 			for(String s: currsIncom){
 				double rndSum = sumIncom.get(s) * 100;
@@ -182,20 +172,19 @@ public class ReportList extends ListActivity {
 	}
 	
 	  private void doSort(){
+		  if(transactions.size()<2){
+			  Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_one_value), 
+					  Toast.LENGTH_LONG).show();
+			  return;
+		  }
+		  
 		  AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
 		  final CharSequence[] choiceList;
-		  if(place.equalsIgnoreCase(getResources().getString(R.string.spinner_all))){
-			  CharSequence[] choiceListLocal = {getResources().getString(R.string.dialog_sort_by_date),
+		  CharSequence[] choiceListLocal = {getResources().getString(R.string.dialog_sort_by_date),
 					  							getResources().getString(R.string.dialog_sort_by_amount),
 					  							getResources().getString(R.string.dialog_sort_by_place)};
-			  choiceList = choiceListLocal;
-		  }else{
-			  CharSequence[] choiceListLocal = {getResources().getString(R.string.dialog_sort_by_date),
-						getResources().getString(R.string.dialog_sort_by_amount)};
-			  
-			  choiceList = choiceListLocal;
-		  }
+		  choiceList = choiceListLocal;
 
 		  alert.setTitle(getResources().getString(R.string.dialog_sort_type));		  
 		  sortItemIndex = -1;
@@ -232,18 +221,12 @@ public class ReportList extends ListActivity {
     	private final String LOG = "ReportListAdapter";
     	private LayoutInflater mInflater;
         private List<TransactionEntry> trs;
-        private String place;
-        private String strAll;
-        private String strCard;
         private Context context;
         
-        public ReportListAdapter(Context context, List<TransactionEntry> trs, String place, String all, String card) {
+        public ReportListAdapter(Context context, List<TransactionEntry> trs) {
             // Cache the LayoutInflate to avoid asking for a new one each time.
             mInflater = LayoutInflater.from(context);
             this.trs = trs;
-            this.place = place; 
-            this.strAll = all;
-            this.strCard = card;
             this.context = context;
         }
 
@@ -293,20 +276,14 @@ public class ReportList extends ListActivity {
             // to reinflate it. We only inflate a new View when the convertView supplied
             // by ListView is null.
             if (convertView == null) {
-            	if(place.equalsIgnoreCase(strAll)){
-            		convertView = mInflater.inflate(R.layout.row, null);
-            	}else{
-            		convertView = mInflater.inflate(R.layout.row_no_place, null);
-            	}
-               
+            	convertView = mInflater.inflate(R.layout.row, null);
+                 
                 // Creates a ViewHolder and store references to the two children views
                 // we want to bind data to.
                 holder = new ViewHolder();
                 holder.card = (TextView) convertView.findViewById(R.id.card);
                 holder.date_time = (TextView) convertView.findViewById(R.id.date_time);
-                if(place.equalsIgnoreCase(strAll)){
-                	holder.place = (TextView) convertView.findViewById(R.id.place);
-                }
+                holder.place = (TextView) convertView.findViewById(R.id.place);
                 holder.amount = (TextView) convertView.findViewById(R.id.amount);
                 holder.type = (TextView) convertView.findViewById(R.id.type);
 
@@ -346,10 +323,8 @@ public class ReportList extends ListActivity {
         	}
         	
         	holder.date_time.setText(dayString+"\r\n"+timeString); 
-        	if(place.equalsIgnoreCase(strAll)){
-        		holder.place.setText(entry.getPlace());
-        	}
-            holder.card.setText(strCard + ": " + entry.getCard());                
+        	holder.place.setText(entry.getPlace());
+            holder.card.setText(context.getResources().getString(R.string.str_card) + ": " + entry.getCard());                
             holder.amount.setText(entry.getAmount() + " " + entry.getAmountCurr());
             holder.type.setText(""); 
             if(entry.getType() == StaticValues.TRANSACTION_TYPE_EXPENSE){
@@ -359,4 +334,5 @@ public class ReportList extends ListActivity {
             }
         }
     }
+
 }
