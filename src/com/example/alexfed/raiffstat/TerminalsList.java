@@ -82,6 +82,7 @@ public class TerminalsList extends ListActivity {
 	  }
 		
 	  private void inflateList(){
+		  getListView().setDivider(null);
 		  modelList = getModel();
 		  ArrayAdapter<Model> adapter = new InteractiveArrayAdapter(this, modelList);
 		  setListAdapter(adapter);

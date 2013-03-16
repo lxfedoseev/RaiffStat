@@ -15,10 +15,10 @@
     <string name="menu_query">Опросить базу</string>
     <string name="menu_summary">Отчет</string>
     <string name="menu_manage_terminals">Терминалы</string>
-    <string name="menu_make_place">Объединить в место</string>
+    <string name="menu_make_place">Объединить</string>
     <string name="menu_manage_places">Места</string>
-    <string name="menu_exclude_from_place">Исключить из места</string>
-    <string name="menu_add_to_place">Добавить в место</string>
+    <string name="menu_exclude_from_place">Исключить</string>
+    <string name="menu_add_to_place">Добавить</string>
     <string name="menu_sort">Сортировать</string>
     <string name="menu_csv_export">Экспорт в файл</string>
     <string name="menu_csv_import">Импорт из файла</string>
@@ -28,7 +28,7 @@
     <string name="str_period">Период</string>
     <string name="str_card">Карта</string>
     <string name="str_amount">Сумма</string>
-    <string name="str_tr_number">Количество транзакций</string>
+    <string name="str_tr_number">Число транзакций</string>
     <string name="str_forbidden">запрещено</string>
     <string name="str_forbidden_empty_place">Название места не может быть пустым</string>
     <string name="str_spent">Расход средств</string>

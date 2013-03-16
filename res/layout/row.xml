@@ -1,71 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    
-    
-    <LinearLayout
-        android:id="@+id/linearLayout1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    
+    android:layout_height="wrap_content"
+    android:background="@drawable/list_background2">
+     
 		<TextView 
 		  android:id="@+id/place"
 		  android:layout_width="fill_parent"
-		  android:layout_height="36dip"
-		  android:textSize="24dip" />
-		
-	</LinearLayout>
-	 
-	<RelativeLayout
-            android:id="@+id/relativeLayout1"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:paddingBottom="2dp"
-            android:paddingLeft="2dp"
-            android:paddingRight="2dp" >
+		  android:layout_height="42dip"
+		  android:textSize="18sp" 
+          android:layout_marginLeft="5dp"
+          android:layout_marginRight="5dp"/>
 		
 	    <TextView 
 			  android:id="@+id/card"
 			  android:layout_width="wrap_content"
-			  android:layout_height="match_parent"
+			  android:layout_height="wrap_content"
+			  android:layout_below="@+id/place"
 			  android:layout_alignParentLeft="true"
-              android:layout_alignParentTop="true"
-              android:paddingRight="20dp"
-			  android:textSize="14dip" 
+			  android:paddingLeft="5dp"
+              android:paddingRight="5dp"
+			  android:textSize="14sp" 
 			  android:textColor="#800000"/>
 	    
 	    <TextView 
 			  android:id="@+id/type"
 			  android:layout_width="wrap_content"
-			  android:layout_height="match_parent"
-              android:layout_toRightOf="@+id/card"
-              android:layout_centerHorizontal="true" 
-              android:paddingRight="3dp"
-			  android:textSize="14dip" 
+			  android:layout_height="wrap_content"
+			  android:layout_toRightOf="@+id/card"
+              android:layout_below="@+id/place"
+              android:paddingLeft="5dp"
+              android:paddingRight="1dp"
+			  android:textSize="14sp" 
 			  android:textColor="#800000"/>
 	    
 	    <TextView 
 			  android:id="@+id/amount"
 			  android:layout_width="wrap_content"
-			  android:layout_height="match_parent"
-              android:layout_toRightOf="@+id/type"
-              android:layout_centerHorizontal="true" 
-              android:paddingRight="3dp"
-			  android:textSize="14dip" 
+			  android:layout_height="wrap_content"
+			  android:layout_below="@+id/place"
+			  android:layout_toRightOf="@+id/type"
+              android:paddingRight="5dp"
+              android:paddingLeft="1dp"
+			  android:textSize="14sp" 
 			  android:textColor="#800000"/>
             
 		  <TextView 
 			  android:id="@+id/date_time"
 			  android:layout_width="wrap_content"
-			  android:layout_height="match_parent"
+			  android:layout_height="wrap_content"
 			  android:layout_alignParentRight="true"
-			  android:textSize="8dip"
+			  android:layout_below="@+id/place"
+			  android:paddingRight="5dp"
+			  android:paddingLeft="5dp"
+			  android:textSize="12sp"
 			  android:textColor="#800000" />
-            
-	</RelativeLayout>
 
-  
-</LinearLayout>
+</RelativeLayout>

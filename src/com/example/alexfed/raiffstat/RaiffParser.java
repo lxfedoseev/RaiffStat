@@ -69,7 +69,7 @@ public class RaiffParser {
     					}
     					this._place = this._terminal;
     					return true;
-    				}catch (Exception e) { 
+    				}catch (Exception e) {  
 						return false;
 					}
     				

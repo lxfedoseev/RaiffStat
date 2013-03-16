@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -76,6 +77,7 @@ public class ReportListAll extends ListActivity {
 	
 	
 	private void inflateList(){
+		getListView().setDivider(null);
 		queryDateIntervalPlace(convertStringDate(dayFrom+ " 00:00:00"), convertStringDate(dayTo+ " 23:59:59"), getResources().getString(R.string.spinner_all));
 		setListAdapter(new ReportListAdapter(this, transactions));
 	}
@@ -311,10 +313,11 @@ public class ReportListAll extends ListActivity {
         	String timeString = new SimpleDateFormat("HH:mm:ss").format(new Date(longDate));
         	
         	if(entry.getType() == StaticValues.TRANSACTION_TYPE_INCOME){
-        		holder.date_time.setTextColor(Color.GREEN);
-        		holder.card.setTextColor(Color.GREEN);
-        		holder.amount.setTextColor(Color.GREEN);
-        		holder.type.setTextColor(Color.GREEN);
+        		int myGreen = Color.argb(255, 0, 127, 14);
+        		holder.date_time.setTextColor(myGreen);
+        		holder.card.setTextColor(myGreen);
+        		holder.amount.setTextColor(myGreen);
+        		holder.type.setTextColor(myGreen);
         	}else{//expense
         		holder.date_time.setTextColor(Color.RED);
         		holder.card.setTextColor(Color.RED);

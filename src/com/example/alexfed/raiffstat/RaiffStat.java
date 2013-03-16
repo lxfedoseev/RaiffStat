@@ -44,13 +44,14 @@ import android.widget.Toast;
 
 /* TODO: 
  * - Progress bar for make/delete/rename places (for all time consuming operations) 
+ * - Make graph only for RUB
+ * - Make terminal rename if only one selected
  * - Save application state (screen rotation, going to background)
- * - Correct row layouts for different screen sizes 
  * - Save report to a file (share report)
  * - Make categories out of places (Food, Leisure, Clothes, Automobile, Applications, etc., Customly defined)
  * - Make a chart for time period with all tags
  * - Radio buttons for interval (1 week, 1 month, period)
- * - Make a good design (application icon as well)
+ * - Make a good design (application icon as well)  
  * 
  * - ? Make failed parsing messages table in DB and ask the user to send them by email to me ?
  * - ? Widget (Spent for a place, spent entirely, remainder) ?

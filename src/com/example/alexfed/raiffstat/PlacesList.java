@@ -49,6 +49,7 @@ public class PlacesList extends ListActivity {
 	}
 
 	private void inflateList(){
+		getListView().setDivider(null);
 		queryDistinctPlaces();
 		setListAdapter(new PlacesListAdapter(this, places));
 	}

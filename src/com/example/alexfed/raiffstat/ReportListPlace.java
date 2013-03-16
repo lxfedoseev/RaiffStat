@@ -95,6 +95,7 @@ public class ReportListPlace extends ListActivity {
 	
 	
 	private void inflateList(){
+		getListView().setDivider(null);
 		queryDateIntervalPlace(convertStringDate(dayFrom+ " 00:00:00"), convertStringDate(dayTo+ " 23:59:59"), place);
 		setListAdapter(new ReportListAdapter(this, transactions, place));
 	}
@@ -261,7 +262,9 @@ public class ReportListPlace extends ListActivity {
 			    	  result = Math.round(result);
 			    	  result = result / 10;
 			          return ""+result; */
-			          return super.formatLabel(value, isValueX);
+			    	  
+			          //return super.formatLabel(value, isValueX);
+			    	  return "";
 			      }
 			   }  
 		};
@@ -270,8 +273,9 @@ public class ReportListPlace extends ListActivity {
 		  LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, height);
 		  params.rightMargin = (int) convertDpToPixel(5, getBaseContext());
 		  params.leftMargin = (int) convertDpToPixel(5, getBaseContext());
-		  
 		  graphView.setLayoutParams(params);
+		  
+		  graphView.setBackgroundColor(Color.WHITE);
 		// add data  
 			graphView.addSeries(new GraphViewSeries(data)); 
 			

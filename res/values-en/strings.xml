@@ -16,10 +16,10 @@
     <string name="menu_sms_import">Import from SMS</string>
     <string name="menu_clear_db">Clear DataBase</string>
     <string name="menu_query">Query DataBase</string>
-    <string name="menu_make_place">Make a Place</string>
+    <string name="menu_make_place">Create</string>
     <string name="menu_manage_places">Places</string>
-    <string name="menu_exclude_from_place">Exclude from Place</string>
-    <string name="menu_add_to_place">Add to Place</string>
+    <string name="menu_exclude_from_place">Exclude</string>
+    <string name="menu_add_to_place">Add</string>
     <string name="menu_sort">Sort</string>
     <string name="menu_csv_export">Export to File</string>
     <string name="menu_csv_import">Import from File</string>
