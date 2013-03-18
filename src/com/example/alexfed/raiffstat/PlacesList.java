@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,7 +28,10 @@ public class PlacesList extends ListActivity {
 	private List<String> places;
 	private final int CTX_MENU_ITEM_DELETE = 0; 
 	private final int CTX_MENU_ITEM_RENAME = 1;
+	private final int CTX_MENU_ITEM_EDIT = 2;
 
+	private ProgressDialog progressBar;
+	
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
@@ -37,7 +41,7 @@ public class PlacesList extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_raiff_report);
 		
-		inflateList();
+		//inflateList();
 		setClickListeners();
 	}
 	
@@ -60,65 +64,45 @@ public class PlacesList extends ListActivity {
 		db.close();
 	}
 	
-	private void queryDeletePlace(String place){	
-		DatabaseHandler db = new DatabaseHandler(this);
-		List<TransactionEntry> trs = db.getTransactionsPlaceFixed(place);
-		
-		for (TransactionEntry t:trs){
-			t.setPlace(t.getTerminal());
-			t.setInPlace(0);
-			db.updateTransaction(t);
-		}
-		db.close();
-	}
 	
 	void setClickListeners(){
 		ListView lv = getListView();
-	     lv.setOnItemLongClickListener( 
-	    		 new AdapterView.OnItemLongClickListener(){ 
-	    			 @Override 
-	    		     public boolean onItemLongClick(AdapterView<?> av, View v, int pos, long id) { 
-	    				 onLongListItemClick(v,pos,id); 
-	    		         return false; 
-	    		     } 
-	      }); 
-	     
 	     lv.setOnItemClickListener(
 	    		 new AdapterView.OnItemClickListener() {
-
 					@Override
 					public void onItemClick(AdapterView<?> arg0, View arg1,
 							int pos, long id) {
-						Intent myIntent;
-				    	myIntent = new Intent(PlacesList.this, PlaceDetailedList.class);
-				    	myIntent.putExtra("place", places.get(pos));
-				    	PlacesList.this.startActivity(myIntent);
+						onListItemClick(arg1,pos,id); 
 					} 
 		});
 	}
 	
-	protected void onLongListItemClick(View v, int pos, long id) { 
+	protected void onListItemClick(View v, int pos, long id) { 
 		final int localPos = pos;
 		final String[] items = new String [] {
-        		getResources().getString(R.string.long_click_place_delete),
-        		getResources().getString(R.string.long_click_place_rename)
+        		getResources().getString(R.string.click_place_delete),
+        		getResources().getString(R.string.click_place_rename),
+        		getResources().getString(R.string.click_place_edit)
         };
         
         ArrayAdapter<String> stringAdapter  = new ArrayAdapter<String> (this, android.R.layout.select_dialog_item,items);
         AlertDialog.Builder builder     = new AlertDialog.Builder(this);
         
-        //builder.setTitle(getResources().getString(R.string.long_click_ctx_dialog_title));
         builder.setTitle(places.get(localPos));
         builder.setAdapter( stringAdapter, new DialogInterface.OnClickListener() {
             public void onClick( DialogInterface dialog, int item ) {
             	
             	if(item == CTX_MENU_ITEM_DELETE){
             		//Delete the place here
-            		queryDeletePlace(places.get(localPos));
-            		inflateList();
+            		deletePlaceWithProgressBar(places.get(localPos));
             	}else if(item == CTX_MENU_ITEM_RENAME){
             		//Handle item rename here
             		renamePlace(places.get(localPos));
+            	}else if(item == CTX_MENU_ITEM_EDIT){
+            		Intent myIntent;
+			    	myIntent = new Intent(PlacesList.this, PlaceDetailedList.class);
+			    	myIntent.putExtra("place", places.get(localPos));
+			    	PlacesList.this.startActivity(myIntent);
             	}else{
             		//Should not enter here
             	}
@@ -127,6 +111,38 @@ public class PlacesList extends ListActivity {
  
         final AlertDialog dialog = builder.create();
 		dialog.show();
+	}
+	
+	private void deletePlaceWithProgressBar(String place){
+		final String localPlace = place;
+		progressBar = new ProgressDialog(this);
+		progressBar.setCancelable(false);
+		progressBar.setMessage(getResources().getString(R.string.progress_working));
+		progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progressBar.setProgress(0);
+		progressBar.show();
+		
+		new Thread(new Runnable() {
+			public void run() {
+				DatabaseHandler db = new DatabaseHandler(getBaseContext());
+				List<TransactionEntry> trs = db.getTransactionsPlaceFixed(localPlace);
+				for (TransactionEntry t:trs){
+					t.setPlace(t.getTerminal());
+					t.setInPlace(0);
+					db.updateTransaction(t);
+				}
+			    db.close();
+			    progressBar.dismiss();
+				PlacesList.this.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						inflateList();
+					}
+				});
+					  
+		}
+		}).start();
+		
 	}
 	
 	  private void renamePlace(String place){
@@ -139,7 +155,6 @@ public class PlacesList extends ListActivity {
 		  // Set an EditText view to get user input 
 		  final EditText input = new EditText(this);
 		  alert.setView(input);
-		  final Context context = getBaseContext();
 		  alert.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
 		  public void onClick(DialogInterface dialog, int whichButton) {
 		    String value = input.getText().toString();
@@ -151,16 +166,7 @@ public class PlacesList extends ListActivity {
 		    				getResources().getString(R.string.str_forbidden), Toast.LENGTH_LONG).show();
 		    		return;
 		    	}
-		    	
-			    DatabaseHandler db = new DatabaseHandler(context);
-			    List<TransactionEntry> transactions = db.getTransactionsPlaceFixed(localPlace);
-			    for(TransactionEntry t : transactions){
-			    	t.setPlace(value);
-			    	t.setInPlace(1);
-			    	db.updateTransaction(t);
-			    }
-			    db.close();
-			    inflateList();
+		    	renamePlaceWithProgressBar(localPlace, value);
 			}else{
 		    	Toast.makeText(getApplicationContext(), getResources().getString(R.string.str_forbidden_empty_place), Toast.LENGTH_LONG).show(); 
 		    }
@@ -176,6 +182,38 @@ public class PlacesList extends ListActivity {
 		  alert.show();
 	  }
 
+	  private void renamePlaceWithProgressBar(String placeName, String newPlaceName){
+		  final String localPlaceName = placeName;
+		  final String localNewPlaceName = newPlaceName;
+		  progressBar = new ProgressDialog(this);
+			progressBar.setCancelable(false);
+			progressBar.setMessage(getResources().getString(R.string.progress_working));
+			progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			progressBar.setProgress(0);
+			progressBar.show();
+			
+		  new Thread(new Runnable() {
+				public void run() {
+					DatabaseHandler db = new DatabaseHandler(getBaseContext());
+				    List<TransactionEntry> transactions = db.getTransactionsPlaceFixed(localPlaceName);
+				    for(TransactionEntry t : transactions){
+				    	t.setPlace(localNewPlaceName);
+				    	t.setInPlace(1);
+				    	db.updateTransaction(t);
+				    }
+				    db.close();
+				    progressBar.dismiss();
+					PlacesList.this.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							inflateList();
+						}
+					});
+						  
+			}
+			}).start();
+	  }
+	  
     private static class PlacesListAdapter extends BaseAdapter {
     	private LayoutInflater mInflater;
         private List<String> places;

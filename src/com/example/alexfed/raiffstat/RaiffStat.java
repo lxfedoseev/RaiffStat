@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import yuku.ambilwarna.AmbilWarnaDialog;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -29,7 +31,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,15 +44,14 @@ import android.widget.Toast;
 
 
 /* TODO: 
- * - Progress bar for make/delete/rename places (for all time consuming operations) 
- * - Make graph only for RUB
- * - Make terminal rename if only one selected
+ * https://code.google.com/p/android/issues/detail?id=9656
  * - Save application state (screen rotation, going to background)
  * - Save report to a file (share report)
  * - Make categories out of places (Food, Leisure, Clothes, Automobile, Applications, etc., Customly defined)
  * - Make a chart for time period with all tags
  * - Radio buttons for interval (1 week, 1 month, period)
  * - Make a good design (application icon as well)  
+ * - Make demo mode in case user has no data but wants to try the application
  * 
  * - ? Make failed parsing messages table in DB and ask the user to send them by email to me ?
  * - ? Widget (Spent for a place, spent entirely, remainder) ?
@@ -71,6 +71,7 @@ public class RaiffStat extends Activity {
 	private ProgressDialog progressBar;
 	private int progressBarStatus = 0;
 	private Handler progressBarHandler = new Handler();
+	private int impExpItemIndex = 0;
 	
 	private int year;
 	private int month;
@@ -105,7 +106,7 @@ public class RaiffStat extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_raiff_stat, menu);
-		return true;
+		return true; 
 	}
 	
 	@Override
@@ -116,44 +117,74 @@ public class RaiffStat extends Activity {
     			//Intent settingsActivity = new Intent(getBaseContext(), MyPreferences.class);
     			//startActivity(settingsActivity);
     			return true;
-    		case R.id.menu_sms_import:
-    			//clearDB();
+    		case R.id.menu_import_export:
+    			importExport();
+    			return true;
+    		/*case R.id.menu_sms_import:
     			importSmsWithProgressBar();
     			return true;
+    		*/
     		case R.id.menu_clear_db:
     			clearDB();
     			setCurrentDateOnView();
     			addItemsOnSpinnerPlace();
     			return true; 
-    		case R.id.menu_query:
-    			queryDistinctPlaces();
+    		
+    			//case R.id.menu_query:
+    		//	queryDistinctPlaces();
     			//queryDistinctPlaces();
     			//queryDateInterval(convertStringDate("02/03/2013 00:00:00"), convertStringDate("07/03/2013 23:59:59"));
     			//queryAmountInterval(0, 500);
     			//queryAmountFixed(2077.3);
-    			return true;
+    		//	return true;
+    		
     		case R.id.menu_manage_terminals:
     			Intent terminalsActivity = new Intent(getBaseContext(), TerminalsList.class);
     			startActivity(terminalsActivity);
     			return true; 
     		case R.id.menu_manage_places:
     			Intent placesActivity = new Intent(getBaseContext(), PlacesList.class);
-    			startActivity(placesActivity);
+    			startActivity(placesActivity); 
     			return true; 
-    		case R.id.menu_csv_export:
-    			//TODO:
+    		case R.id.menu_categories:
+    			AmbilWarnaDialog dialog = new AmbilWarnaDialog(this, 0xffff0000 ,new ColorChangedListener());
+    			dialog.show();
+    		/*	String key = "Key";
+    			int initialColor = 0xff0000;
+    			int defaultColor = 0x00ff00;
+    			ColorPickerDialog color = new ColorPickerDialog(this, new ColorChangedListener(), 
+    					key, initialColor, defaultColor);
+    			
+    			color.show();
+    			return true; 
+    			*/
+    		/*case R.id.menu_csv_export:
     			doExportToCSV();
     			return true; 
     		case R.id.menu_csv_import:
-    			//TODO:
     			doImportFromCSV();
     			return true; 
+    		*/
     		default:
     			return super.onOptionsItemSelected(item);
 		}
    
 	}
 	
+	private final class ColorChangedListener implements  AmbilWarnaDialog.OnAmbilWarnaListener {
+		public void onCancel(AmbilWarnaDialog dialog){
+			
+		}
+		public void onOk(AmbilWarnaDialog dialog, int color){
+			myLog.LOGD(LOG, "Color is: " + color);	
+		  }
+	}
+/*	private final class ColorChangedListener implements  ColorPickerDialog.OnColorChangedListener {
+	  public void colorChanged(String key, int color) {
+		  myLog.LOGD(LOG, "Color is: " + color);
+	  }
+	}
+	*/
 	
 	public void addItemsOnSpinnerPlace() {
 		spPlace = (Spinner) findViewById(R.id.spinnerPlace);
@@ -257,6 +288,58 @@ public class RaiffStat extends Activity {
 			// TODO Auto-generated method stub
 		  }
 		 
+	}
+	
+	private void importExport(){		  
+		  AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+		  final CharSequence[] choiceList;
+		  CharSequence[] choiceListLocal = {getResources().getString(R.string.dialog_sms_import),
+					  							getResources().getString(R.string.dialog_csv_export),
+					  							getResources().getString(R.string.dialog_csv_import)};
+		  choiceList = choiceListLocal;
+
+		  alert.setTitle(getResources().getString(R.string.menu_import_export));		  
+		  impExpItemIndex = -1;
+		  alert.setSingleChoiceItems(choiceList, -1, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				impExpItemIndex = which; 
+			}
+		});
+		alert.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				if(impExpItemIndex > -1){
+					switch (impExpItemIndex){
+						case 0:
+							importSmsWithProgressBar();
+							break;
+						case 1:
+							doExportToCSV();
+							break;
+						case 2:
+							doImportFromCSV();
+							break;
+						default:
+							//do nothing
+							break;
+					}	
+				}else{
+					Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show(); 
+				}
+			}
+		});
+		alert.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+			}
+		});
+		  
+		alert.show();
 	}
 	
 	private void importSmsWithProgressBar(){

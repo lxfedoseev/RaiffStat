@@ -5,9 +5,14 @@ import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteException;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,11 +22,12 @@ import android.widget.Toast;
 
 public class TerminalsList extends ListActivity {
 
-
-	
 	private final String LOG = "TerminalsList";
 	private List<Model> modelList;
 	private int itemIndex = 0;
+	
+	private ProgressDialog progressBar;
+
 	
 	/** Called when the activity is first created. */
 	  public void onCreate(Bundle icicle) {
@@ -120,7 +126,7 @@ public class TerminalsList extends ListActivity {
 		  // Set an EditText view to get user input 
 		  final EditText input = new EditText(this);
 		  alert.setView(input);
-		  final Context context = getBaseContext();
+		  //final Context context = getBaseContext();
 		  alert.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
 		  public void onClick(DialogInterface dialog, int whichButton) {
 		    String value = input.getText().toString();
@@ -132,19 +138,7 @@ public class TerminalsList extends ListActivity {
 		    		return;
 		    	}
 		    	
-			    DatabaseHandler db = new DatabaseHandler(context);
-			    for (Model m: modelList){
-			    	if(m.isSelected()){
-			    		List<TransactionEntry> transactions = db.getTransactionsTerminal(m.getName());
-			    		for(TransactionEntry t : transactions){
-			    			t.setPlace(value);
-			    			t.setInPlace(1);
-			    			db.updateTransaction(t);
-			    		}
-			    	}
-			    }
-			    db.close();
-			    inflateList();
+		    	makeNewPlaceWithProgressBar(value);
 		    }else{
 		    	Toast.makeText(getApplicationContext(), getResources().getString(R.string.str_forbidden_empty_place), Toast.LENGTH_LONG).show(); 
 		    }
@@ -158,6 +152,41 @@ public class TerminalsList extends ListActivity {
 		  });
 
 		  alert.show();
+	  }
+	  
+	  private void makeNewPlaceWithProgressBar(String placeName){
+		  final String localPlaceName = placeName;
+			progressBar = new ProgressDialog(this);
+			progressBar.setCancelable(false);
+			progressBar.setMessage(getResources().getString(R.string.progress_working));
+			progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			progressBar.setProgress(0);
+			progressBar.show();
+			
+			new Thread(new Runnable() {
+				public void run() {
+					DatabaseHandler db = new DatabaseHandler(getBaseContext());
+				    for (Model m: modelList){
+				    	if(m.isSelected()){
+				    		List<TransactionEntry> transactions = db.getTransactionsTerminal(m.getName());
+				    		for(TransactionEntry t : transactions){
+				    			t.setPlace(localPlaceName);
+				    			t.setInPlace(1);
+				    			db.updateTransaction(t);
+				    		}
+				    	}
+				    }
+				    db.close();
+				    progressBar.dismiss();
+					TerminalsList.this.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							inflateList();
+						}
+					});
+						  
+			}
+			}).start();
 	  }
 
 	  private void addToPlace(){
@@ -183,19 +212,7 @@ public class TerminalsList extends ListActivity {
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub
 				if(itemIndex > -1){
-					DatabaseHandler db = new DatabaseHandler(getApplicationContext());
-					for (Model m: modelList){
-				    	if(m.isSelected()){
-				    		List<TransactionEntry> transactions = db.getTransactionsTerminal(m.getName());
-				    		for(TransactionEntry t : transactions){
-				    			t.setPlace(choiceList[itemIndex].toString());
-				    			t.setInPlace(1);
-				    			db.updateTransaction(t);
-				    		}
-				    	}
-				    }
-					db.close();
-					inflateList();
+					addToPlaceWithProgressBar(choiceList[itemIndex]);
 				}else{
 					Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show(); 
 				}
@@ -210,5 +227,42 @@ public class TerminalsList extends ListActivity {
 		});
 		  
 		alert.show();
+	  }
+	  
+	  private void addToPlaceWithProgressBar(CharSequence choice){
+		  final CharSequence localChoice = choice;
+		  
+		  progressBar = new ProgressDialog(this);
+			progressBar.setCancelable(false);
+			progressBar.setMessage(getResources().getString(R.string.progress_working));
+			progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			progressBar.setProgress(0);
+			progressBar.show();
+			
+			new Thread(new Runnable() {
+				public void run() {
+					DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+					for (Model m: modelList){
+				    	if(m.isSelected()){
+				    		List<TransactionEntry> transactions = db.getTransactionsTerminal(m.getName());
+				    		for(TransactionEntry t : transactions){
+				    			t.setPlace(localChoice.toString());
+				    			t.setInPlace(1);
+				    			db.updateTransaction(t);
+				    		}
+				    	}
+				    }
+				    db.close();
+				    progressBar.dismiss();
+					TerminalsList.this.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							inflateList();
+						}
+					});
+						  
+			}
+			}).start();
+		  
 	  }
 }

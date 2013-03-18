@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +16,7 @@ public class PlaceDetailedList extends ListActivity {
 	private final String LOG = "PlaceDetailedList";
 	private List<Model> modelList;
 	private String place;
+	private ProgressDialog progressBar;
 	
 	/** Called when the activity is first created. */
 	  public void onCreate(Bundle icicle) {
@@ -45,7 +47,7 @@ public class PlaceDetailedList extends ListActivity {
 	    		    	}
 	    		    }
 	    			if(hasSelection){
-	    				excludeFromPlace();
+	    				excludeFromPlaceWithProgressBar();
 	    			}else{ 
 	    				Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show();
 	    			}
@@ -85,21 +87,39 @@ public class PlaceDetailedList extends ListActivity {
 			return ls;		
 	  }
 	  
-	  private void excludeFromPlace(){
+	  private void excludeFromPlaceWithProgressBar(){
 		  
-		  DatabaseHandler db = new DatabaseHandler(getBaseContext());
-		    for (Model m: modelList){
-		    	if(m.isSelected()){
-		    		List<TransactionEntry> transactions = db.getTransactionsTerminal(m.getName());
-		    		for(TransactionEntry t : transactions){
-		    			t.setPlace(t.getTerminal());
-		    			t.setInPlace(0);
-		    			db.updateTransaction(t);
-		    		}
-		    	}
-		    }
-		    db.close();
-		    inflateList();
-	  }
+		  progressBar = new ProgressDialog(this);
+			progressBar.setCancelable(false);
+			progressBar.setMessage(getResources().getString(R.string.progress_working));
+			progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			progressBar.setProgress(0);
+			progressBar.show();
+			
+			new Thread(new Runnable() {
+				public void run() {
+					DatabaseHandler db = new DatabaseHandler(getBaseContext());
+				    for (Model m: modelList){
+				    	if(m.isSelected()){
+				    		List<TransactionEntry> transactions = db.getTransactionsTerminal(m.getName());
+				    		for(TransactionEntry t : transactions){
+				    			t.setPlace(t.getTerminal());
+				    			t.setInPlace(0);
+				    			db.updateTransaction(t);
+				    		}
+				    	}
+				    }
+				    db.close();
+				    progressBar.dismiss();
+					PlaceDetailedList.this.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							inflateList();
+						}
+					});
+						  
+			}
+			}).start();
+	  	}
 	  
 }

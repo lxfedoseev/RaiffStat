@@ -10,7 +10,6 @@
     <string name="spinner_all">Выбрать все</string>
     
     <string name="menu_settings">Настройки</string>
-    <string name="menu_sms_import">Импорт из СМС</string>
     <string name="menu_clear_db">Очистить базу</string>
     <string name="menu_query">Опросить базу</string>
     <string name="menu_summary">Отчет</string>
@@ -20,9 +19,9 @@
     <string name="menu_exclude_from_place">Исключить</string>
     <string name="menu_add_to_place">Добавить</string>
     <string name="menu_sort">Сортировать</string>
-    <string name="menu_csv_export">Экспорт в файл</string>
-    <string name="menu_csv_import">Импорт из файла</string>
     <string name="menu_graph">График</string>
+    <string name="menu_import_export">Импорт/Экспорт</string>
+    <string name="menu_categories">Категории расходов</string>
     
     <string name="str_place">Место</string>
     <string name="str_period">Период</string>
@@ -38,9 +37,10 @@
     <string name="str_created">создан</string>
     <string name="str_files">Файлы</string>
     
-    <string name="long_click_place_delete">Удалить</string>
-    <string name="long_click_place_rename">Переименовать</string>
-	<string name="long_click_ctx_dialog_title">Контекстное меню</string>
+    <string name="click_place_delete">Удалить</string>
+    <string name="click_place_rename">Переименовать</string>
+    <string name="click_place_edit">Редактировать</string>
+	<string name="click_ctx_dialog_title">Контекстное меню</string>
 	
 	<string name="toast_nothing_selected">Ничего не выбрано</string>
 	<string name="toast_db_empty">База пуста</string>
@@ -52,6 +52,7 @@
 	<string name="toast_imp_failed">Ошибка импорта</string>
 	<string name="toast_pars_failed">Ошибка анализатора</string>
 	<string name="toast_one_value">Всего одно значение</string>
+	<string name="toast_no_values">Нет значаний</string>
 	
 	<string name="ctx_new_place_name">Введите новое название места</string>
 	<string name="ctx_place_name">Введите название места</string>
@@ -62,10 +63,18 @@
 	<string name="dialog_sort_by_amount">По сумме</string>
 	<string name="dialog_sort_by_place">По алфавиту</string>
 	<string name="dialog_sort_type">Тип сортировки</string>
+	<string name="dialog_sms_import">Импорт из СМС</string>
+	<string name="dialog_csv_export">Экспорт в файл</string>
+    <string name="dialog_csv_import">Импорт из файла</string>
 	
 	<string name="progress_sms_scanning">Сканирую СМС ...</string>
 	<string name="progress_csv_scanning">Сканирую файл ...</string>
+	<string name="progress_working">Работаю ...</string>
 	
 	<string name="btn_apply">Применить</string>
+	
+	<string name="settings_bg_color_confirm">Подтвердить цвет фона</string>
+	<string name="settings_default_color_confirm">Подтвердить цвет по умолчанию</string>
+	<string name="settings_bg_color_dialog">Диалог выбора цвета фона</string>
 	
 </resources>

@@ -375,6 +375,32 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	}
     }
     
+    public List<TransactionEntry> getTransactionsForGraph(long dateStart, long dateEnd, String place, String currency){
+    	String countQuery;
+    	if(place.equalsIgnoreCase(context.getResources().getString(R.string.spinner_all))){
+    		countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
+    			" WHERE " + " ( " + KEY_DATE_TIME + " >= ? )" + " AND " + " ( " + KEY_DATE_TIME + " <= ? )" +
+    			" AND " + " ( " + KEY_TYPE + " =?" + " ) " + 
+    			" AND " + " ( " + KEY_AMOUNT_CURR + " =?" + " ) "+
+    			" ORDER BY " + KEY_DATE_TIME;    			
+    		
+    		return queryDB(countQuery, new String[] {String.valueOf(dateStart), String.valueOf(dateEnd),
+    														String.valueOf(StaticValues.TRANSACTION_TYPE_EXPENSE),
+    														currency});
+    	}else{
+    		countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
+        			" WHERE " + " ( " + KEY_DATE_TIME + " >= ? )" + " AND " + " ( " + KEY_DATE_TIME + " <= ? )" + 
+    				" AND " + " ( " + KEY_PLACE + " = ? )" +
+    				" AND " + " ( " + KEY_TYPE + " =?" + " ) " +
+    				" AND " + " ( " + KEY_AMOUNT_CURR + " =?" + " ) "+
+    				" ORDER BY " + KEY_DATE_TIME;
+    		
+    		return queryDB(countQuery, new String[] {String.valueOf(dateStart), String.valueOf(dateEnd), place,
+    													String.valueOf(StaticValues.TRANSACTION_TYPE_EXPENSE),
+    													currency});
+    	}
+    }
+    
     public List<String> getDistinctTerminals(){
     	List<String> distVals = new ArrayList<String>();
     	SQLiteDatabase db = this.getWritableDatabase();	

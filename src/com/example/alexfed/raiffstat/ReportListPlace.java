@@ -225,16 +225,22 @@ public class ReportListPlace extends ListActivity {
 		AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		  
 		DatabaseHandler db = new DatabaseHandler(this);
-		List<TransactionEntry> trs = db.getTransactionsDateIntervalPlace(convertStringDate(dayFrom+ " 00:00:00"), 
-				convertStringDate(dayTo+ " 23:59:59"), place, StaticValues.SORT_BY_DATE, false);
+		List<TransactionEntry> trs = db.getTransactionsForGraph(convertStringDate(dayFrom+ " 00:00:00"), 
+				convertStringDate(dayTo+ " 23:59:59"), place, StaticValues.CURR_RUB);
 		db.close();
-		  if(trs.size()<2){
+		  if(trs.size()<1){
+			  Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_no_values) + " " + StaticValues.CURR_RUB, 
+					  Toast.LENGTH_LONG).show();
+			  return;
+			  
+		  }else if(trs.size()<2){
 			  Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_one_value), 
 					  Toast.LENGTH_LONG).show();
 			  return;
 		  }
+		  
 		  GraphView graphView;
-		  GraphViewData[] data = new GraphViewData[transactions.size()];
+		  GraphViewData[] data = new GraphViewData[trs.size()];
 		  final ArrayList<Long> dateList = new ArrayList<Long>();
 		  double maxV = Double.MIN_VALUE;
 		  double minV = Double.MAX_VALUE;
@@ -249,7 +255,7 @@ public class ReportListPlace extends ListActivity {
 			  i++;
 		  }
 		  
-		  graphView = new LineGraphView(this, place){ 
+		  graphView = new LineGraphView(this, place+" (" + StaticValues.CURR_RUB + ")"){ 
 			   @Override  
 			   protected String formatLabel(double value, boolean isValueX) {  
 			      if (isValueX) {

@@ -13,7 +13,6 @@
     <string name="menu_summary">Summary</string>
     <string name="menu_manage_terminals">Terminals</string>
     <string name="menu_settings">Settings</string>
-    <string name="menu_sms_import">Import from SMS</string>
     <string name="menu_clear_db">Clear DataBase</string>
     <string name="menu_query">Query DataBase</string>
     <string name="menu_make_place">Create</string>
@@ -21,9 +20,9 @@
     <string name="menu_exclude_from_place">Exclude</string>
     <string name="menu_add_to_place">Add</string>
     <string name="menu_sort">Sort</string>
-    <string name="menu_csv_export">Export to File</string>
-    <string name="menu_csv_import">Import from File</string>
     <string name="menu_graph">Graph</string>
+    <string name="menu_import_export">Import/Export</string>
+    <string name="menu_categories">Expense Categories</string>
     
     <string name="str_place">Place</string>
     <string name="str_period">Period</string>
@@ -39,9 +38,10 @@
     <string name="str_created">created</string>
     <string name="str_files">Files</string>
     
-    <string name="long_click_place_delete">Delete</string>
-    <string name="long_click_place_rename">Rename</string>
-	<string name="long_click_ctx_dialog_title">Context Menu</string>
+    <string name="click_place_delete">Delete</string>
+    <string name="click_place_rename">Rename</string>
+    <string name="click_place_edit">Edit</string>
+	<string name="click_ctx_dialog_title">Context Menu</string>
 	
 	<string name="toast_nothing_selected">Nothing selected</string>
 	<string name="toast_db_empty">DataBase is empty</string>
@@ -53,6 +53,7 @@
 	<string name="toast_imp_failed">Import failed</string>
 	<string name="toast_pars_failed">Parser failed</string>
 	<string name="toast_one_value">Only one value</string>
+	<string name="toast_no_values">No values</string>
 	
 	<string name="ctx_new_place_name">Input new place name</string>
 	<string name="ctx_place_name">Input place name</string>
@@ -63,10 +64,18 @@
 	<string name="dialog_sort_by_amount">By amount</string>
 	<string name="dialog_sort_by_place">By alphabet</string>
 	<string name="dialog_sort_type">Sort Type</string>
+	<string name="dialog_sms_import">Import from SMS</string>
+	<string name="dialog_csv_export">Export to File</string>
+    <string name="dialog_csv_import">Import from File</string>
 	
 	<string name="progress_sms_scanning">Scanning SMS ...</string>
 	<string name="progress_csv_scanning">Scanning file ...</string>
+	<string name="progress_working">Working ...</string>
 	
 	<string name="btn_apply">Apply</string>
+	
+	<string name="settings_bg_color_confirm">BG Color Confirm</string>
+	<string name="settings_default_color_confirm">Default Color Confirm</string>
+	<string name="settings_bg_color_dialog">BG Color Dialog</string>
 	
 </resources>
