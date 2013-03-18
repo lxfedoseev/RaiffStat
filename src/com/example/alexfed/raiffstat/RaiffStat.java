@@ -145,7 +145,7 @@ public class RaiffStat extends Activity {
     			startActivity(placesActivity); 
     			return true; 
     		case R.id.menu_categories:
-    			AmbilWarnaDialog dialog = new AmbilWarnaDialog(this, 0x00ff00 ,new ColorChangedListener());
+    			AmbilWarnaDialog dialog = new AmbilWarnaDialog(this, 0xff00ff00 ,new ColorChangedListener());
     			dialog.show();
     		/*case R.id.menu_csv_export:
     			doExportToCSV();
