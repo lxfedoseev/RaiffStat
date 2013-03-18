@@ -75,7 +75,7 @@ public class RaiffStat extends Activity {
 	
 	private int year;
 	private int month;
-	private int day;
+	private int day; 
 	
 	private String dirName = "RaiffStat";
 	
