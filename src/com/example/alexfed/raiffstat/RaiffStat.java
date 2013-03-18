@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import yuku.ambilwarna.AmbilWarnaDialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -44,7 +43,6 @@ import android.widget.Toast;
 
 
 /* TODO: 
- * https://code.google.com/p/android/issues/detail?id=9656
  * - Save application state (screen rotation, going to background)
  * - Save report to a file (share report)
  * - Make categories out of places (Food, Leisure, Clothes, Automobile, Applications, etc., Customly defined)
@@ -147,17 +145,8 @@ public class RaiffStat extends Activity {
     			startActivity(placesActivity); 
     			return true; 
     		case R.id.menu_categories:
-    			AmbilWarnaDialog dialog = new AmbilWarnaDialog(this, 0xffff0000 ,new ColorChangedListener());
+    			AmbilWarnaDialog dialog = new AmbilWarnaDialog(this, 0x00ff00 ,new ColorChangedListener());
     			dialog.show();
-    		/*	String key = "Key";
-    			int initialColor = 0xff0000;
-    			int defaultColor = 0x00ff00;
-    			ColorPickerDialog color = new ColorPickerDialog(this, new ColorChangedListener(), 
-    					key, initialColor, defaultColor);
-    			
-    			color.show();
-    			return true; 
-    			*/
     		/*case R.id.menu_csv_export:
     			doExportToCSV();
     			return true; 
@@ -179,12 +168,6 @@ public class RaiffStat extends Activity {
 			myLog.LOGD(LOG, "Color is: " + color);	
 		  }
 	}
-/*	private final class ColorChangedListener implements  ColorPickerDialog.OnColorChangedListener {
-	  public void colorChanged(String key, int color) {
-		  myLog.LOGD(LOG, "Color is: " + color);
-	  }
-	}
-	*/
 	
 	public void addItemsOnSpinnerPlace() {
 		spPlace = (Spinner) findViewById(R.id.spinnerPlace);

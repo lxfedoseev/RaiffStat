@@ -27,6 +27,7 @@ public final class R {
         public static final int ic_launcher_org=0x7f020007;
         public static final int list_background=0x7f020008;
         public static final int list_background2=0x7f020009;
+        public static final int pic_main=0x7f02000a;
     }
     public static final class id {
         public static final int ambilwarna_cursor=0x7f080008;
