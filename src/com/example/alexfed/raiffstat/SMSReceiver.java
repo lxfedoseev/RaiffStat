@@ -55,24 +55,29 @@ public class SMSReceiver extends BroadcastReceiver {
         			 prs.getAmount() + " & " + prs.getAmountCurr() + " & " 
         			 + prs.getRemainder() + " & " + prs.getRemainderCurr() + " & " + prs.getPlace() + " & " + prs.getInPlace() + " & " + dateString);
             	
-        	addTransactionToDB(context, prs);
+        	mergeTransactionToDB(context, prs);
         }
 	}
 	
-	private void addTransactionToDB(Context context, RaiffParser prs){
+	private void mergeTransactionToDB(Context context, RaiffParser prs){
 		DatabaseHandler db = new DatabaseHandler(context);
+		db.mergeTransaction(new TransactionEntry(prs.getDateTime(), prs.getAmount(), prs.getAmountCurr(),
+				prs.getRemainder(), prs.getRemainderCurr(), prs.getTerminal(), prs.getCard(), 
+				prs.getPlace(), prs.getInPlace(), prs.getType(), prs.getExpCategory()));
+		db.close();
 		
-		List<TransactionEntry> transactions = db.getTransactionsTerminal(prs.getTerminal());
+		/*List<TransactionEntry> transactions = db.getTransactionsTerminal(prs.getTerminal());
 		if(!transactions.isEmpty()){
 			db.addTransaction(new TransactionEntry(prs.getDateTime(), prs.getAmount(), prs.getAmountCurr(),
 					prs.getRemainder(), prs.getRemainderCurr(), prs.getTerminal(), prs.getCard(), 
-					transactions.get(0).getPlace(), transactions.get(0).getInPlace(), prs.getType()));
+					transactions.get(0).getPlace(), transactions.get(0).getInPlace(), prs.getType(), 
+					transactions.get(0).getExpCategory()));
 		}else{
 			db.addTransaction(new TransactionEntry(prs.getDateTime(), prs.getAmount(), prs.getAmountCurr(),
 				prs.getRemainder(), prs.getRemainderCurr(), prs.getTerminal(), prs.getCard(), 
-				prs.getPlace(), prs.getInPlace(), prs.getType()));  
+				prs.getPlace(), prs.getInPlace(), prs.getType(), prs.getExpCategory()));  
 		}
-		db.close();
+		db.close();*/
 	}
 
 }

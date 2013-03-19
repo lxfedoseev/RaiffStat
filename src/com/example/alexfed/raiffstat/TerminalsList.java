@@ -61,7 +61,7 @@ public class TerminalsList extends ListActivity {
 	    				Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show();
 	    			}
 	    			return true;
-	    		case R.id.menu_add_to_place:
+	    		case R.id.menu_add:
 	    			DatabaseHandler db = new DatabaseHandler(getBaseContext());
 	    			if(db.getDistinctPlacesForPlaceList().size()<1){
 	    				Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_no_place), Toast.LENGTH_LONG).show();

@@ -145,28 +145,12 @@ public class RaiffStat extends Activity {
     			startActivity(placesActivity); 
     			return true; 
     		case R.id.menu_categories:
-    			AmbilWarnaDialog dialog = new AmbilWarnaDialog(this, 0xff00ff00 ,new ColorChangedListener());
-    			dialog.show();
-    		/*case R.id.menu_csv_export:
-    			doExportToCSV();
-    			return true; 
-    		case R.id.menu_csv_import:
-    			doImportFromCSV();
-    			return true; 
-    		*/
+    			Intent categoriesActivity = new Intent(getBaseContext(), CategoryList.class);
+    			startActivity(categoriesActivity);
     		default:
     			return super.onOptionsItemSelected(item);
 		}
    
-	}
-	
-	private final class ColorChangedListener implements  AmbilWarnaDialog.OnAmbilWarnaListener {
-		public void onCancel(AmbilWarnaDialog dialog){
-			
-		}
-		public void onOk(AmbilWarnaDialog dialog, int color){
-			myLog.LOGD(LOG, "Color is: " + color);	
-		  }
 	}
 	
 	public void addItemsOnSpinnerPlace() {
@@ -413,12 +397,12 @@ public class RaiffStat extends Activity {
 	                	//TODO: add this strbody to problem SMS table of DB to be sent later to the developer
 	                	myLog.LOGE(LOG, "Problem message: " + strbody);
 	                	//TODO: remove Toast, using now only for test
-	                	RaiffStat.this.runOnUiThread(new Runnable() {
+	                	/*RaiffStat.this.runOnUiThread(new Runnable() {
 	    					@Override
 	    					public void run() {
 	    						Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_pars_failed), Toast.LENGTH_SHORT).show();
 	    				}
-	    			});
+	    			});*/
 	                }
 	                
 	                progressBarStatus++;
@@ -482,7 +466,9 @@ public class RaiffStat extends Activity {
 				    		t.getTerminal() + StaticValues.DELIMITER +
 				    		t.getCard() + StaticValues.DELIMITER +
 				    		t.getPlace() + StaticValues.DELIMITER +
-				    		t.getInPlace() + StaticValues.DELIMITER + t.getType() + "\r\n");
+				    		t.getInPlace() + StaticValues.DELIMITER + 
+				    		t.getType() + StaticValues.DELIMITER + 
+				    		t.getExpCategory() + "\r\n");
 	    			out.flush();
 	    		}
 	    		out.close(); 
@@ -593,12 +579,12 @@ public class RaiffStat extends Activity {
                 	//Something went wrong.
                 	myLog.LOGE(LOG, "Problem message: " + strLine);
                 	//TODO: remove Toast, using now only for test
-                	RaiffStat.this.runOnUiThread(new Runnable() {
+                	/*RaiffStat.this.runOnUiThread(new Runnable() {
     					@Override
     					public void run() {
     						Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_pars_failed), Toast.LENGTH_SHORT).show();
     				}
-    			});
+    			});*/
                 }
                 
                 progressBarStatus++;
@@ -672,11 +658,11 @@ public class RaiffStat extends Activity {
 		return Environment.getExternalStorageDirectory()+ "/" + dirName + "/" + df.format(c.getTime())+".csv";
 	}
 	
-	private void addTransactionToDB(long dateTime, RaiffParser prs){
+	private void addTransactionToDB(RaiffParser prs){
 		DatabaseHandler db = new DatabaseHandler(this);
-		db.addTransaction(new TransactionEntry(dateTime, prs.getAmount(), prs.getAmountCurr(),
+		db.addTransaction(new TransactionEntry(prs.getDateTime(), prs.getAmount(), prs.getAmountCurr(),
 				prs.getRemainder(), prs.getRemainderCurr(), prs.getTerminal(), prs.getCard(), 
-				prs.getPlace(), prs.getInPlace(), prs.getType()));
+				prs.getPlace(), prs.getInPlace(), prs.getType(), prs.getExpCategory()));
 		db.close();
 	}
 
@@ -684,7 +670,7 @@ public class RaiffStat extends Activity {
 		DatabaseHandler db = new DatabaseHandler(this);
 		db.mergeTransaction(new TransactionEntry(prs.getDateTime(), prs.getAmount(), prs.getAmountCurr(),
 				prs.getRemainder(), prs.getRemainderCurr(), prs.getTerminal(), prs.getCard(), 
-				prs.getPlace(), prs.getInPlace(), prs.getType()));
+				prs.getPlace(), prs.getInPlace(), prs.getType(), prs.getExpCategory()));
 		db.close();
 	}
 

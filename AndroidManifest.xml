@@ -57,6 +57,11 @@
               android:label="@string/place_detailed"
               android:screenOrientation="portrait">
         </activity>
+        
+        <activity android:name=".CategoryList"
+              android:label="@string/exp_categories"
+              android:screenOrientation="portrait">
+        </activity>
     	
     </application>
 

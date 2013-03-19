@@ -14,6 +14,7 @@ public class TransactionEntry {
     private String _place;
     private int _in_place;
     private int _type;
+    private int _exp_category;
  
     // Empty constructor
     public TransactionEntry(){
@@ -28,11 +29,12 @@ public class TransactionEntry {
         this._place = "unknown";
         this._in_place = 0;
         this._type = StaticValues.TRANSACTION_TYPE_UNKNOWN;
+        this._exp_category = StaticValues.EXPENSE_CATEGORY_UNKNOWN;
     }
     // constructor
     public TransactionEntry(int id, long date_time, double amount, String amount_curr, 
     						double remainder, String remainder_curr, String terminal, String card, 
-    						String place, int in_place, int _type){
+    						String place, int in_place, int _type, int exp_category){
         this._id = id;
         this._date_time = date_time;
         this._amount = amount;
@@ -44,12 +46,13 @@ public class TransactionEntry {
         this._place = place;
         this._in_place = in_place;
         this._type = _type;
+        this._exp_category = exp_category;
     }
  
     // constructor
     public TransactionEntry(long date_time, double amount, String amount_curr, 
     						double remainder, String remainder_curr, String terminal, String card, 
-    						String place, int in_place, int type){
+    						String place, int in_place, int type, int exp_category){
     	this._date_time = date_time;
         this._amount = amount;
         this._amount_curr = amount_curr;
@@ -60,6 +63,7 @@ public class TransactionEntry {
         this._place = place;
         this._in_place = in_place;
         this._type = type;
+        this._exp_category = exp_category;
     }
     // getting ID
     public int getID(){
@@ -169,5 +173,15 @@ public class TransactionEntry {
     // setting type
     public void setType(int type){
         this._type = type;
+    }
+    
+    // getting exp_category
+    public int getExpCategory(){
+        return this._exp_category;
+    }
+ 
+    // setting exp_category
+    public void setExpCategory(int exp_category){
+        this._exp_category = exp_category;
     }
 }

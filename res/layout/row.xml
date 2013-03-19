@@ -3,7 +3,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/list_background2">
+    android:background="@drawable/list_background3">
      
 		<TextView 
 		  android:id="@+id/place"
@@ -21,9 +21,8 @@
 			  android:layout_alignParentLeft="true"
 			  android:paddingLeft="5dp"
               android:paddingRight="5dp"
-			  android:textSize="14sp" 
-			  android:textColor="#800000"/>
-	    
+			  android:textSize="14sp"/>
+<!--  	    
 	    <TextView 
 			  android:id="@+id/type"
 			  android:layout_width="wrap_content"
@@ -34,7 +33,18 @@
               android:paddingRight="1dp"
 			  android:textSize="14sp" 
 			  android:textColor="#800000"/>
-	    
+-->
+		<ImageView
+		      android:id="@+id/type"
+		      android:layout_width="wrap_content"
+		      android:layout_height="wrap_content"
+		      android:layout_toRightOf="@+id/card"
+              android:layout_below="@+id/place"
+              android:paddingLeft="5dp"
+              android:paddingRight="1dp"
+              android:paddingTop="4dp"
+		      android:src="@drawable/outcome_logo"/>	  
+		          
 	    <TextView 
 			  android:id="@+id/amount"
 			  android:layout_width="wrap_content"
@@ -43,8 +53,7 @@
 			  android:layout_toRightOf="@+id/type"
               android:paddingRight="5dp"
               android:paddingLeft="1dp"
-			  android:textSize="14sp" 
-			  android:textColor="#800000"/>
+			  android:textSize="14sp"/>
             
 		  <TextView 
 			  android:id="@+id/date_time"
@@ -54,7 +63,7 @@
 			  android:layout_below="@+id/place"
 			  android:paddingRight="5dp"
 			  android:paddingLeft="5dp"
-			  android:textSize="12sp"
-			  android:textColor="#800000" />
+			  android:paddingBottom="4dp"
+			  android:textSize="12sp" />
 
 </RelativeLayout>

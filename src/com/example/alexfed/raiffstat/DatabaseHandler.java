@@ -8,14 +8,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
+import android.graphics.Color;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
 	private static final String LOG = "DatabaseHandler";
 	// All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 12;
  
     // Database Name
     private static final String DATABASE_NAME = "raiffDB";
@@ -23,6 +23,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Transactions table name
     private static final String TABLE_TRANSACTIONS = "transactions";
  
+    // Categories table name
+    private static final String TABLE_CATEGORIES = "categories";
+    
     private Context context;
     
     // Transactions Table Columns names
@@ -37,6 +40,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_PLACE = "place";
     private static final String KEY_IN_PLACE = "in_place";
     private static final String KEY_TYPE = "type";
+    private static final String KEY_EXP_CATEGORY = "exp_category";
+    
+    // Categories Table Columns names
+    private static final String CAT_KEY_ID = "id";
+    private static final String CAT_KEY_NAME = "name";
+    private static final String CAT_KEY_COLOR = "color";
  
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -56,16 +65,41 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_CARD + " TEXT," 
                 + KEY_PLACE + " TEXT," 
                 + KEY_IN_PLACE + "  INTEGER,"
-                + KEY_TYPE + "  INTEGER" +")";
+                + KEY_TYPE + "  INTEGER," 
+                + KEY_EXP_CATEGORY + "  INTEGER" +")";
         db.execSQL(CREATE_TRANSACTIONS_TABLE);
+        
+        createDefaultCategoriesTable(db);   
     }
  
+    private void createDefaultCategoriesTable(SQLiteDatabase db){
+    	String CREATE_CATEGORIES_TABLE = "CREATE TABLE " + TABLE_CATEGORIES + "("
+                + CAT_KEY_ID + " INTEGER PRIMARY KEY," + CAT_KEY_NAME + " TEXT,"
+                + CAT_KEY_COLOR + " INTEGER" +")";
+        db.execSQL(CREATE_CATEGORIES_TABLE);
+        
+        //Add some default values
+        ContentValues values = new ContentValues();
+        values.put(CAT_KEY_NAME, context.getResources().getString(R.string.category_food));
+        values.put(CAT_KEY_COLOR, Color.GREEN); 
+        db.insert(TABLE_CATEGORIES, null, values);
+        
+        values.clear();
+        values.put(CAT_KEY_NAME, context.getResources().getString(R.string.category_health));
+        values.put(CAT_KEY_COLOR, Color.BLUE); 
+        db.insert(TABLE_CATEGORIES, null, values);
+        
+        values.clear();
+        values.put(CAT_KEY_NAME, context.getResources().getString(R.string.category_clothes));
+        values.put(CAT_KEY_COLOR, Color.RED); 
+        db.insert(TABLE_CATEGORIES, null, values);
+    }
     // Upgrading database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older table if existed
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TRANSACTIONS);
- 
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORIES);
         // Create tables again
         onCreate(db);
     }
@@ -89,9 +123,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_PLACE, t.getPlace());
         values.put(KEY_IN_PLACE, t.getInPlace());
         values.put(KEY_TYPE, t.getType());
+        values.put(KEY_EXP_CATEGORY, t.getExpCategory());
  
         // Inserting Row
         db.insert(TABLE_TRANSACTIONS, null, values);
+        db.close(); // Closing database connection
+    }
+    
+    // Adding new category
+    void addCategory(CategoryEntry c) {
+        SQLiteDatabase db = this.getWritableDatabase();
+ 
+        ContentValues values = new ContentValues();
+        values.put(CAT_KEY_NAME, c.getName());
+        values.put(CAT_KEY_COLOR, c.getColor()); 
+ 
+        // Inserting Row
+        db.insert(TABLE_CATEGORIES, null, values);
         db.close(); // Closing database connection
     }
  
@@ -107,6 +155,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         		t.setPlace(trs.get(0).getPlace());
         		t.setInPlace(1);
         	}
+        	trs = this.getCatigorizedTransactionsPlaceFixed(t.getPlace());
+        	if(trs.size()>0){
+        		t.setExpCategory(trs.get(0).getExpCategory());
+        	}
         	
         	//Create new transaction
         	SQLiteDatabase db = this.getWritableDatabase();
@@ -121,6 +173,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	        values.put(KEY_PLACE, t.getPlace());
 	        values.put(KEY_IN_PLACE, t.getInPlace());
 	        values.put(KEY_TYPE, t.getType());
+	        values.put(KEY_EXP_CATEGORY, t.getExpCategory());
 	        // Inserting Row
 	        db.insert(TABLE_TRANSACTIONS, null, values);
 	        db.close(); // Closing database connection
@@ -135,7 +188,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	
         Cursor cursor = db.query(TABLE_TRANSACTIONS, new String[] { KEY_ID, KEY_DATE_TIME, 
         		KEY_AMOUNT, KEY_AMOUNT_CURR, KEY_REMAINDER, KEY_REMAINDER_CURR, KEY_TERMINAL, 
-        		KEY_CARD, KEY_PLACE, KEY_IN_PLACE, KEY_TYPE }, 
+        		KEY_CARD, KEY_PLACE, KEY_IN_PLACE, KEY_TYPE, KEY_EXP_CATEGORY }, 
                 "( " + KEY_DATE_TIME + "=? ) " + " AND " +
                 "( " + KEY_AMOUNT + "=? ) " + " AND " +
                 "( " + KEY_AMOUNT_CURR + "=? ) " + " AND " +
@@ -170,7 +223,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
  
         Cursor cursor = db.query(TABLE_TRANSACTIONS, new String[] { KEY_ID, KEY_DATE_TIME, 
         		KEY_AMOUNT, KEY_AMOUNT_CURR, KEY_REMAINDER, KEY_REMAINDER_CURR, KEY_TERMINAL, 
-        		KEY_CARD, KEY_PLACE, KEY_IN_PLACE, KEY_TYPE }, 
+        		KEY_CARD, KEY_PLACE, KEY_IN_PLACE, KEY_TYPE, KEY_EXP_CATEGORY }, 
                 KEY_ID + "=?",
                 new String[] { String.valueOf(id) }, null, null, null, null);
         if (cursor != null)
@@ -178,12 +231,31 @@ public class DatabaseHandler extends SQLiteOpenHelper {
  
         TransactionEntry t = new TransactionEntry(cursor.getInt(0), Long.valueOf(cursor.getString(1)), 
         		cursor.getDouble(2), cursor.getString(3), cursor.getDouble(4), cursor.getString(5),
-        		cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getInt(9), cursor.getInt(10));
+        		cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getInt(9), 
+        		cursor.getInt(10), cursor.getInt(11));
         
         cursor.close();
         db.close();
         // return transaction
         return t;
+    }
+    
+    // Getting single category entry
+    CategoryEntry getCategory(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+ 
+        Cursor cursor = db.query(TABLE_CATEGORIES, new String[] { CAT_KEY_ID, CAT_KEY_NAME, CAT_KEY_COLOR }, 
+                KEY_ID + "=?",
+                new String[] { String.valueOf(id) }, null, null, null, null);
+        if (cursor != null)
+            cursor.moveToFirst();
+ 
+        CategoryEntry c = new CategoryEntry(cursor.getInt(0), cursor.getString(1), cursor.getInt(2));
+        
+        cursor.close();
+        db.close();
+        // return transaction
+        return c;
     }
  
     // Getting All transactions
@@ -210,6 +282,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 t.setPlace(cursor.getString(8));
                 t.setInPlace(cursor.getInt(9));
                 t.setType(cursor.getInt(10));
+                t.setExpCategory(cursor.getInt(11));
                 // Adding transaction to list
                 transactionList.add(t);
             } while (cursor.moveToNext());
@@ -218,6 +291,32 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
         // return transaction list
         return transactionList;
+    }
+    
+    // Getting All categories
+    public List<CategoryEntry> getAllCategories() {
+        List<CategoryEntry> categoryList = new ArrayList<CategoryEntry>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_CATEGORIES;
+ 
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+ 
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+            	CategoryEntry c = new CategoryEntry(); 
+                c.setID(cursor.getInt(0));
+                c.setName(cursor.getString(1));
+                c.setColor(cursor.getInt(2));
+                // Adding category to list
+                categoryList.add(c);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        // return transaction list
+        return categoryList;
     }
  
     // Updating single transaction entry
@@ -235,10 +334,26 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_PLACE, t.getPlace());
         values.put(KEY_IN_PLACE, t.getInPlace());
         values.put(KEY_TYPE, t.getType());
+        values.put(KEY_EXP_CATEGORY, t.getExpCategory());
         
      // updating row
         int ret = db.update(TABLE_TRANSACTIONS, values, KEY_ID + " = ?",
                 new String[] { String.valueOf(t.getID()) });
+        db.close();
+        return ret;
+    }
+    
+    // Updating single category entry
+    public int updateCategory(CategoryEntry c) {
+        SQLiteDatabase db = this.getWritableDatabase();
+ 
+        ContentValues values = new ContentValues();
+        values.put(CAT_KEY_NAME, c.getName()); 
+        values.put(CAT_KEY_COLOR, c.getColor());
+        
+     // updating row
+        int ret = db.update(TABLE_CATEGORIES, values, KEY_ID + " = ?",
+                new String[] { String.valueOf(c.getID()) });
         db.close();
         return ret;
     }
@@ -248,6 +363,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_TRANSACTIONS, KEY_ID + " = ?",
                 new String[] { String.valueOf(t.getID()) });
+        db.close();
+    }
+    
+    // Deleting single category entry
+    public void deleteCategory(CategoryEntry c) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_CATEGORIES, KEY_ID + " = ?",
+                new String[] { String.valueOf(c.getID()) });
         db.close();
     }
  
@@ -263,9 +386,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return ret;
     }
  
+    // Getting categories Count
+    public int getCategoriesCount() {
+        String countQuery = "SELECT  * FROM " + TABLE_CATEGORIES;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+        int ret = cursor.getCount();
+        cursor.close();
+        db.close();
+        // return count
+        return ret;
+    }
+    
     public void clearAll(){
     	SQLiteDatabase db = this.getWritableDatabase();
     	db.execSQL("DELETE FROM " + TABLE_TRANSACTIONS + ";");
+    	db.close();
+    }
+    
+    public void clearAllCategories(){
+    	SQLiteDatabase db = this.getWritableDatabase();
+    	db.execSQL("DELETE FROM " + TABLE_CATEGORIES + ";");
     	db.close();
     }
     
@@ -289,6 +430,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 t.setPlace(cursor.getString(8));
                 t.setInPlace(cursor.getInt(9));
                 t.setType(cursor.getInt(10));
+                t.setExpCategory(cursor.getInt(11));
                 // Adding transaction to list
                 transactionList.add(t);
             } while (cursor.moveToNext());
@@ -502,6 +644,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	String countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + " WHERE " + "( " + KEY_TERMINAL + " = ?" + " ) " + " AND "+
     			" ( " + KEY_IN_PLACE + " = 1 )";
     	return queryDB(countQuery, new String[] {terminal});
+    }
+    
+    public  List<TransactionEntry> getCatigorizedTransactionsPlaceFixed(String place){
+    	String countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
+    			" WHERE " + "( " + KEY_PLACE + " = ?" + " ) " + " AND "+
+    			" ( " + KEY_EXP_CATEGORY + " > ? )";
+    	return queryDB(countQuery, new String[] {place, String.valueOf(StaticValues.EXPENSE_CATEGORY_UNKNOWN)});
     }
     
     public List<String> getTerminalsOfPlace(String place){

@@ -16,6 +16,7 @@ public class RaiffParser {
     private String _place; 
     private int _in_place;
     private int _type;
+    private int _exp_category;
     
     RaiffParser(){
     	this._date_time = 0;
@@ -28,11 +29,13 @@ public class RaiffParser {
     	this._place = "unknown";
     	this._in_place = 0;
     	this._type = StaticValues.TRANSACTION_TYPE_UNKNOWN;
+    	this._exp_category = StaticValues.EXPENSE_CATEGORY_UNKNOWN;
     }
     
     public boolean parseSmsBody(Context context, String body, long date){
     	
     	this._date_time = date;
+    	this._exp_category = StaticValues.EXPENSE_CATEGORY_UNKNOWN;
     	String delims;
     	String[] tokens;
     	if(body.toLowerCase().startsWith("balans")){//Income
@@ -117,7 +120,7 @@ public class RaiffParser {
     	
     	String delims = "[,]+"; 
     	String[] tokens = line.split(delims);
-    	if(tokens.length<11){
+    	if(tokens.length<12){
     		return false;
     	}
     	else{
@@ -132,6 +135,7 @@ public class RaiffParser {
     			this._place = tokens[8].trim();
     			this._in_place = Integer.parseInt(tokens[9].trim());
     			this._type = Integer.parseInt(tokens[10].trim());
+    			this._exp_category = Integer.parseInt(tokens[11].trim());
     			
     			return true;
     			
@@ -307,4 +311,7 @@ public class RaiffParser {
     	return this._type;
     }
     
+    public int getExpCategory(){
+    	return this._exp_category;
+    }
 }

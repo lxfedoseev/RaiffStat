@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
@@ -239,7 +240,7 @@ public class ReportListPlace extends ListActivity {
 			  return;
 		  }
 		  
-		  GraphView graphView;
+		  LineGraphView graphView;
 		  GraphViewData[] data = new GraphViewData[trs.size()];
 		  final ArrayList<Long> dateList = new ArrayList<Long>();
 		  double maxV = Double.MIN_VALUE;
@@ -260,7 +261,7 @@ public class ReportListPlace extends ListActivity {
 			   protected String formatLabel(double value, boolean isValueX) {  
 			      if (isValueX) {
 			    	  int i = (int) value;
-			    	  long date = dateList.get(i<=0?0:(i>count)?count-1:i-1);
+			    	  long date = dateList.get(i<=0?0:(i>=count)?count-1:i);
 			    	  String dateString = new SimpleDateFormat("dd/MM/yyyy").format(new Date(date));
 			    	  return dateString;
 			      } else {
@@ -440,7 +441,8 @@ public class ReportListPlace extends ListActivity {
                 holder.card = (TextView) convertView.findViewById(R.id.card);
                 holder.date_time = (TextView) convertView.findViewById(R.id.date_time);
                 holder.amount = (TextView) convertView.findViewById(R.id.amount);
-                holder.type = (TextView) convertView.findViewById(R.id.type);
+                //holder.type = (TextView) convertView.findViewById(R.id.type);
+                holder.type = (ImageView) convertView.findViewById(R.id.type);
 
                 convertView.setTag(holder);
             } else {
@@ -457,7 +459,8 @@ public class ReportListPlace extends ListActivity {
             TextView date_time;
             TextView amount;
             TextView card;
-            TextView type;
+            //TextView type;
+            ImageView type;
         }
         
         private void setListEntry(ViewHolder holder, TransactionEntry entry){
@@ -466,27 +469,29 @@ public class ReportListPlace extends ListActivity {
         	String timeString = new SimpleDateFormat("HH:mm:ss").format(new Date(longDate));
         	
         	if(entry.getType() == StaticValues.TRANSACTION_TYPE_INCOME){
-        		holder.date_time.setTextColor(Color.GREEN);
-        		holder.card.setTextColor(Color.GREEN);
-        		holder.amount.setTextColor(Color.GREEN);
-        		holder.type.setTextColor(Color.GREEN);
+        		//holder.date_time.setTextColor(Color.GREEN);
+        		//holder.card.setTextColor(Color.GREEN);
+        		//holder.amount.setTextColor(Color.GREEN);
+        		//holder.type.setTextColor(Color.GREEN);
+        		holder.type.setImageDrawable(context.getResources().getDrawable(R.drawable.income_logo));
         	}else{//expense
-        		holder.date_time.setTextColor(Color.RED);
-        		holder.card.setTextColor(Color.RED);
-        		holder.amount.setTextColor(Color.RED);  
-        		holder.type.setTextColor(Color.RED);
+        		//holder.date_time.setTextColor(Color.RED);
+        		//holder.card.setTextColor(Color.RED);
+        		//holder.amount.setTextColor(Color.RED);  
+        		//holder.type.setTextColor(Color.RED); 
+        		holder.type.setImageDrawable(context.getResources().getDrawable(R.drawable.outcome_logo));
         	}
         	
         	holder.date_time.setText(dayString+"\r\n"+timeString); 
 
             holder.card.setText(context.getResources().getString(R.string.str_card) + ": " + entry.getCard());                
             holder.amount.setText(entry.getAmount() + " " + entry.getAmountCurr());
-            holder.type.setText(""); 
+            /*holder.type.setText(""); 
             if(entry.getType() == StaticValues.TRANSACTION_TYPE_EXPENSE){
             	holder.type.setText("-");
             }else if(entry.getType() == StaticValues.TRANSACTION_TYPE_INCOME){
             	holder.type.setText("+");
-            }
+            }*/
         }
     }
 

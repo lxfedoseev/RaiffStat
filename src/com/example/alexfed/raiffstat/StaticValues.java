@@ -8,6 +8,8 @@ public class StaticValues {
 	public static int TRANSACTION_TYPE_INCOME = 2;
 	public static int TRANSACTION_TYPE_DENIAL = 3;
 	
+	public static int EXPENSE_CATEGORY_UNKNOWN = -1;
+	
 	//Sort types: order is essential!!!
 	public static int SORT_BY_DATE = 0;
 	public static int SORT_BY_AMMOUNT = 1;

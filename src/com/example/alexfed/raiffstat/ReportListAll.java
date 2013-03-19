@@ -16,14 +16,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -287,7 +286,8 @@ public class ReportListAll extends ListActivity {
                 holder.date_time = (TextView) convertView.findViewById(R.id.date_time);
                 holder.place = (TextView) convertView.findViewById(R.id.place);
                 holder.amount = (TextView) convertView.findViewById(R.id.amount);
-                holder.type = (TextView) convertView.findViewById(R.id.type);
+                //holder.type = (TextView) convertView.findViewById(R.id.type);
+                holder.type = (ImageView) convertView.findViewById(R.id.type);
 
                 convertView.setTag(holder);
             } else {
@@ -304,7 +304,8 @@ public class ReportListAll extends ListActivity {
             TextView date_time;
             TextView amount;
             TextView card;
-            TextView type;
+            //TextView type;
+            ImageView type;
         }
         
         private void setListEntry(ViewHolder holder, TransactionEntry entry){
@@ -314,27 +315,29 @@ public class ReportListAll extends ListActivity {
         	
         	if(entry.getType() == StaticValues.TRANSACTION_TYPE_INCOME){
         		int myGreen = Color.argb(255, 0, 127, 14);
-        		holder.date_time.setTextColor(myGreen);
-        		holder.card.setTextColor(myGreen);
-        		holder.amount.setTextColor(myGreen);
-        		holder.type.setTextColor(myGreen);
+        		//holder.date_time.setTextColor(myGreen);
+        		//holder.card.setTextColor(myGreen);
+        		//holder.amount.setTextColor(myGreen);
+        		//holder.type.setTextColor(myGreen);
+        		holder.type.setImageDrawable(context.getResources().getDrawable(R.drawable.income_logo));
         	}else{//expense
-        		holder.date_time.setTextColor(Color.RED);
-        		holder.card.setTextColor(Color.RED);
-        		holder.amount.setTextColor(Color.RED);
-        		holder.type.setTextColor(Color.RED);
+        		//holder.date_time.setTextColor(Color.RED);
+        		//holder.card.setTextColor(Color.RED);
+        		//holder.amount.setTextColor(Color.RED);
+        		//holder.type.setTextColor(Color.RED);
+        		holder.type.setImageDrawable(context.getResources().getDrawable(R.drawable.outcome_logo));
         	}
         	
         	holder.date_time.setText(dayString+"\r\n"+timeString); 
         	holder.place.setText(entry.getPlace());
             holder.card.setText(context.getResources().getString(R.string.str_card) + ": " + entry.getCard());                
             holder.amount.setText(entry.getAmount() + " " + entry.getAmountCurr());
-            holder.type.setText(""); 
+           /* holder.type.setText(""); 
             if(entry.getType() == StaticValues.TRANSACTION_TYPE_EXPENSE){
             	holder.type.setText("-");
             }else if(entry.getType() == StaticValues.TRANSACTION_TYPE_INCOME){
             	holder.type.setText("+");
-            }
+            }*/
         }
     }
 

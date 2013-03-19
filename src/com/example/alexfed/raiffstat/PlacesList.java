@@ -80,9 +80,9 @@ public class PlacesList extends ListActivity {
 	protected void onListItemClick(View v, int pos, long id) { 
 		final int localPos = pos;
 		final String[] items = new String [] {
-        		getResources().getString(R.string.click_place_delete),
-        		getResources().getString(R.string.click_place_rename),
-        		getResources().getString(R.string.click_place_edit)
+        		getResources().getString(R.string.click_delete),
+        		getResources().getString(R.string.click_rename),
+        		getResources().getString(R.string.click_edit)
         };
         
         ArrayAdapter<String> stringAdapter  = new ArrayAdapter<String> (this, android.R.layout.select_dialog_item,items);
