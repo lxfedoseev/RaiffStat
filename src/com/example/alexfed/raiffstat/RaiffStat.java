@@ -338,6 +338,10 @@ public class RaiffStat extends Activity {
 	    	myLog.LOGD(LOG, ex.getMessage()); 
 	    	return false;
 	    } 
+	    if(cur.getCount()<1){
+	    	Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_no_sms) + " " + RAIFF_ADDRESS, Toast.LENGTH_LONG).show(); 
+	    	return false;
+	    }
 		progressBar = new ProgressDialog(this);
 		progressBar.setCancelable(false);
 		progressBar.setMessage(getResources().getString(R.string.progress_sms_scanning));

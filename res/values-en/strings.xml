@@ -59,6 +59,7 @@
 	<string name="toast_pars_failed">Parser failed</string>
 	<string name="toast_one_value">Only one value</string>
 	<string name="toast_no_values">No values</string>
+	<string name="toast_no_sms">There is no SMS from</string>
 	
 	<string name="ctx_new_place_name">Input new place name</string>
 	<string name="ctx_place_name">Input place name</string>

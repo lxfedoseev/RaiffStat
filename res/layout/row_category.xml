@@ -9,24 +9,23 @@
 	<RelativeLayout
             android:id="@+id/relativeLayout1"
             android:layout_width="match_parent"
-            android:layout_height="60dp" >
+            android:layout_height="60dip" >
 		
 	    <TextView 
 			  android:id="@+id/name"
 			  android:layout_width="wrap_content"
 			  android:layout_height="wrap_content"
 			  android:layout_alignParentLeft="true"
-              android:paddingRight="16dp"
+              android:paddingRight="5dp"
 			  android:textSize="18sp"
 			  android:layout_marginLeft="5dp"
 			  android:paddingTop="16dp"/>
 	           
 		  <SurfaceView 
 			  android:id="@+id/color"
-			  android:layout_width="20dip"
-			  android:layout_height="wrap_content"
-			  android:layout_alignParentRight="true"
-			  android:paddingTop="16dp"/>
+			  android:layout_width="20dp"
+			  android:layout_height="match_parent"
+			  android:layout_alignParentRight="true"/>
             
 	</RelativeLayout>
 

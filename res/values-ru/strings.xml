@@ -59,6 +59,7 @@
 	<string name="toast_pars_failed">Ошибка анализатора</string>
 	<string name="toast_one_value">Всего одно значение</string>
 	<string name="toast_no_values">Нет значаний</string>
+	<string name="toast_no_sms">У вас нет СМС от</string>
 	
 	<string name="ctx_new_place_name">Введите новое название места</string>
 	<string name="ctx_place_name">Введите название места</string>
