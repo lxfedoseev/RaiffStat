@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,6 +26,7 @@ public class CategoryDestributionList extends ListActivity {
 
 	private final String LOG = "CategoryDestributionList";
 	private List<CategorizedPlaceModel> catPlaces;
+	private ProgressDialog progressBar;
 	
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -58,10 +60,66 @@ public class CategoryDestributionList extends ListActivity {
 	}
 	
 	protected void onListItemClick(View v, int pos, long id) {
-		Intent myIntent;
-    	myIntent = new Intent(CategoryDestributionList.this, CategoryList.class);
-    	myIntent.putExtra("place", catPlaces.get(pos).getPlaceName());
-    	CategoryDestributionList.this.startActivity(myIntent);
+		
+		final int localPos = pos;
+		final String[] items = new String [] {
+        		getResources().getString(R.string.click_assign_category),
+        		getResources().getString(R.string.click_remove_category)
+        };
+        
+        ArrayAdapter<String> stringAdapter  = new ArrayAdapter<String> (this, android.R.layout.select_dialog_item,items);
+        AlertDialog.Builder builder     = new AlertDialog.Builder(this);
+        
+        builder.setTitle(catPlaces.get(localPos).getPlaceName());
+        builder.setAdapter( stringAdapter, new DialogInterface.OnClickListener() {
+            public void onClick( DialogInterface dialog, int item ) {
+            	
+            	if(item == 0){
+            		Intent myIntent;
+                	myIntent = new Intent(CategoryDestributionList.this, CategoryList.class);
+                	myIntent.putExtra("place", catPlaces.get(localPos).getPlaceName());
+                	CategoryDestributionList.this.startActivity(myIntent);
+            	}else if(item == 1){
+            		removeCategoryWithProgressBar(localPos);
+            	}else{
+            		//Should not enter here
+            	}
+            }
+        } );
+ 
+        final AlertDialog dialog = builder.create();
+		dialog.show();
+	}
+	
+	private void removeCategoryWithProgressBar(int pos){
+		final int localPos = pos;
+		
+		progressBar = new ProgressDialog(this);
+		progressBar.setCancelable(false);
+		progressBar.setMessage(getResources().getString(R.string.progress_working));
+		progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progressBar.setProgress(0);
+		progressBar.show();
+		
+		new Thread(new Runnable() {
+			public void run() {
+				DatabaseHandler db = new DatabaseHandler(getBaseContext());
+        		List<TransactionEntry> trs = db.getTransactionsPlace(catPlaces.get(localPos).getPlaceName());
+        		for(TransactionEntry t : trs){
+        			t.setExpCategory(StaticValues.EXPENSE_CATEGORY_UNKNOWN);
+        			db.updateTransaction(t);
+        		}
+        		db.close();
+			    progressBar.dismiss();
+				CategoryDestributionList.this.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						inflateList();
+					}
+				});
+					  
+		}
+		}).start();
 	}
 	
 	private void inflateList(){

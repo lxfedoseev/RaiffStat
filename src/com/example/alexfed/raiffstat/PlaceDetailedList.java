@@ -105,6 +105,7 @@ public class PlaceDetailedList extends ListActivity {
 				    		for(TransactionEntry t : transactions){
 				    			t.setPlace(t.getTerminal());
 				    			t.setInPlace(0);
+				    			t.setExpCategory(StaticValues.EXPENSE_CATEGORY_UNKNOWN);
 				    			db.updateTransaction(t);
 				    		}
 				    	}

@@ -137,6 +137,11 @@ public class TerminalsList extends ListActivity {
 		    					value + " " + getResources().getString(R.string.str_forbidden), Toast.LENGTH_LONG).show();
 		    		return;
 		    	}
+		    	if(value.contains(",")){
+		    		Toast.makeText(getApplicationContext(), getResources().getString(R.string.str_comma_usage) + " " + 
+	    					getResources().getString(R.string.str_forbidden), Toast.LENGTH_LONG).show();
+		    		return;
+		    	}
 		    	
 		    	makeNewPlaceWithProgressBar(value);
 		    }else{
@@ -172,6 +177,7 @@ public class TerminalsList extends ListActivity {
 				    		for(TransactionEntry t : transactions){
 				    			t.setPlace(localPlaceName);
 				    			t.setInPlace(1);
+				    			t.setExpCategory(StaticValues.EXPENSE_CATEGORY_UNKNOWN);
 				    			db.updateTransaction(t);
 				    		}
 				    	}
@@ -245,9 +251,11 @@ public class TerminalsList extends ListActivity {
 					for (Model m: modelList){
 				    	if(m.isSelected()){
 				    		List<TransactionEntry> transactions = db.getTransactionsTerminal(m.getName());
+				    		List<TransactionEntry> trForPlace = db.getTransactionsPlaceFixed(localChoice.toString());
 				    		for(TransactionEntry t : transactions){
 				    			t.setPlace(localChoice.toString());
 				    			t.setInPlace(1);
+				    			t.setExpCategory(trForPlace.get(0).getExpCategory());
 				    			db.updateTransaction(t);
 				    		}
 				    	}

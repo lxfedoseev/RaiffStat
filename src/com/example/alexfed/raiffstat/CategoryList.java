@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,6 +36,7 @@ public class CategoryList extends ListActivity {
 	private final int COLOR_DIALOG_MODIFY = 1;
 	private int colorDlgType;
 	private int position;
+	private ProgressDialog progressBar;
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
@@ -139,16 +141,34 @@ public class CategoryList extends ListActivity {
 	} 
 	
 	protected void onListItemClick(View v, int pos, long id) { 
-		DatabaseHandler db = new DatabaseHandler(this);
-		List<TransactionEntry> trs = db.getTransactionsPlace(place);
-		for(TransactionEntry t : trs){
-			t.setExpCategory(categories.get(pos).getID());
-			db.updateTransaction(t);
-		}
-		db.close();
-		finish();
+		assignCategoryWithProgressBar(pos);
 	}
 
+	private void assignCategoryWithProgressBar(int pos){
+		final int localPos = pos;
+		progressBar = new ProgressDialog(this);
+		progressBar.setCancelable(false);
+		progressBar.setMessage(getResources().getString(R.string.progress_working));
+		progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progressBar.setProgress(0);
+		progressBar.show();
+		
+		new Thread(new Runnable() {
+			public void run() {
+				DatabaseHandler db = new DatabaseHandler(getBaseContext());
+				List<TransactionEntry> trs = db.getTransactionsPlace(place);
+				for(TransactionEntry t : trs){
+					t.setExpCategory(categories.get(localPos).getID());
+					db.updateTransaction(t);
+				}
+        		db.close();
+			    progressBar.dismiss();
+			    finish();	  
+		}
+		}).start();
+		
+	}
+	
 	private void doEditCategoryColor(int pos){
 		colorDlgType = COLOR_DIALOG_MODIFY;
 		position = pos;

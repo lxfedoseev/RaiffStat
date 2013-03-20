@@ -1,7 +1,8 @@
 package com.example.alexfed.raiffstat;
 
 public class StaticValues {
-
+	public static String RAIFF_ADDRESS = "Raiffeisen";
+	
 	//Transaction types
 	public static int TRANSACTION_TYPE_UNKNOWN = 0;
 	public static int TRANSACTION_TYPE_EXPENSE = 1;

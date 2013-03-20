@@ -129,6 +129,7 @@ public class PlacesList extends ListActivity {
 				for (TransactionEntry t:trs){
 					t.setPlace(t.getTerminal());
 					t.setInPlace(0);
+					t.setExpCategory(StaticValues.EXPENSE_CATEGORY_UNKNOWN);
 					db.updateTransaction(t);
 				}
 			    db.close();
@@ -164,6 +165,11 @@ public class PlacesList extends ListActivity {
 		    		//Toast.makeText(getApplicationContext(), "Place " + value + " is not allowed", Toast.LENGTH_LONG).show();
 		    		Toast.makeText(getApplicationContext(), getResources().getString(R.string.str_place) + " " + value + " " + 
 		    				getResources().getString(R.string.str_forbidden), Toast.LENGTH_LONG).show();
+		    		return;
+		    	}
+		    	if(value.contains(",")){
+		    		Toast.makeText(getApplicationContext(), getResources().getString(R.string.str_comma_usage) + " " + 
+	    					getResources().getString(R.string.str_forbidden), Toast.LENGTH_LONG).show();
 		    		return;
 		    	}
 		    	renamePlaceWithProgressBar(localPlace, value);

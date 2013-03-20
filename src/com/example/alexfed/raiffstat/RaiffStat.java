@@ -45,7 +45,6 @@ import android.widget.Toast;
 /* TODO: 
  * - Save application state (screen rotation, going to background)
  * - Save report to a file (share report)
- * - Make categories out of places (Food, Leisure, Clothes, Automobile, Applications, etc., Customly defined)
  * - Make a chart for time period with all tags
  * - Radio buttons for interval (1 week, 1 month, period)
  * - Make a good design (application icon as well)  
@@ -59,7 +58,6 @@ import android.widget.Toast;
 public class RaiffStat extends Activity { 
 
 	private final String LOG = "RaiffStat";
-	private final String RAIFF_ADDRESS = "Raiffeisen";
 	
 	private DatePicker dpFrom;
 	private DatePicker dpTo;
@@ -336,13 +334,13 @@ public class RaiffStat extends Activity {
 	    try {  
 	    	Uri uri = Uri.parse(SMS_URI_INBOX);  
 	        String[] projection = new String[] { "_id", "address", "person", "body", "date", "type" }; 
-	        cur = getContentResolver().query(uri, projection, "address" + "='" + RAIFF_ADDRESS + "'", null, "date");
+	        cur = getContentResolver().query(uri, projection, "address" + "='" + StaticValues.RAIFF_ADDRESS + "'", null, "date");
 	    }catch (SQLiteException ex) {  
 	    	myLog.LOGD(LOG, ex.getMessage()); 
 	    	return false;
 	    } 
 	    if(cur.getCount()<1){
-	    	Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_no_sms) + " " + RAIFF_ADDRESS, Toast.LENGTH_LONG).show(); 
+	    	Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_no_sms) + " " + StaticValues.RAIFF_ADDRESS, Toast.LENGTH_LONG).show(); 
 	    	return false;
 	    }
 		progressBar = new ProgressDialog(this);
@@ -366,7 +364,7 @@ public class RaiffStat extends Activity {
 	    try {  
 	    	Uri uri = Uri.parse(SMS_URI_INBOX);  
 	        String[] projection = new String[] { "_id", "address", "person", "body", "date", "type" }; 
-	        Cursor cur = getContentResolver().query(uri, projection, "address" + "='" + RAIFF_ADDRESS + "'", null, "date");
+	        Cursor cur = getContentResolver().query(uri, projection, "address" + "='" + StaticValues.RAIFF_ADDRESS + "'", null, "date");
 	        if (cur.moveToFirst()) {  
 	        	int index_Address = cur.getColumnIndex("address");  
 	            int index_Person = cur.getColumnIndex("person");  
@@ -474,8 +472,7 @@ public class RaiffStat extends Activity {
 				    		t.getCard() + StaticValues.DELIMITER +
 				    		t.getPlace() + StaticValues.DELIMITER +
 				    		t.getInPlace() + StaticValues.DELIMITER + 
-				    		t.getType() + StaticValues.DELIMITER + 
-				    		t.getExpCategory() + "\r\n");
+				    		t.getType() + "\r\n");
 	    			out.flush();
 	    		}
 	    		out.close(); 

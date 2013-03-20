@@ -31,7 +31,7 @@
     <string name="str_card">Card</string>
     <string name="str_amount">Amount</string>
     <string name="str_tr_number">Transaction number</string>
-    <string name="str_forbidden">forbidden</string>
+    <string name="str_forbidden">is forbidden</string>
     <string name="str_forbidden_empty_place">Place name can\'t be empty</string>
     <string name="str_spent">Payment</string>
     <string name="str_earned">Income</string>
@@ -42,6 +42,7 @@
     <string name="str_category">Category</string>
     <string name="str_forbidden_empty_category">Category name can\'t be empty</string>
     <string name="str_category_undefined">Category\r\nundefined</string>
+    <string name="str_comma_usage">Using comma</string>
     
     <string name="click_delete">Delete</string>
     <string name="click_rename">Rename</string>
@@ -49,6 +50,8 @@
 	<string name="click_ctx_dialog_title">Context Menu</string>
 	<string name="click_edit_name">Edit name</string>
 	<string name="click_edit_color">Edit color</string>
+	<string name="click_assign_category">Assign category</string>
+	<string name="click_remove_category">Remove category</string>
 	
 	<string name="toast_nothing_selected">Nothing selected</string>
 	<string name="toast_db_empty">DataBase is empty</string>

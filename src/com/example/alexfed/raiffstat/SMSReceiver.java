@@ -21,7 +21,6 @@ public class SMSReceiver extends BroadcastReceiver {
         String message = ""; 
         String sender = "";
         long date = 0;
-        String raiffAddress = "Raiffeisen";
         //String raiffAddress = "12345"; //test with emulator
         if (bundle != null)
         {
@@ -38,7 +37,7 @@ public class SMSReceiver extends BroadcastReceiver {
             String dateString = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date(date));
             myLog.LOGD(LOG, "Sender: " + sender + " Message: " + message + " Date: " + dateString);
             
-            if(sender.trim().equals(raiffAddress))
+            if(sender.trim().equals(StaticValues.RAIFF_ADDRESS))
             	parseSmsAddToDb(context, date, message);
         }
 	}

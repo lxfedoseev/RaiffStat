@@ -120,7 +120,7 @@ public class RaiffParser {
     	
     	String delims = "[,]+"; 
     	String[] tokens = line.split(delims);
-    	if(tokens.length<12){
+    	if(tokens.length<11){
     		return false;
     	}
     	else{
@@ -135,7 +135,7 @@ public class RaiffParser {
     			this._place = tokens[8].trim();
     			this._in_place = Integer.parseInt(tokens[9].trim());
     			this._type = Integer.parseInt(tokens[10].trim());
-    			this._exp_category = Integer.parseInt(tokens[11].trim());
+    			this._exp_category = StaticValues.EXPENSE_CATEGORY_UNKNOWN;
     			
     			return true;
     			
