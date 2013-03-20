@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +29,7 @@ public class CategoryList extends ListActivity {
 	private List<CategoryEntry> categories;
 	private String catName;
 	private Context context;
+	private String place;
 	
 	private final int COLOR_DIALOG_NEW = 0;
 	private final int COLOR_DIALOG_MODIFY = 1;
@@ -41,15 +44,10 @@ public class CategoryList extends ListActivity {
 		super.onCreate(savedInstanceState);
 		context = this;
 		setContentView(R.layout.activity_raiff_report);
-		
-	    getListView().setOnItemLongClickListener( 
-	    		new AdapterView.OnItemLongClickListener(){ 
-	    		@Override 
-	    		public boolean onItemLongClick(AdapterView<?> av, View v, int pos, long id) { 
-	    			onLongListItemClick(v,pos,id); 
-	    		    return false; 
-	    		} 
-	    }); 
+		place = getIntent().getStringExtra("place");
+	    setTitle(place);
+	    
+	    setClickListeners();
 
 	}
 	
@@ -60,6 +58,28 @@ public class CategoryList extends ListActivity {
 		inflateList();
 	}
 
+	void setClickListeners(){
+		ListView lv = getListView();
+		
+		lv.setOnItemLongClickListener( 
+	    		new AdapterView.OnItemLongClickListener(){ 
+	    		@Override 
+	    		public boolean onItemLongClick(AdapterView<?> av, View v, int pos, long id) { 
+	    			onLongListItemClick(v,pos,id); 
+	    		    return false; 
+	    		} 
+	    }); 
+		
+	    lv.setOnItemClickListener(
+	    		 new AdapterView.OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> arg0, View arg1,
+							int pos, long id) {
+						onListItemClick(arg1,pos,id); 
+					} 
+		});
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -117,6 +137,17 @@ public class CategoryList extends ListActivity {
         final AlertDialog dialog = builder.create();
 		dialog.show();
 	} 
+	
+	protected void onListItemClick(View v, int pos, long id) { 
+		DatabaseHandler db = new DatabaseHandler(this);
+		List<TransactionEntry> trs = db.getTransactionsPlace(place);
+		for(TransactionEntry t : trs){
+			t.setExpCategory(categories.get(pos).getID());
+			db.updateTransaction(t);
+		}
+		db.close();
+		finish();
+	}
 
 	private void doEditCategoryColor(int pos){
 		colorDlgType = COLOR_DIALOG_MODIFY;

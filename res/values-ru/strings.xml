@@ -8,6 +8,7 @@
     <string name="places_name">Места</string>
     <string name="place_detailed">Места подробно</string>
     <string name="exp_categories">Категории расходов</string>
+    <string name="distrib_categories">Распределение по категориям</string>
     
     <string name="spinner_all">Выбрать все</string>
     
@@ -40,6 +41,7 @@
     <string name="str_files">Файлы</string>
     <string name="str_category">Категория</string>
     <string name="str_forbidden_empty_category">Название категории не может быть пустым</string>
+    <string name="str_category_undefined">Категория\r\nнеопределена</string>
     
     <string name="click_delete">Удалить</string>
     <string name="click_rename">Переименовать</string>

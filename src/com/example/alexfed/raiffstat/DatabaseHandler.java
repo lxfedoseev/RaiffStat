@@ -671,4 +671,31 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	return terminals;
     }
     
+    public List<CategorizedPlaceModel> getCategorizedPlaces(){
+    	List<CategorizedPlaceModel> vals = new ArrayList<CategorizedPlaceModel>();
+    	SQLiteDatabase db = this.getWritableDatabase();	
+    	//http://zetcode.com/db/sqlite/joins/
+    	String countQuery = "SELECT DISTINCT " + KEY_PLACE + ", "  + CAT_KEY_NAME + ", " + CAT_KEY_COLOR +
+    			" FROM " + TABLE_TRANSACTIONS + " LEFT JOIN " + TABLE_CATEGORIES + 
+    			" ON " + TABLE_TRANSACTIONS + "." + KEY_EXP_CATEGORY + " = " + TABLE_CATEGORIES + "." + CAT_KEY_ID +
+    			" WHERE " + TABLE_TRANSACTIONS + "." + KEY_TYPE + "=" + StaticValues.TRANSACTION_TYPE_EXPENSE +
+    			" ORDER BY " + KEY_PLACE; 
+    			
+    	Cursor cursor = db.rawQuery(countQuery, null);
+    	
+    	if (cursor.moveToFirst()) {
+            do {
+            	vals.add(new CategorizedPlaceModel(cursor.getString(0), cursor.getString(1), cursor.getInt(2)));
+            } while (cursor.moveToNext());
+        }
+    	cursor.close();
+    	db.close();
+    	return vals;
+    }
+ 
+    public  List<TransactionEntry> getTransactionsPlace(String place){
+    	String countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + " WHERE " + "( " + KEY_PLACE + " = ?" + " ) ";
+    	return queryDB(countQuery, new String[] {place});
+    }
+    
 }

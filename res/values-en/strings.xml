@@ -8,6 +8,7 @@
     <string name="places_name">Places</string>
     <string name="place_detailed">Place Detailed</string>
     <string name="exp_categories">Expense Categories</string>
+    <string name="distrib_categories">Category destribution</string>
 
     <string name="spinner_all">Select all</string>
 
@@ -40,6 +41,7 @@
     <string name="str_files">Files</string>
     <string name="str_category">Category</string>
     <string name="str_forbidden_empty_category">Category name can\'t be empty</string>
+    <string name="str_category_undefined">Category\r\nundefined</string>
     
     <string name="click_delete">Delete</string>
     <string name="click_rename">Rename</string>

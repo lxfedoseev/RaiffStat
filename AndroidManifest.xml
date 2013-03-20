@@ -62,7 +62,12 @@
               android:label="@string/exp_categories"
               android:screenOrientation="portrait">
         </activity>
-    	
+
+    	<activity android:name="CategoryDestributionList" 
+              android:label="@string/exp_categories"
+              android:screenOrientation="portrait">
+        </activity>
+        
     </application>
 
 </manifest>

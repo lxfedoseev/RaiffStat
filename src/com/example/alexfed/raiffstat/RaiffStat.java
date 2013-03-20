@@ -128,7 +128,8 @@ public class RaiffStat extends Activity {
     			addItemsOnSpinnerPlace();
     			return true; 
     		
-    			//case R.id.menu_query:
+    		//	case R.id.menu_query:
+    		//		queryCategorizedPlaces();
     		//	queryDistinctPlaces();
     			//queryDistinctPlaces();
     			//queryDateInterval(convertStringDate("02/03/2013 00:00:00"), convertStringDate("07/03/2013 23:59:59"));
@@ -145,7 +146,9 @@ public class RaiffStat extends Activity {
     			startActivity(placesActivity); 
     			return true; 
     		case R.id.menu_categories:
-    			Intent categoriesActivity = new Intent(getBaseContext(), CategoryList.class);
+    			//Intent categoriesActivity = new Intent(getBaseContext(), CategoryList.class);
+    			//startActivity(categoriesActivity);
+    			Intent categoriesActivity = new Intent(getBaseContext(), CategoryDestributionList.class);
     			startActivity(categoriesActivity);
     		default:
     			return super.onOptionsItemSelected(item);
@@ -745,6 +748,18 @@ public class RaiffStat extends Activity {
 		long date = db.getMinDate();
 		db.close();
 		return date;
+		
+	}
+	
+	private void queryCategorizedPlaces(){	
+		DatabaseHandler db = new DatabaseHandler(this);
+		List <CategorizedPlaceModel> cat = db.getCategorizedPlaces();
+		db.close();
+		
+		for(CategorizedPlaceModel c : cat){
+			myLog.LOGD(LOG, "Place: " + c.getPlaceName() + " Category: " + c.getCategoryName() +
+					" Color: " + c.getColor());
+		}
 		
 	}
 }
