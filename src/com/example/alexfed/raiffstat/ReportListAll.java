@@ -10,12 +10,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.jjoe64.graphview.LineGraphView;
+
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,8 +27,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.LinearLayout.LayoutParams;
+
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GraphView.GraphViewData;
+import com.jjoe64.graphview.GraphViewSeries;
+import com.jjoe64.graphview.BarGraphView;
 
 public class ReportListAll extends ListActivity {
 
@@ -68,12 +79,130 @@ public class ReportListAll extends ListActivity {
     		case R.id.menu_sort:
     			doSort();
     			return true;
+    		case R.id.menu_graph:
+    			doDrawGraph();
+    			return true;
     		default:
     			return super.onOptionsItemSelected(item);
 		}
    
 	}
 	
+	
+	private void doDrawGraph(){
+		LinearLayout graphLayout = new LinearLayout(getBaseContext());
+		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		  
+		DatabaseHandler db = new DatabaseHandler(this);
+		List<TransactionEntry> trs = db.getTransactionsForGraph(convertStringDate(dayFrom+ " 00:00:00"), 
+				convertStringDate(dayTo+ " 23:59:59"), getResources().getString(R.string.spinner_all), StaticValues.CURR_RUB);
+		if(trs.size()<1){
+			  Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_no_values) + " " + StaticValues.CURR_RUB, 
+					  Toast.LENGTH_LONG).show();
+			  db.close();
+			  return;
+			  
+		  }
+		
+		Map<Integer, Double> sum = new HashMap<Integer, Double>();
+		Set<Integer> cats = new HashSet<Integer>();
+		double totalSum = 0.0;
+		for (TransactionEntry t : trs) {
+			if(!cats.contains(t.getExpCategory())){
+				cats.add(t.getExpCategory());
+				sum.put(t.getExpCategory(), 0.0);
+			}
+			sum.put(t.getExpCategory(), sum.get(t.getExpCategory())+t.getAmount());
+			totalSum += t.getAmount();
+		}
+		
+		GraphViewSeries[] sers = new GraphViewSeries[cats.size()];
+		int i = 0;
+		String catName = "";
+		int catColor = 0xff000000;
+		int thickness = 50;
+		for(Integer c: cats){
+			if(c == StaticValues.EXPENSE_CATEGORY_UNKNOWN){
+				catName = getResources().getString(R.string.str_category_undefined);
+				catColor = 0xff000000;
+			}else{
+				CategoryEntry cat = db.getCategory(c);
+				catName = cat.getName();
+				catColor = cat.getColor();
+			}
+			GraphViewData[] data = new GraphViewData[2];
+			data[0] = new GraphViewData(i+1, 0);
+			data[1] = new GraphViewData(i+1, (sum.get(c)/totalSum)*100);
+			sers[i] = new GraphViewSeries(catName, new GraphViewSeries.GraphViewSeriesStyle(catColor, thickness), data);
+			i++;
+		}
+		db.close();
+
+		LineGraphView graphView = new LineGraphView(this, "%"){ 
+			   @Override  
+			   protected String formatLabel(double value, boolean isValueX) {  
+			      if (isValueX) {
+			    	  /*int i = (int) value;
+			    	  long date = dateList.get(i<=0?0:(i>=count)?count-1:i);
+			    	  String dateString = new SimpleDateFormat("dd/MM/yyyy").format(new Date(date));
+			    	  return dateString;*/
+			    	  return "";
+			      } else {
+			    	  /*double result = value * 10; 
+			    	  result = Math.round(result);
+			    	  result = result / 10;
+			          return ""+result; */
+			    	  
+			          return super.formatLabel(value, isValueX);
+			    	  //return "";
+			      }
+			   }  
+		}; 
+		
+		
+		 int height = (int)getBaseContext().getResources().getDisplayMetrics().heightPixels/2;
+		 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, height);
+		 params.rightMargin = (int) convertDpToPixel(5, getBaseContext());
+		 params.leftMargin = (int) convertDpToPixel(5, getBaseContext());
+		 graphView.setLayoutParams(params);
+		  
+		  graphView.setBackgroundColor(Color.WHITE);
+			for(i=0; i<cats.size();i++){
+				graphView.addSeries(sers[i]);
+			}
+		  
+		  graphView.setViewPort(0,cats.size()+1);
+		  graphView.setScrollable(false);   
+			// optional - activate scaling / zooming  
+			graphView.setScalable(false);   
+			graphView.setManualYAxisBounds(100, 0);
+			graphView.getGraphViewStyle().setHorizontalLabelsColor(Color.BLACK); 
+			graphView.getGraphViewStyle().setVerticalLabelsColor(Color.BLACK);
+			graphView.setShowLegend(true); 
+			graphView.setLegendAlign(GraphView.LegendAlign.TOP);  
+			graphView.setLegendWidth(200); 
+			
+			//setLabelParams(graphView);
+			
+			graphLayout.addView(graphView); 
+		  
+		  alert.setView(graphLayout);
+		  alert.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+
+			}
+		  });
+
+		  alert.show(); 
+	}
+	
+	private float convertDpToPixel(float dp,Context context){
+	    Resources resources = context.getResources();
+	    DisplayMetrics metrics = resources.getDisplayMetrics();
+	    float px = dp * (metrics.densityDpi/160f);
+	    return px;
+	}
 	
 	private void inflateList(){
 		getListView().setDivider(null);
