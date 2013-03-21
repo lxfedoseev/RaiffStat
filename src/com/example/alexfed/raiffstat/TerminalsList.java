@@ -126,6 +126,7 @@ public class TerminalsList extends ListActivity {
 		  // Set an EditText view to get user input 
 		  final EditText input = new EditText(this);
 		  alert.setView(input);
+		  input.setSingleLine();
 		  //final Context context = getBaseContext();
 		  alert.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
 		  public void onClick(DialogInterface dialog, int whichButton) {

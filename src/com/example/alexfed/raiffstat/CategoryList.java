@@ -187,6 +187,7 @@ public class CategoryList extends ListActivity {
 
 		  // Set an EditText view to get user input 
 		  final EditText input = new EditText(this);
+		  input.setSingleLine();
 		  alert.setView(input);
 		  alert.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
 		  public void onClick(DialogInterface dialog, int whichButton) {
@@ -223,6 +224,7 @@ public class CategoryList extends ListActivity {
 
 		  // Set an EditText view to get user input 
 		  final EditText input = new EditText(this);
+		  input.setSingleLine();
 		  alert.setView(input);
 		  alert.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
 		  public void onClick(DialogInterface dialog, int whichButton) {

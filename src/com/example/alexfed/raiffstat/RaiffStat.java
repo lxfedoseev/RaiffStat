@@ -49,6 +49,7 @@ import android.widget.Toast;
  * - Radio buttons for interval (1 week, 1 month, period)
  * - Make a good design (application icon as well)  
  * - Make demo mode in case user has no data but wants to try the application
+ * - Check out all licenses
  * 
  * - ? Make failed parsing messages table in DB and ask the user to send them by email to me ?
  * - ? Widget (Spent for a place, spent entirely, remainder) ?
