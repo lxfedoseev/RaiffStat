@@ -24,6 +24,24 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/*
+ * Possible categories:
+ * - Food
+ * - Health
+ * - Clothes
+ * - Travel
+ * - Cash
+ * - Software
+ * - House keeping
+ * - For kid
+ * - Furniture
+ * - Electronics
+ * - Public utilites
+ * - Communication (telephone)
+ * - Jewerly
+ * - Entertainment
+ * - Education
+ */
 public class CategoryList extends ListActivity {
 	private final String LOG = "CategoryList";
 	

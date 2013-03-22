@@ -45,17 +45,18 @@ import android.widget.Toast;
 /* TODO: 
  * - Save application state (screen rotation, going to background)
  * - Save report to a file (share report)
- * - Make a chart for time period with all tags
  * - Radio buttons for interval (1 week, 1 month, period)
  * - Make a good design (application icon as well)  
  * - Make demo mode in case user has no data but wants to try the application
  * - Check out all licenses
+ * - Implement help
  * 
  * - ? Make failed parsing messages table in DB and ask the user to send them by email to me ?
  * - ? Widget (Spent for a place, spent entirely, remainder) ?
  * - ? Remove particular items from report (long touch -> remove) ?
  * 
  */
+
 public class RaiffStat extends Activity { 
 
 	private final String LOG = "RaiffStat";

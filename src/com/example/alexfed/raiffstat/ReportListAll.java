@@ -121,6 +121,8 @@ public class ReportListAll extends ListActivity {
 		String catName = "";
 		int catColor = 0xff000000;
 		int thickness = 50;
+		double maxVal = Double.MIN_VALUE;
+		double percents = 0.0;
 		for(Integer c: cats){
 			if(c == StaticValues.EXPENSE_CATEGORY_UNKNOWN){
 				catName = getResources().getString(R.string.str_category_undefined);
@@ -130,10 +132,20 @@ public class ReportListAll extends ListActivity {
 				catName = cat.getName();
 				catColor = cat.getColor();
 			}
+			percents = (sum.get(c)/totalSum)*100;
+			maxVal = Math.max(maxVal, percents);
 			GraphViewData[] data = new GraphViewData[2];
 			data[0] = new GraphViewData(i+1, 0);
-			data[1] = new GraphViewData(i+1, (sum.get(c)/totalSum)*100);
-			sers[i] = new GraphViewSeries(catName, new GraphViewSeries.GraphViewSeriesStyle(catColor, thickness), data);
+			data[1] = new GraphViewData(i+1, percents);
+			percents = Math.round(percents);
+			if(percents < 0.1){
+				catName = catName + " < 0.1%";
+			}else{
+				int per = (int) percents;
+				catName = catName + " " + per + "%";
+			}
+			sers[i] = new GraphViewSeries(catName, 
+					new GraphViewSeries.GraphViewSeriesStyle(catColor, thickness), data);
 			i++;
 		}
 		db.close();
@@ -159,7 +171,6 @@ public class ReportListAll extends ListActivity {
 			   }  
 		}; 
 		
-		
 		 int height = (int)getBaseContext().getResources().getDisplayMetrics().heightPixels/2;
 		 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, height);
 		 params.rightMargin = (int) convertDpToPixel(5, getBaseContext());
@@ -173,14 +184,13 @@ public class ReportListAll extends ListActivity {
 		  
 		  graphView.setViewPort(0,cats.size()+1);
 		  graphView.setScrollable(false);   
-			// optional - activate scaling / zooming  
-			graphView.setScalable(false);   
-			graphView.setManualYAxisBounds(100, 0);
-			graphView.getGraphViewStyle().setHorizontalLabelsColor(Color.BLACK); 
-			graphView.getGraphViewStyle().setVerticalLabelsColor(Color.BLACK);
-			graphView.setShowLegend(true); 
-			graphView.setLegendAlign(GraphView.LegendAlign.TOP);  
-			graphView.setLegendWidth(200); 
+		  graphView.setScalable(false);   
+		  graphView.setManualYAxisBounds(maxVal, 0);
+		  graphView.getGraphViewStyle().setHorizontalLabelsColor(Color.BLACK); 
+		  graphView.getGraphViewStyle().setVerticalLabelsColor(Color.BLACK);
+		  graphView.setShowLegend(true); 
+		  graphView.setLegendAlign(GraphView.LegendAlign.TOP);  
+		  graphView.setLegendWidth(200); 
 			
 			//setLabelParams(graphView);
 			
