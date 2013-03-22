@@ -18,10 +18,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -30,9 +29,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -40,6 +39,11 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 
 /* TODO: 
@@ -57,10 +61,11 @@ import android.widget.Toast;
  * 
  */
 
-public class RaiffStat extends Activity { 
+public class RaiffStat extends SherlockFragment { 
 
 	private final String LOG = "RaiffStat";
-	
+	static final int IMPORT_EXPORT_ID = Menu.FIRST;
+    static final int CLEAR_ID = Menu.FIRST+1;
 	private DatePicker dpFrom;
 	private DatePicker dpTo;
 	private Spinner spPlace;
@@ -80,84 +85,60 @@ public class RaiffStat extends Activity {
 	private int itemIndex = 0;
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_raiff_stat);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
-		setCurrentDateOnView();
-		addListenerOnButton();
-	}
-
+	@Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.activity_raiff_stat, container, false);
+        return v;
+    }
+	
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onResume() 
 	 */
 	@Override
-	protected void onResume() {
+	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
 		
 		addItemsOnSpinnerPlace();
 		addListenerOnSpinnerItemSelection();
+		setCurrentDateOnView();
+		addListenerOnButton();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_raiff_stat, menu);
-		return true; 
-	}
+	@Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        MenuItem populateItem = menu.add(Menu.NONE, IMPORT_EXPORT_ID, 0, R.string.menu_import_export);
+        populateItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        MenuItem clearItem = menu.add(Menu.NONE, CLEAR_ID, 0, R.string.menu_clear_db);
+        clearItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+    }
 	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-    		case R.id.menu_settings:
-    			//TODO:
-    			//Intent settingsActivity = new Intent(getBaseContext(), MyPreferences.class);
-    			//startActivity(settingsActivity);
-    			return true;
-    		case R.id.menu_import_export:
-    			importExport();
-    			return true;
-    		/*case R.id.menu_sms_import:
-    			importSmsWithProgressBar();
-    			return true;
-    		*/
-    		case R.id.menu_clear_db:
-    			clearDB();
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
+        final ContentResolver cr = getActivity().getContentResolver();
+
+        switch (item.getItemId()) {
+            case IMPORT_EXPORT_ID:
+            	importExport();
+                return true;
+            case CLEAR_ID:
+            	clearDB();
     			setCurrentDateOnView();
     			addItemsOnSpinnerPlace();
-    			return true; 
-    		
-    		//	case R.id.menu_query:
-    		//		queryCategorizedPlaces();
-    		//	queryDistinctPlaces();
-    			//queryDistinctPlaces();
-    			//queryDateInterval(convertStringDate("02/03/2013 00:00:00"), convertStringDate("07/03/2013 23:59:59"));
-    			//queryAmountInterval(0, 500);
-    			//queryAmountFixed(2077.3);
-    		//	return true;
-    		
-    		case R.id.menu_manage_terminals:
-    			Intent terminalsActivity = new Intent(getBaseContext(), TerminalsList.class);
-    			startActivity(terminalsActivity);
-    			return true; 
-    		case R.id.menu_manage_places:
-    			Intent placesActivity = new Intent(getBaseContext(), PlacesList.class);
-    			startActivity(placesActivity); 
-    			return true; 
-    		case R.id.menu_categories:
-    			//Intent categoriesActivity = new Intent(getBaseContext(), CategoryList.class);
-    			//startActivity(categoriesActivity);
-    			Intent categoriesActivity = new Intent(getBaseContext(), CategoryDestributionList.class);
-    			startActivity(categoriesActivity);
-    		default:
-    			return super.onOptionsItemSelected(item);
-		}
-   
-	}
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    
 	
 	public void addItemsOnSpinnerPlace() {
-		spPlace = (Spinner) findViewById(R.id.spinnerPlace);
+		spPlace = (Spinner) getActivity().findViewById(R.id.spinnerPlace);
 		List<String> list = new ArrayList<String>();
 		List<String> distPlaces = new ArrayList<String>();
 		list.add(getResources().getString(R.string.spinner_all));
@@ -165,7 +146,7 @@ public class RaiffStat extends Activity {
 		for(String s : distPlaces){
 			list.add(s);
 		}
-		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),
 			android.R.layout.simple_spinner_item, list);
 		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spPlace.setAdapter(dataAdapter);
@@ -173,8 +154,8 @@ public class RaiffStat extends Activity {
 	
 	// display current date
 	public void setCurrentDateOnView() {
-		dpFrom = (DatePicker) findViewById(R.id.datePickerFrom);
-		dpTo = (DatePicker) findViewById(R.id.datePickerTo);
+		dpFrom = (DatePicker) getActivity().findViewById(R.id.datePickerFrom);
+		dpTo = (DatePicker) getActivity().findViewById(R.id.datePickerTo);
 		
 		final Calendar c = Calendar.getInstance();
 		year = c.get(Calendar.YEAR);
@@ -182,7 +163,7 @@ public class RaiffStat extends Activity {
 		day = c.get(Calendar.DAY_OF_MONTH);
 		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
 		
-		DatabaseHandler db = new DatabaseHandler(this);
+		DatabaseHandler db = new DatabaseHandler(getActivity());
 		if(db.getTransactionsCount() > 0){// DB is not empty
 		 
 			if (currentapiVersion >= 11) {
@@ -204,7 +185,7 @@ public class RaiffStat extends Activity {
 					null);
 			dpTo.init(year, month, day, null);	
 		}else{
-			Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_db_empty), Toast.LENGTH_LONG).show(); 
+			Toast.makeText(getActivity(), getResources().getString(R.string.toast_db_empty), Toast.LENGTH_LONG).show(); 
 			if (currentapiVersion >= 11) {
 			  try {
 			    Method m = dpFrom.getClass().getMethod("setCalendarViewShown", boolean.class);
@@ -221,16 +202,16 @@ public class RaiffStat extends Activity {
 	}
 	
 	public void addListenerOnButton() {
-		btnApply = (Button) findViewById(R.id.btnApply);
+		btnApply = (Button) getActivity().findViewById(R.id.btnApply);
 		btnApply.setOnClickListener(new View.OnClickListener() {
 		    @Override
 		    public void onClick(View v) { 
 		    	//Toast.makeText(getApplicationContext(), "Button click", Toast.LENGTH_LONG).show();               
 		    	Intent myIntent;
 		    	if(placeName.equalsIgnoreCase(getResources().getString(R.string.spinner_all))){
-		    		myIntent = new Intent(RaiffStat.this, ReportListAll.class);
+		    		myIntent = new Intent(getActivity(), ReportListAll.class);
 		    	}else{
-		    		myIntent = new Intent(RaiffStat.this, ReportListPlace.class);
+		    		myIntent = new Intent(getActivity(), ReportListPlace.class);
 		    		myIntent.putExtra("place", placeName);
 		    	}
 		    	int month = dpFrom.getMonth() + 1;
@@ -243,7 +224,7 @@ public class RaiffStat extends Activity {
 	}
 	
 	public void addListenerOnSpinnerItemSelection() {
-		spPlace = (Spinner) findViewById(R.id.spinnerPlace);
+		spPlace = (Spinner) getActivity().findViewById(R.id.spinnerPlace);
 		spPlace.setOnItemSelectedListener(new CustomOnItemSelectedListener());
 	  }
 	
@@ -257,11 +238,10 @@ public class RaiffStat extends Activity {
 		  public void onNothingSelected(AdapterView<?> arg0) {
 			// TODO Auto-generated method stub
 		  }
-		 
 	}
 	
 	private void importExport(){		  
-		  AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		  AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 
 		  final CharSequence[] choiceList;
 		  CharSequence[] choiceListLocal = {getResources().getString(R.string.dialog_sms_import),
@@ -298,7 +278,7 @@ public class RaiffStat extends Activity {
 							break;
 					}	
 				}else{
-					Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show(); 
+					Toast.makeText(getActivity(), getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show(); 
 				}
 			}
 		});
@@ -317,7 +297,7 @@ public class RaiffStat extends Activity {
 			new Thread(new Runnable() {
 				  public void run() {
 					  importSms();
-					  RaiffStat.this.runOnUiThread(new Runnable() {
+					  getActivity().runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
 								setCurrentDateOnView();
@@ -336,16 +316,16 @@ public class RaiffStat extends Activity {
 	    try {  
 	    	Uri uri = Uri.parse(SMS_URI_INBOX);  
 	        String[] projection = new String[] { "_id", "address", "person", "body", "date", "type" }; 
-	        cur = getContentResolver().query(uri, projection, "address" + "='" + StaticValues.RAIFF_ADDRESS + "'", null, "date");
+	        cur = getActivity().getContentResolver().query(uri, projection, "address" + "='" + StaticValues.RAIFF_ADDRESS + "'", null, "date");
 	    }catch (SQLiteException ex) {  
 	    	myLog.LOGD(LOG, ex.getMessage()); 
 	    	return false;
 	    } 
 	    if(cur.getCount()<1){
-	    	Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_no_sms) + " " + StaticValues.RAIFF_ADDRESS, Toast.LENGTH_LONG).show(); 
+	    	Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_sms) + " " + StaticValues.RAIFF_ADDRESS, Toast.LENGTH_LONG).show(); 
 	    	return false;
 	    }
-		progressBar = new ProgressDialog(this);
+		progressBar = new ProgressDialog(getActivity());
 		progressBar.setCancelable(false);
 		progressBar.setMessage(getResources().getString(R.string.progress_sms_scanning));
 		progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -366,7 +346,7 @@ public class RaiffStat extends Activity {
 	    try {  
 	    	Uri uri = Uri.parse(SMS_URI_INBOX);  
 	        String[] projection = new String[] { "_id", "address", "person", "body", "date", "type" }; 
-	        Cursor cur = getContentResolver().query(uri, projection, "address" + "='" + StaticValues.RAIFF_ADDRESS + "'", null, "date");
+	        Cursor cur = getActivity().getContentResolver().query(uri, projection, "address" + "='" + StaticValues.RAIFF_ADDRESS + "'", null, "date");
 	        if (cur.moveToFirst()) {  
 	        	int index_Address = cur.getColumnIndex("address");  
 	            int index_Person = cur.getColumnIndex("person");  
@@ -389,7 +369,7 @@ public class RaiffStat extends Activity {
 	                    
 	                RaiffParser prs = new RaiffParser();
 	                if(strbody!=null) 
-	                	parsedWell = prs.parseSmsBody(getBaseContext(), strbody.trim(), longDate);
+	                	parsedWell = prs.parseSmsBody(getActivity(), strbody.trim(), longDate);
 	                    
 	                if(parsedWell){
 	                	myLog.LOGD(LOG, prs.getCard() + " & " +  prs.getPlace() + " & " + 
@@ -443,15 +423,15 @@ public class RaiffStat extends Activity {
 		String state = Environment.getExternalStorageState();
 	    if (Environment.MEDIA_MOUNTED.equals(state)) {
 	    	
-	    	DatabaseHandler db = new DatabaseHandler(this);
+	    	DatabaseHandler db = new DatabaseHandler(getActivity());
 	    	if(db.getTransactionsCount() < 1){
-	    		Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_db_empty), Toast.LENGTH_LONG).show();
+	    		Toast.makeText(getActivity(), getResources().getString(R.string.toast_db_empty), Toast.LENGTH_LONG).show();
 	    		db.close();
 	    		return;
 	    	}
 	    	
 	    	if(!createDirIfNotExists(dirName)){
-	    		Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_dir_failed), Toast.LENGTH_LONG).show();
+	    		Toast.makeText(getActivity(), getResources().getString(R.string.toast_dir_failed), Toast.LENGTH_LONG).show();
 	    		db.close();
 	    		return;
 	    	}
@@ -478,15 +458,15 @@ public class RaiffStat extends Activity {
 	    			out.flush();
 	    		}
 	    		out.close(); 
-	    		Toast.makeText(getApplicationContext(), 
+	    		Toast.makeText(getActivity(), 
 	    				getResources().getString(R.string.str_file) + " " + fName  + " " +
 	    						getResources().getString(R.string.str_created), Toast.LENGTH_LONG).show();
 	    	}catch(Exception e){
 	    		myLog.LOGD(LOG, e.getMessage());
-	    		Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_exp_failed), Toast.LENGTH_LONG).show();
+	    		Toast.makeText(getActivity(), getResources().getString(R.string.toast_exp_failed), Toast.LENGTH_LONG).show();
 	    	}
 	    }else {
-	    	Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_no_storage), Toast.LENGTH_LONG).show();
+	    	Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_storage), Toast.LENGTH_LONG).show();
 	    }
 		
 	}
@@ -495,11 +475,11 @@ public class RaiffStat extends Activity {
 		
 		List<String> fileList = getCSVFileList();
 		if(fileList.size()<1){
-			Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_no_files), Toast.LENGTH_LONG).show();
+			Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_files), Toast.LENGTH_LONG).show();
 			return;
 		}
 		
-		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 		final CharSequence[] choiceList = fileList.toArray(new CharSequence[fileList.size()]);
 		
 		alert.setTitle(getResources().getString(R.string.str_files));		  
@@ -520,7 +500,7 @@ public class RaiffStat extends Activity {
 					if(itemIndex > -1){
 						importSmsFromFileWithProgressBar(choiceList[itemIndex]);
 					}else{
-						Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show(); 
+						Toast.makeText(getActivity(), getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show(); 
 					}
 				}
 			});
@@ -537,7 +517,7 @@ public class RaiffStat extends Activity {
 	
 	private void importSmsFromFileWithProgressBar(CharSequence fileName){
 		final CharSequence localFileName = fileName;
-		progressBar = new ProgressDialog(this);
+		progressBar = new ProgressDialog(getActivity());
 		progressBar.setCancelable(false);
 		progressBar.setMessage(getResources().getString(R.string.progress_csv_scanning));
 		progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -547,7 +527,7 @@ public class RaiffStat extends Activity {
 		new Thread(new Runnable() {
 			public void run() {
 				importSmsFromCSV(localFileName);
-				RaiffStat.this.runOnUiThread(new Runnable() {
+				getActivity().runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
 					setCurrentDateOnView();
@@ -607,7 +587,7 @@ public class RaiffStat extends Activity {
 			progressBar.dismiss();
 		}catch (Exception e){//Catch exception if any
 			myLog.LOGE(LOG, "Error: " + e.getMessage());
-			  Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_imp_failed), Toast.LENGTH_LONG).show();
+			  Toast.makeText(getActivity(), getResources().getString(R.string.toast_imp_failed), Toast.LENGTH_LONG).show();
 		}
 
 	}
@@ -665,7 +645,7 @@ public class RaiffStat extends Activity {
 	}
 	
 	private void addTransactionToDB(RaiffParser prs){
-		DatabaseHandler db = new DatabaseHandler(this);
+		DatabaseHandler db = new DatabaseHandler(getActivity());
 		db.addTransaction(new TransactionEntry(prs.getDateTime(), prs.getAmount(), prs.getAmountCurr(),
 				prs.getRemainder(), prs.getRemainderCurr(), prs.getTerminal(), prs.getCard(), 
 				prs.getPlace(), prs.getInPlace(), prs.getType(), prs.getExpCategory()));
@@ -673,7 +653,7 @@ public class RaiffStat extends Activity {
 	}
 
 	private void mergeTransactionToDB(RaiffParser prs){
-		DatabaseHandler db = new DatabaseHandler(this);
+		DatabaseHandler db = new DatabaseHandler(getActivity());
 		db.mergeTransaction(new TransactionEntry(prs.getDateTime(), prs.getAmount(), prs.getAmountCurr(),
 				prs.getRemainder(), prs.getRemainderCurr(), prs.getTerminal(), prs.getCard(), 
 				prs.getPlace(), prs.getInPlace(), prs.getType(), prs.getExpCategory()));
@@ -681,7 +661,7 @@ public class RaiffStat extends Activity {
 	}
 
 	private void clearDB(){	
-		DatabaseHandler db = new DatabaseHandler(this);
+		DatabaseHandler db = new DatabaseHandler(getActivity());
 		db.clearAll();
 		db.close();
 	}
@@ -697,21 +677,21 @@ public class RaiffStat extends Activity {
 	}
 	
 	private void queryAmountFixed(double amount){	
-		DatabaseHandler db = new DatabaseHandler(this);
+		DatabaseHandler db = new DatabaseHandler(getActivity());
 		List<TransactionEntry> transactions = db.getTransactionsAmountFixed(amount);
 		printTransactions(transactions);
 		db.close();
 	}
 	
 	private void queryAmountInterval(double start, double end){
-		DatabaseHandler db = new DatabaseHandler(this);
+		DatabaseHandler db = new DatabaseHandler(getActivity());
 		List<TransactionEntry> transactions = db.getTransactionsAmountInterval(start, end);
 		printTransactions(transactions);
 		db.close();
 	}
 	
 	private void queryDateInterval(long start, long end){	
-		DatabaseHandler db = new DatabaseHandler(this);
+		DatabaseHandler db = new DatabaseHandler(getActivity());
 		List<TransactionEntry> transactions = db.getTransactionsDateInterval(start, end);
 		printTransactions(transactions);
 		db.close();
@@ -729,13 +709,13 @@ public class RaiffStat extends Activity {
 	}
 	
 	private List<String> queryDistinctTerminals(){	
-		DatabaseHandler db = new DatabaseHandler(this);
+		DatabaseHandler db = new DatabaseHandler(getActivity());
 		return db.getDistinctTerminals();
 		
 	}
 	
 	private List<String> queryDistinctPlaces(){	
-		DatabaseHandler db = new DatabaseHandler(this);
+		DatabaseHandler db = new DatabaseHandler(getActivity());
 		List <String> ls = db.getDistinctPlaces();
 		db.close();
 		return ls;
@@ -743,7 +723,7 @@ public class RaiffStat extends Activity {
 	}
 	
 	private long queryMinDate(){	
-		DatabaseHandler db = new DatabaseHandler(this);
+		DatabaseHandler db = new DatabaseHandler(getActivity());
 		long date = db.getMinDate();
 		db.close();
 		return date;
@@ -751,7 +731,7 @@ public class RaiffStat extends Activity {
 	}
 	
 	private void queryCategorizedPlaces(){	
-		DatabaseHandler db = new DatabaseHandler(this);
+		DatabaseHandler db = new DatabaseHandler(getActivity());
 		List <CategorizedPlaceModel> cat = db.getCategorizedPlaces();
 		db.close();
 		

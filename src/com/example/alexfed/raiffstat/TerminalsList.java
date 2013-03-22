@@ -4,52 +4,68 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.app.ProgressDialog;
-import android.content.Context;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteException;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class TerminalsList extends ListActivity {
+import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+
+public class TerminalsList extends SherlockListFragment {
 
 	private final String LOG = "TerminalsList";
 	private List<Model> modelList;
 	private int itemIndex = 0;
-	
+	static final int MAKE_ID = Menu.FIRST;
+    static final int ADD_ID = Menu.FIRST+1;
 	private ProgressDialog progressBar;
 
 	
 	/** Called when the activity is first created. */
 	  public void onCreate(Bundle icicle) {
 	    super.onCreate(icicle);
-	    setContentView(R.layout.activity_raiff_report);
-	    
-	    inflateList();
+	    //getActivity().setContentView(R.layout.activity_raiff_report);
 	  }
 	  
-	  @Override
-		public boolean onCreateOptionsMenu(Menu menu) {
-			// Inflate the menu; this adds items to the action bar if it is present.
-			getMenuInflater().inflate(R.menu.menu_terminals_list, menu);
-			return true;
-		}
+	  @Override public void onActivityCreated(Bundle savedInstanceState) {
+	        super.onActivityCreated(savedInstanceState);
+	        // We have a menu item to show in action bar.
+	        setHasOptionsMenu(true);
+	        inflateList();
+	  }
+	  
+	  
+	  
+	 /* @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	        MenuItem populateItem = menu.add(Menu.NONE, MAKE_ID, 0, R.string.menu_import_export);
+	        populateItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+	        MenuItem clearItem = menu.add(Menu.NONE, ADD_ID, 0, R.string.menu_clear_db);
+	        clearItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+	    }*/
 	  
 		@Override
+	public void onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu,
+			MenuInflater inflater) {
+			MenuItem populateItem = menu.add(Menu.NONE, MAKE_ID, 0, R.string.menu_make_place);
+	        populateItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+	        MenuItem clearItem = menu.add(Menu.NONE, ADD_ID, 0, R.string.menu_add);
+	        clearItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+		
+	  @Override
 		public boolean onOptionsItemSelected(MenuItem item) {
-			boolean hasSelection = false;
-			switch (item.getItemId()) {
-	    		case R.id.menu_make_place:
-	    			for (Model m: modelList){
+		  final ContentResolver cr = getActivity().getContentResolver();
+		  boolean hasSelection = false;
+	        switch (item.getItemId()) {
+	            case MAKE_ID:
+	            	for (Model m: modelList){
 	    		    	if(m.isSelected()){
 	    		    		hasSelection = true;
 	    		    		break;
@@ -58,13 +74,13 @@ public class TerminalsList extends ListActivity {
 	    			if(hasSelection){
 	    				makeNewPlace();
 	    			}else{
-	    				Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show();
+	    				Toast.makeText(getActivity(), getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show();
 	    			}
-	    			return true;
-	    		case R.id.menu_add:
-	    			DatabaseHandler db = new DatabaseHandler(getBaseContext());
+	                return true;
+	            case ADD_ID:
+	            	DatabaseHandler db = new DatabaseHandler(getActivity());
 	    			if(db.getDistinctPlacesForPlaceList().size()<1){
-	    				Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_no_place), Toast.LENGTH_LONG).show();
+	    				Toast.makeText(getActivity(), getResources().getString(R.string.toast_no_place), Toast.LENGTH_LONG).show();
 	    				db.close();
 	    				return true;
 	    			}
@@ -77,20 +93,19 @@ public class TerminalsList extends ListActivity {
 	    			if(hasSelection){
 	    				addToPlace();
 	    			}else{
-	    				Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show();
+	    				Toast.makeText(getActivity(), getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show();
 	    			}
 	    			db.close();
 	    			return true;
-	    		default:
-	    			return super.onOptionsItemSelected(item);
-			}
-	   
-	  }
-		
-	  private void inflateList(){
+	            default:
+	                return super.onOptionsItemSelected(item);
+	        }
+		}
+
+	private void inflateList(){
 		  getListView().setDivider(null);
 		  modelList = getModel();
-		  ArrayAdapter<Model> adapter = new InteractiveArrayAdapter(this, modelList);
+		  ArrayAdapter<Model> adapter = new InteractiveArrayAdapter(getActivity(), modelList);
 		  setListAdapter(adapter);
 	  }
 
@@ -110,7 +125,7 @@ public class TerminalsList extends ListActivity {
 	  }
 	  
 	  private List<String> queryUnplacedDistinctTerminals(){	
-			DatabaseHandler db = new DatabaseHandler(this);
+			DatabaseHandler db = new DatabaseHandler(getActivity());
 			List<String> ls = db.getUnplacedDistinctTerminals();
 			db.close();
 			return ls;
@@ -118,13 +133,13 @@ public class TerminalsList extends ListActivity {
 		}
 	  
 	  private void makeNewPlace(){
-		  AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		  AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 
 		  alert.setTitle(getResources().getString(R.string.str_place));
 		  alert.setMessage(getResources().getString(R.string.ctx_place_name));
 
 		  // Set an EditText view to get user input 
-		  final EditText input = new EditText(this);
+		  final EditText input = new EditText(getActivity());
 		  alert.setView(input);
 		  input.setSingleLine();
 		  //final Context context = getBaseContext();
@@ -134,19 +149,19 @@ public class TerminalsList extends ListActivity {
 		    value = value.trim();
 		    if(!value.isEmpty()){
 		    	if(value.equalsIgnoreCase(getResources().getString(R.string.spinner_all))){
-		    		Toast.makeText(getApplicationContext(), getResources().getString(R.string.str_place) + " " + 
+		    		Toast.makeText(getActivity(), getResources().getString(R.string.str_place) + " " + 
 		    					value + " " + getResources().getString(R.string.str_forbidden), Toast.LENGTH_LONG).show();
 		    		return;
 		    	}
 		    	if(value.contains(",")){
-		    		Toast.makeText(getApplicationContext(), getResources().getString(R.string.str_comma_usage) + " " + 
+		    		Toast.makeText(getActivity(), getResources().getString(R.string.str_comma_usage) + " " + 
 	    					getResources().getString(R.string.str_forbidden), Toast.LENGTH_LONG).show();
 		    		return;
 		    	}
 		    	
 		    	makeNewPlaceWithProgressBar(value);
 		    }else{
-		    	Toast.makeText(getApplicationContext(), getResources().getString(R.string.str_forbidden_empty_place), Toast.LENGTH_LONG).show(); 
+		    	Toast.makeText(getActivity(), getResources().getString(R.string.str_forbidden_empty_place), Toast.LENGTH_LONG).show(); 
 		    }
 		  }
 		  });
@@ -162,7 +177,7 @@ public class TerminalsList extends ListActivity {
 	  
 	  private void makeNewPlaceWithProgressBar(String placeName){
 		  final String localPlaceName = placeName;
-			progressBar = new ProgressDialog(this);
+			progressBar = new ProgressDialog(getActivity());
 			progressBar.setCancelable(false);
 			progressBar.setMessage(getResources().getString(R.string.progress_working));
 			progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -171,7 +186,7 @@ public class TerminalsList extends ListActivity {
 			
 			new Thread(new Runnable() {
 				public void run() {
-					DatabaseHandler db = new DatabaseHandler(getBaseContext());
+					DatabaseHandler db = new DatabaseHandler(getActivity());
 				    for (Model m: modelList){
 				    	if(m.isSelected()){
 				    		List<TransactionEntry> transactions = db.getTransactionsTerminal(m.getName());
@@ -185,7 +200,7 @@ public class TerminalsList extends ListActivity {
 				    }
 				    db.close();
 				    progressBar.dismiss();
-					TerminalsList.this.runOnUiThread(new Runnable() {
+				    getActivity().runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
 							inflateList();
@@ -197,8 +212,8 @@ public class TerminalsList extends ListActivity {
 	  }
 
 	  private void addToPlace(){
-		  AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		  DatabaseHandler db = new DatabaseHandler(getBaseContext());
+		  AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+		  DatabaseHandler db = new DatabaseHandler(getActivity());
 		  List<String> placeList = db.getDistinctPlacesForPlaceList();
 		  db.close();
 		  
@@ -221,7 +236,7 @@ public class TerminalsList extends ListActivity {
 				if(itemIndex > -1){
 					addToPlaceWithProgressBar(choiceList[itemIndex]);
 				}else{
-					Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show(); 
+					Toast.makeText(getActivity(), getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show(); 
 				}
 			}
 		});
@@ -239,7 +254,7 @@ public class TerminalsList extends ListActivity {
 	  private void addToPlaceWithProgressBar(CharSequence choice){
 		  final CharSequence localChoice = choice;
 		  
-		  progressBar = new ProgressDialog(this);
+		  progressBar = new ProgressDialog(getActivity());
 			progressBar.setCancelable(false);
 			progressBar.setMessage(getResources().getString(R.string.progress_working));
 			progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -248,7 +263,7 @@ public class TerminalsList extends ListActivity {
 			
 			new Thread(new Runnable() {
 				public void run() {
-					DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+					DatabaseHandler db = new DatabaseHandler(getActivity());
 					for (Model m: modelList){
 				    	if(m.isSelected()){
 				    		List<TransactionEntry> transactions = db.getTransactionsTerminal(m.getName());
@@ -263,7 +278,7 @@ public class TerminalsList extends ListActivity {
 				    }
 				    db.close();
 				    progressBar.dismiss();
-					TerminalsList.this.runOnUiThread(new Runnable() {
+				    getActivity().runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
 							inflateList();
