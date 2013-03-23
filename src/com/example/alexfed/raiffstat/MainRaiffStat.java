@@ -25,7 +25,7 @@ public class MainRaiffStat  extends SherlockFragmentActivity implements RaiffSta
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setTheme(R.style.Theme_Sherlock_Light_DarkActionBar);
         setContentView(R.layout.fragment_tabs_pager);
         mTabHost = (TabHost)findViewById(android.R.id.tabhost);
         mTabHost.setup();
