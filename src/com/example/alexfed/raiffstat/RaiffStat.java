@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
@@ -83,6 +84,7 @@ public class RaiffStat extends SherlockFragment {
 	private String dirName = "RaiffStat";
 	
 	private int itemIndex = 0;
+	OnDBChangedListener mCallback;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -111,6 +113,25 @@ public class RaiffStat extends SherlockFragment {
 		addListenerOnButton();
 	}
 
+	
+	/* (non-Javadoc)
+	 * @see com.actionbarsherlock.app.SherlockFragment#onAttach(android.app.Activity)
+	 */
+	@Override
+	public void onAttach(Activity activity) {
+		// TODO Auto-generated method stub
+		super.onAttach(activity);
+        
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (OnDBChangedListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
+	}
+
 	@Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         MenuItem populateItem = menu.add(Menu.NONE, IMPORT_EXPORT_ID, 0, R.string.menu_import_export);
         populateItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
@@ -127,6 +148,7 @@ public class RaiffStat extends SherlockFragment {
                 return true;
             case CLEAR_ID:
             	clearDB();
+            	mCallback.onDBChanged();
     			setCurrentDateOnView();
     			addItemsOnSpinnerPlace();
                 return true;
@@ -302,6 +324,7 @@ public class RaiffStat extends SherlockFragment {
 							public void run() {
 								setCurrentDateOnView();
 					    		 addItemsOnSpinnerPlace();
+					    		 mCallback.onDBChanged();
 							}
 						});
 					  
@@ -532,6 +555,7 @@ public class RaiffStat extends SherlockFragment {
 					public void run() {
 					setCurrentDateOnView();
 					addItemsOnSpinnerPlace();
+					mCallback.onDBChanged();
 				}
 			});
 					  
@@ -741,4 +765,10 @@ public class RaiffStat extends SherlockFragment {
 		}
 		
 	}
+
+	// Container Activity must implement this interface
+    public interface OnDBChangedListener {
+        public void onDBChanged();
+    }
+    
 }

@@ -3,11 +3,15 @@ package com.example.alexfed.raiffstat;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -36,19 +40,74 @@ public class TerminalsList extends SherlockListFragment {
 	  @Override public void onActivityCreated(Bundle savedInstanceState) {
 	        super.onActivityCreated(savedInstanceState);
 	        // We have a menu item to show in action bar.
+	        myLog.LOGD(LOG, "onActivityCreated");
 	        setHasOptionsMenu(true);
 	        inflateList();
 	  }
-	  
-	  
-	  
-	 /* @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-	        MenuItem populateItem = menu.add(Menu.NONE, MAKE_ID, 0, R.string.menu_import_export);
-	        populateItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-	        MenuItem clearItem = menu.add(Menu.NONE, ADD_ID, 0, R.string.menu_clear_db);
-	        clearItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-	    }*/
-	  
+
+	public void inflateDBChanged(){
+		modelList = getModel();
+	}
+	
+	public void setData() {
+		myLog.LOGD(LOG, "setData 01");
+        // The reload fragment code here !
+        if (this.isDetached()) {
+        	myLog.LOGD(LOG, "setData 02");
+            getFragmentManager().beginTransaction()
+               .detach(this)
+               .attach(this)
+               .commit();
+        }
+    }
+	
+		/* (non-Javadoc)
+	 * @see com.actionbarsherlock.app.SherlockListFragment#onAttach(android.app.Activity)
+	 */
+	@Override
+	public void onAttach(Activity activity) {
+		// TODO Auto-generated method stub
+		super.onAttach(activity);
+		myLog.LOGD(LOG, "onAttach");
+	}
+	
+	
+	
+
+		/* (non-Javadoc)
+	 * @see android.support.v4.app.ListFragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
+	 */
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		myLog.LOGD(LOG, "onCreateView");
+		// TODO Auto-generated method stub 
+		//return super.onCreateView(inflater, container, savedInstanceState);
+		View view = inflater.inflate(R.layout.activity_raiff_report, null);
+		return view;  //You must return your view here
+	}
+
+	
+	/* (non-Javadoc)
+	 * @see android.support.v4.app.ListFragment#onDestroyView()
+	 */
+	@Override
+	public void onDestroyView() {
+		myLog.LOGD(LOG, "onDestroyView");
+		// TODO Auto-generated method stub
+		super.onDestroyView();
+	}
+
+	/* (non-Javadoc)
+	 * @see android.support.v4.app.Fragment#onResume()
+	 */
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		myLog.LOGD(LOG, "onResume");
+	}
+
 		@Override
 	public void onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu,
 			MenuInflater inflater) {
@@ -61,7 +120,6 @@ public class TerminalsList extends SherlockListFragment {
 		
 	  @Override
 		public boolean onOptionsItemSelected(MenuItem item) {
-		  final ContentResolver cr = getActivity().getContentResolver();
 		  boolean hasSelection = false;
 	        switch (item.getItemId()) {
 	            case MAKE_ID:

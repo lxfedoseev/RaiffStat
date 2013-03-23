@@ -12,18 +12,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TabHost;
 import android.widget.TabWidget;
+import android.support.v4.app.FragmentTransaction;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
-public class MainRaiffStat  extends SherlockFragmentActivity{
-
+public class MainRaiffStat  extends SherlockFragmentActivity implements RaiffStat.OnDBChangedListener {
+	private final String LOG = "MainRaiffStat";
 	TabHost mTabHost;
     ViewPager  mViewPager;
     TabsAdapter mTabsAdapter;
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-        //setTheme(SampleList.THEME); //Used for theme switching in samples
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.fragment_tabs_pager);
@@ -34,10 +34,11 @@ public class MainRaiffStat  extends SherlockFragmentActivity{
 
         mTabsAdapter = new TabsAdapter(this, mTabHost, mViewPager);
 
-        mTabsAdapter.addTab(mTabHost.newTabSpec("app").setIndicator(getResources().getString(R.string.app_name)),
+        mTabsAdapter.addTab(mTabHost.newTabSpec("app").setIndicator(getResources().getString(R.string.str_statistics)),
         		RaiffStat.class, null);
          mTabsAdapter.addTab(mTabHost.newTabSpec("terminals").setIndicator(getResources().getString(R.string.terminals_name)),
         		TerminalsList.class, null);
+         
          /*mTabsAdapter.addTab(mTabHost.newTabSpec("places").setIndicator(getResources().getString(R.string.places_name)),
         		PlacesList.class, null);
         mTabsAdapter.addTab(mTabHost.newTabSpec("categories").setIndicator(getResources().getString(R.string.exp_categories)),
@@ -54,8 +55,43 @@ public class MainRaiffStat  extends SherlockFragmentActivity{
         outState.putString("tab", mTabHost.getCurrentTabTag());
     }
 
+	public void onDBChanged() {
+        myLog.LOGD(LOG, "onDBChanged");
+        //mViewPager.invalidate();
+        //mTabHost.getTabWidget().invalidate();
+        
+        //TerminalsList r = (TerminalsList) mTabsAdapter.getItem(1);
+        //r.setData();
+        
+        Fragment r = mTabsAdapter.getItem(1);
+        FragmentTransaction tr = getSupportFragmentManager().beginTransaction();
+        //tr.remove(r);
+        tr.detach(r);
+        //tr.attach(r);
+        tr.commit();
+        
+        
+        //smTabsAdapter.notifyDataSetChanged();
+        
+        
+        //TerminalsList articleFrag = (TerminalsList) mTabsAdapter.getItem(1);
+        
+        /*TerminalsList newFragment = new TerminalsList();
+        Bundle args = new Bundle();
+        args.putInt("dbchanged", 1);
+        newFragment.setArguments(args);
+    
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack so the user can navigate back
+        //transaction.replace(R.id.fragment_container, newFragment);
+        transaction.addToBackStack(null);
 
+        // Commit the transaction
+        transaction.commit();*/
+    }
+	
 	/**
      * This is a helper class that implements the management of tabs and all
      * details of connecting a ViewPager with associated TabHost.  It relies on a
@@ -69,11 +105,13 @@ public class MainRaiffStat  extends SherlockFragmentActivity{
      */
     public static class TabsAdapter extends FragmentPagerAdapter
             implements TabHost.OnTabChangeListener, ViewPager.OnPageChangeListener {
+    	private final String LOG = "TabsAdapter";
         private final Context mContext;
         private final TabHost mTabHost;
         private final ViewPager mViewPager;
         private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
 
+        
         static final class TabInfo {
             private final String tag;
             private final Class<?> clss;
