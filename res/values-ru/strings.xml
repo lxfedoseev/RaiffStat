@@ -43,6 +43,8 @@
     <string name="str_forbidden_empty_category">Название категории не может быть пустым</string>
     <string name="str_category_undefined">Категория\r\nнеопределена</string>
     <string name="str_comma_usage">Использование запятых</string>
+    <string name="str_data">Данные</string>
+    <string name="str_about">О программе</string>
     
     <string name="click_delete">Удалить</string>
     <string name="click_rename">Переименовать</string>

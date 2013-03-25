@@ -7,9 +7,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
-import java.lang.reflect.Method;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -18,246 +15,83 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
+import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.SherlockActivity;
 
-/* TODO: 
- * - Save application state (screen rotation, going to background)
- * - Save report to a file (share report)
- * - Radio buttons for interval (1 week, 1 month, period)
- * - Make a good design (application icon as well)  
- * - Make demo mode in case user has no data but wants to try the application
- * - Check out all licenses
- * - Implement help
- * 
- * - ? Make failed parsing messages table in DB and ask the user to send them by email to me ?
- * - ? Widget (Spent for a place, spent entirely, remainder) ?
- * - ? Remove particular items from report (long touch -> remove) ?
- * 
- */ 
-
-public class RaiffStat extends Activity { 
-
-	private final String LOG = "RaiffStat";
+public class MainRaiffStat extends SherlockActivity{
 	
-	private DatePicker dpFrom;
-	private DatePicker dpTo;
-	private Spinner spPlace;
-	private String placeName; 
-	private Button btnApply;
+	private final String LOG = "MainRaiffStat";
 	private ProgressDialog progressBar;
 	private int progressBarStatus = 0;
 	private Handler progressBarHandler = new Handler();
 	private int impExpItemIndex = 0;
-	
-	private int year;
-	private int month;
-	private int day; 
-	
 	private String dirName = "RaiffStat";
-	
 	private int itemIndex = 0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_raiff_stat);
-
-		setCurrentDateOnView();
-		addListenerOnButton();
+		setContentView(R.layout.activity_main);
+		setButtons();
 	}
 
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onResume() 
-	 */
 	@Override
-	protected void onResume() {
+	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
 		// TODO Auto-generated method stub
-		super.onResume();
-		
-		addItemsOnSpinnerPlace();
-		addListenerOnSpinnerItemSelection();
+		return super.onCreateOptionsMenu(menu);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_raiff_stat, menu);
-		return true; 
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-    		case R.id.menu_settings:
-    			//TODO:
-    			//Intent settingsActivity = new Intent(getBaseContext(), MyPreferences.class);
-    			//startActivity(settingsActivity);
-    			return true;
-    		case R.id.menu_import_export:
-    			importExport();
-    			return true;
-    		/*case R.id.menu_sms_import:
-    			importSmsWithProgressBar();
-    			return true;
-    		*/
-    		case R.id.menu_clear_db:
-    			clearDB();
-    			setCurrentDateOnView();
-    			addItemsOnSpinnerPlace();
-    			return true; 
-    		
-    		//	case R.id.menu_query:
-    		//		queryCategorizedPlaces();
-    		//	queryDistinctPlaces();
-    			//queryDistinctPlaces();
-    			//queryDateInterval(convertStringDate("02/03/2013 00:00:00"), convertStringDate("07/03/2013 23:59:59"));
-    			//queryAmountInterval(0, 500);
-    			//queryAmountFixed(2077.3);
-    		//	return true;
-    		
-    		case R.id.menu_manage_terminals:
-    			Intent terminalsActivity = new Intent(getBaseContext(), TerminalsList.class);
-    			startActivity(terminalsActivity);
-    			return true; 
-    		case R.id.menu_manage_places:
-    			Intent placesActivity = new Intent(getBaseContext(), PlacesList.class);
-    			startActivity(placesActivity); 
-    			return true; 
-    		case R.id.menu_categories:
-    			//Intent categoriesActivity = new Intent(getBaseContext(), CategoryList.class);
-    			//startActivity(categoriesActivity);
-    			Intent categoriesActivity = new Intent(getBaseContext(), CategoryDestributionList.class);
-    			startActivity(categoriesActivity);
-    		default:
-    			return super.onOptionsItemSelected(item);
-		}
-   
-	}
-	
-	public void addItemsOnSpinnerPlace() {
-		spPlace = (Spinner) findViewById(R.id.spinnerPlace);
-		List<String> list = new ArrayList<String>();
-		List<String> distPlaces = new ArrayList<String>();
-		list.add(getResources().getString(R.string.spinner_all));
-		distPlaces = queryDistinctPlaces();
-		for(String s : distPlaces){
-			list.add(s);
-		}
-		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-			android.R.layout.simple_spinner_item, list);
-		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spPlace.setAdapter(dataAdapter);
-	  }
-	
-	// display current date
-	public void setCurrentDateOnView() {
-		dpFrom = (DatePicker) findViewById(R.id.datePickerFrom);
-		dpTo = (DatePicker) findViewById(R.id.datePickerTo);
+	private void setButtons(){
 		
-		final Calendar c = Calendar.getInstance();
-		year = c.get(Calendar.YEAR);
-		month = c.get(Calendar.MONTH);
-		day = c.get(Calendar.DAY_OF_MONTH);
-		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+		Button btnReport = (Button) findViewById(R.id.button_report);
+		Button btnData = (Button) findViewById(R.id.button_data);
+		Button btnPlaces = (Button) findViewById(R.id.button_places);
+		Button btnAbout = (Button) findViewById(R.id.button_about);
 		
-		DatabaseHandler db = new DatabaseHandler(this);
-		if(db.getTransactionsCount() > 0){// DB is not empty
-		 
-			if (currentapiVersion >= 11) {
-			  try {
-			    Method m = dpFrom.getClass().getMethod("setCalendarViewShown", boolean.class);
-			    m.invoke(dpFrom, false);
-			    m.invoke(dpTo, false);
-			    
-			    m = dpFrom.getClass().getMethod("setMinDate", long.class);
-			    m.invoke(dpFrom, queryMinDate());
-			    m.invoke(dpTo, queryMinDate());
-			  }
-			  catch (Exception e) {} // eat exception in our case
-			}
+		btnReport.setOnClickListener(new OnClickListener() {
 			
-			dpFrom.init(Integer.valueOf(new SimpleDateFormat("yyyy").format(new Date(queryMinDate()))), 
-					Integer.valueOf(new SimpleDateFormat("MM").format(new Date(queryMinDate())))-1, 
-					Integer.valueOf(new SimpleDateFormat("dd").format(new Date(queryMinDate()))), 
-					null);
-			dpTo.init(year, month, day, null);	
-		}else{
-			Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_db_empty), Toast.LENGTH_LONG).show(); 
-			if (currentapiVersion >= 11) {
-			  try {
-			    Method m = dpFrom.getClass().getMethod("setCalendarViewShown", boolean.class);
-			    m.invoke(dpFrom, false);
-			    m.invoke(dpTo, false);
-			  }
-			  catch (Exception e) {} // eat exception in our case
+			@Override
+			public void onClick(View arg0) {
+				
 			}
-	
-			dpFrom.init(year, month, day, null);
-			dpTo.init(year, month, day, null);
-			db.close();
-		}
-	}
-	
-	public void addListenerOnButton() {
-		btnApply = (Button) findViewById(R.id.btnApply);
-		btnApply.setOnClickListener(new View.OnClickListener() {
-		    @Override
-		    public void onClick(View v) { 
-		    	//Toast.makeText(getApplicationContext(), "Button click", Toast.LENGTH_LONG).show();               
-		    	Intent myIntent;
-		    	if(placeName.equalsIgnoreCase(getResources().getString(R.string.spinner_all))){
-		    		myIntent = new Intent(RaiffStat.this, ReportListAll.class);
-		    	}else{
-		    		myIntent = new Intent(RaiffStat.this, ReportListPlace.class);
-		    		myIntent.putExtra("place", placeName);
-		    	}
-		    	int month = dpFrom.getMonth() + 1;
-		    	myIntent.putExtra("day_from", dpFrom.getDayOfMonth()+"/"+month+"/"+dpFrom.getYear());
-		    	month = dpTo.getMonth() + 1;
-		    	myIntent.putExtra("day_to", dpTo.getDayOfMonth()+"/"+month+"/"+dpTo.getYear());
-		    	RaiffStat.this.startActivity(myIntent);
-		    }
 		});
-	}
-	
-	public void addListenerOnSpinnerItemSelection() {
-		spPlace = (Spinner) findViewById(R.id.spinnerPlace);
-		spPlace.setOnItemSelectedListener(new CustomOnItemSelectedListener());
-	  }
-	
-	public class CustomOnItemSelectedListener implements OnItemSelectedListener {
-		 
-		  public void onItemSelected(AdapterView<?> parent, View view, int pos,long id) {
-			  placeName = parent.getItemAtPosition(pos).toString();
-		  }
-		 
-		  @Override
-		  public void onNothingSelected(AdapterView<?> arg0) {
-			// TODO Auto-generated method stub
-		  }
-		 
+		
+		btnData.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				importExport();
+			}
+		});
+		
+		btnPlaces.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				
+			}
+		});
+
+		btnAbout.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				
+			}
+		});
 	}
 	
 	private void importExport(){		  
@@ -266,10 +100,11 @@ public class RaiffStat extends Activity {
 		  final CharSequence[] choiceList;
 		  CharSequence[] choiceListLocal = {getResources().getString(R.string.dialog_sms_import),
 					  							getResources().getString(R.string.dialog_csv_export),
-					  							getResources().getString(R.string.dialog_csv_import)};
+					  							getResources().getString(R.string.dialog_csv_import),
+					  							getResources().getString(R.string.menu_clear_db)};
 		  choiceList = choiceListLocal;
 
-		  alert.setTitle(getResources().getString(R.string.menu_import_export));		  
+		  alert.setTitle(getResources().getString(R.string.str_data));		  
 		  impExpItemIndex = -1;
 		  alert.setSingleChoiceItems(choiceList, -1, new DialogInterface.OnClickListener() {
 			
@@ -292,6 +127,9 @@ public class RaiffStat extends Activity {
 							break;
 						case 2:
 							doImportFromCSV();
+							break;
+						case 3:
+							clearDB();
 							break;
 						default:
 							//do nothing
@@ -316,20 +154,12 @@ public class RaiffStat extends Activity {
 		if(initProgressBar()){
 			new Thread(new Runnable() {
 				  public void run() {
-					  importSms();
-					  RaiffStat.this.runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								setCurrentDateOnView();
-					    		 addItemsOnSpinnerPlace();
-							}
-						});
-					  
+					  importSms(); 
 				  }
 			}).start();
 		}
 	}
-
+	
 	private boolean initProgressBar(){
 	    final String SMS_URI_INBOX = "content://sms/inbox"; 
 	    Cursor cur;
@@ -434,8 +264,15 @@ public class RaiffStat extends Activity {
 	    } catch (SQLiteException ex) {  
 	    	myLog.LOGD(LOG, ex.getMessage());  
 	    }      
+
+	}
 	
-		
+	private void mergeTransactionToDB(RaiffParser prs){
+		DatabaseHandler db = new DatabaseHandler(this);
+		db.mergeTransaction(new TransactionEntry(prs.getDateTime(), prs.getAmount(), prs.getAmountCurr(),
+				prs.getRemainder(), prs.getRemainderCurr(), prs.getTerminal(), prs.getCard(), 
+				prs.getPlace(), prs.getInPlace(), prs.getType(), prs.getExpCategory()));
+		db.close();
 	}
 	
 	private void doExportToCSV(){
@@ -491,6 +328,24 @@ public class RaiffStat extends Activity {
 		
 	}
 	
+	private boolean createDirIfNotExists(String path) {
+	    boolean ret = true;
+
+	    File file = new File(Environment.getExternalStorageDirectory(), path);
+	    if (!file.exists()) {
+	        if (!file.mkdirs()) {
+	            ret = false;
+	        }
+	    }
+	    return ret;
+	}
+	
+	private String makeExportFileName(){
+		Calendar c = Calendar.getInstance();
+		SimpleDateFormat df = new SimpleDateFormat("dd_MM_yyyy__HH_mm_ss");	
+		return Environment.getExternalStorageDirectory()+ "/" + dirName + "/" + df.format(c.getTime())+".csv";
+	}
+	
 	private void doImportFromCSV(){
 		
 		List<String> fileList = getCSVFileList();
@@ -535,6 +390,27 @@ public class RaiffStat extends Activity {
 		alert.show();
 	}
 	
+	private List<String> getCSVFileList(){
+		List<String> fileList = new ArrayList<String>();
+		String patternString = "\\d{2}_\\d{2}_\\d{4}__\\d{2}_\\d{2}_\\d{2}.csv";
+		Pattern pattern = Pattern.compile(patternString);
+		
+		File f = new File(Environment.getExternalStorageDirectory()+"/"+dirName);
+		if(!f.exists())
+			return fileList;
+		
+	    File[] files = f.listFiles();
+	    for(int i=0; i < files.length; i++){
+	    	File file = files[i];
+	       
+	    	if(!isCSVFile(file, pattern))
+	    	   continue;
+	    	fileList.add(file.getName());
+	    }
+	    return fileList;
+		
+	}
+	
 	private void importSmsFromFileWithProgressBar(CharSequence fileName){
 		final CharSequence localFileName = fileName;
 		progressBar = new ProgressDialog(this);
@@ -546,18 +422,22 @@ public class RaiffStat extends Activity {
 		
 		new Thread(new Runnable() {
 			public void run() {
-				importSmsFromCSV(localFileName);
-				RaiffStat.this.runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-					setCurrentDateOnView();
-					addItemsOnSpinnerPlace();
-				}
-			});
-					  
+				importSmsFromCSV(localFileName);		  
 		}
 		}).start();
 	}
+	
+	private boolean isCSVFile(File file, Pattern pattern){
+ 		
+ 		if(file.isDirectory())
+ 			return false;
+ 		
+ 		Matcher matcher = pattern.matcher(file.getName());
+ 		if (matcher.matches())
+            return true;
+        else
+            return false;
+ }
 	
 	private void importSmsFromCSV(CharSequence fileName){
 	    
@@ -612,153 +492,9 @@ public class RaiffStat extends Activity {
 
 	}
 	
-	
-	private List<String> getCSVFileList(){
-		List<String> fileList = new ArrayList<String>();
-		String patternString = "\\d{2}_\\d{2}_\\d{4}__\\d{2}_\\d{2}_\\d{2}.csv";
-		Pattern pattern = Pattern.compile(patternString);
-		
-		File f = new File(Environment.getExternalStorageDirectory()+"/"+dirName);
-		if(!f.exists())
-			return fileList;
-		
-	    File[] files = f.listFiles();
-	    for(int i=0; i < files.length; i++){
-	    	File file = files[i];
-	       
-	    	if(!isCSVFile(file, pattern))
-	    	   continue;
-	    	fileList.add(file.getName());
-	    }
-	    return fileList;
-		
-	}
-	
-	private boolean isCSVFile(File file, Pattern pattern){
-	 		
-	 		if(file.isDirectory())
-	 			return false;
-	 		
-	 		Matcher matcher = pattern.matcher(file.getName());
-	 		if (matcher.matches())
-	            return true;
-	        else
-	            return false;
-	 }
-
-	private boolean createDirIfNotExists(String path) {
-	    boolean ret = true;
-
-	    File file = new File(Environment.getExternalStorageDirectory(), path);
-	    if (!file.exists()) {
-	        if (!file.mkdirs()) {
-	            ret = false;
-	        }
-	    }
-	    return ret;
-	}
-	
-	private String makeExportFileName(){
-		Calendar c = Calendar.getInstance();
-		SimpleDateFormat df = new SimpleDateFormat("dd_MM_yyyy__HH_mm_ss");	
-		return Environment.getExternalStorageDirectory()+ "/" + dirName + "/" + df.format(c.getTime())+".csv";
-	}
-	
-	private void addTransactionToDB(RaiffParser prs){
-		DatabaseHandler db = new DatabaseHandler(this);
-		db.addTransaction(new TransactionEntry(prs.getDateTime(), prs.getAmount(), prs.getAmountCurr(),
-				prs.getRemainder(), prs.getRemainderCurr(), prs.getTerminal(), prs.getCard(), 
-				prs.getPlace(), prs.getInPlace(), prs.getType(), prs.getExpCategory()));
-		db.close();
-	}
-
-	private void mergeTransactionToDB(RaiffParser prs){
-		DatabaseHandler db = new DatabaseHandler(this);
-		db.mergeTransaction(new TransactionEntry(prs.getDateTime(), prs.getAmount(), prs.getAmountCurr(),
-				prs.getRemainder(), prs.getRemainderCurr(), prs.getTerminal(), prs.getCard(), 
-				prs.getPlace(), prs.getInPlace(), prs.getType(), prs.getExpCategory()));
-		db.close();
-	}
-
 	private void clearDB(){	
 		DatabaseHandler db = new DatabaseHandler(this);
 		db.clearAll();
 		db.close();
-	}
-	
-	private void printTransactions(List<TransactionEntry> transactions){
-		for (TransactionEntry t : transactions) {
-			String dateString = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date(t.getDateTime()));
-			myLog.LOGD(LOG, t.getID() + " & " + t.getCard() + " & " +  t.getTerminal() + " & " + 
-	    			t.getAmount() + " & " + t.getAmountCurr() + " & " 
-	    			+ t.getRemainder() + " & " + t.getRemainderCurr() + " & " +  t.getPlace() +  " & " +  
-	    			t.getInPlace() +  " & " + t.getType() + " & " + dateString);
-		}
-	}
-	
-	private void queryAmountFixed(double amount){	
-		DatabaseHandler db = new DatabaseHandler(this);
-		List<TransactionEntry> transactions = db.getTransactionsAmountFixed(amount);
-		printTransactions(transactions);
-		db.close();
-	}
-	
-	private void queryAmountInterval(double start, double end){
-		DatabaseHandler db = new DatabaseHandler(this);
-		List<TransactionEntry> transactions = db.getTransactionsAmountInterval(start, end);
-		printTransactions(transactions);
-		db.close();
-	}
-	
-	private void queryDateInterval(long start, long end){	
-		DatabaseHandler db = new DatabaseHandler(this);
-		List<TransactionEntry> transactions = db.getTransactionsDateInterval(start, end);
-		printTransactions(transactions);
-		db.close();
-	}
-	
-	private long convertStringDate(String strDate){
-		try {
-			DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-			Date date = (Date)formatter.parse(strDate);
-			return date.getTime();
-		}catch (ParseException ex){
-			myLog.LOGD(LOG, ex.getMessage()); 
-			return 0;
-		}
-	}
-	
-	private List<String> queryDistinctTerminals(){	
-		DatabaseHandler db = new DatabaseHandler(this);
-		return db.getDistinctTerminals();
-		
-	}
-	
-	private List<String> queryDistinctPlaces(){	
-		DatabaseHandler db = new DatabaseHandler(this);
-		List <String> ls = db.getDistinctPlaces();
-		db.close();
-		return ls;
-		
-	}
-	
-	private long queryMinDate(){	
-		DatabaseHandler db = new DatabaseHandler(this);
-		long date = db.getMinDate();
-		db.close();
-		return date;
-		
-	}
-	
-	private void queryCategorizedPlaces(){	
-		DatabaseHandler db = new DatabaseHandler(this);
-		List <CategorizedPlaceModel> cat = db.getCategorizedPlaces();
-		db.close();
-		
-		for(CategorizedPlaceModel c : cat){
-			myLog.LOGD(LOG, "Place: " + c.getPlaceName() + " Category: " + c.getCategoryName() +
-					" Color: " + c.getColor());
-		}
-		
 	}
 }
