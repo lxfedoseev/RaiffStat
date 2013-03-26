@@ -2,9 +2,9 @@ package com.example.alexfed.raiffstat;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -31,11 +31,11 @@ public class ReportTabs extends SherlockFragmentActivity{
         setContentView(R.layout.fragment_tabs_pager);
         mTabHost = (TabHost)findViewById(android.R.id.tabhost);
         mTabHost.setup();
-
+        
         mViewPager = (ViewPager)findViewById(R.id.pager);
 
         mTabsAdapter = new TabsAdapter(this, mTabHost, mViewPager);
-
+        
         String dayTo = getCurrentDate();
         
         String dayFrom = getOneWeekBefore();
@@ -62,6 +62,8 @@ public class ReportTabs extends SherlockFragmentActivity{
         mTabsAdapter.addTab(mTabHost.newTabSpec("period").setIndicator(getResources().getString(R.string.str_period)),
         		ReportListAll.class, null);
 
+        //setSelectedTabColor();
+        
         if (savedInstanceState != null) {
             mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
         }
@@ -183,6 +185,7 @@ public class ReportTabs extends SherlockFragmentActivity{
         public void onTabChanged(String tabId) {
             int position = mTabHost.getCurrentTab();
             mViewPager.setCurrentItem(position);
+            //setSelectedTabColor();
         }
 
         @Override
@@ -206,5 +209,15 @@ public class ReportTabs extends SherlockFragmentActivity{
         @Override
         public void onPageScrollStateChanged(int state) {
         }
+        
+    	/*private void setSelectedTabColor() {
+            for(int i=0;i<mTabHost.getTabWidget().getChildCount();i++)  
+            {  
+            	mTabHost.getTabWidget().getChildAt(i)
+                                                .setBackgroundColor(Color.WHITE);  
+            }  
+            mTabHost.getTabWidget().getChildAt(mTabHost.getCurrentTab())
+                                                  .setBackgroundColor(Color.RED); 
+        }*/
     }
 }

@@ -96,12 +96,16 @@ public class ReportListAll extends SherlockListFragment {
 			MenuItem periodItem = menu.add(Menu.NONE, PERIOD_ID, 0, R.string.menu_period);
 			periodItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 		}
+		MenuItem graphItem = menu.add(Menu.NONE, GRAPH_ID, 0, R.string.menu_graph);
+	    graphItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+	    graphItem.setIcon(R.drawable.ic_action_line_chart);
+	    
 		MenuItem summaryItem = menu.add(Menu.NONE, SUMMARY_ID, 0, R.string.menu_summary);
 		summaryItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		summaryItem.setIcon(R.drawable.ic_action_calculator);
+		
 	    MenuItem sortItem = menu.add(Menu.NONE, SORT_ID, 0, R.string.menu_sort);
 	    sortItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-	    MenuItem graphItem = menu.add(Menu.NONE, GRAPH_ID, 0, R.string.menu_graph);
-	    graphItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 	

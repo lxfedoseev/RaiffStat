@@ -928,12 +928,14 @@ containing a value of this type.
         public static final int ambilwarna_hue=0x7f020072;
         public static final int ambilwarna_target=0x7f020073;
         public static final int background=0x7f020074;
-        public static final int ic_launcher=0x7f020075;
-        public static final int ic_launcher_org=0x7f020076;
-        public static final int income_logo=0x7f020077;
-        public static final int list_background2=0x7f020078;
-        public static final int list_background3=0x7f020079;
-        public static final int outcome_logo=0x7f02007a;
+        public static final int ic_action_calculator=0x7f020075;
+        public static final int ic_action_line_chart=0x7f020076;
+        public static final int ic_launcher=0x7f020077;
+        public static final int ic_launcher_org=0x7f020078;
+        public static final int income_logo=0x7f020079;
+        public static final int list_background2=0x7f02007a;
+        public static final int list_background3=0x7f02007b;
+        public static final int outcome_logo=0x7f02007c;
     }
     public static final class id {
         public static final int abs__action_bar=0x7f040022;
