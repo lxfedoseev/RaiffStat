@@ -25,6 +25,7 @@
     <string name="menu_graph">График</string>
     <string name="menu_import_export">Импорт/Экспорт</string>
     <string name="menu_categories">Категории расходов</string>
+    <string name="menu_period">Задайте период</string>
     
     <string name="str_place">Место</string>
     <string name="str_period">Период</string>
@@ -45,6 +46,10 @@
     <string name="str_comma_usage">Использование запятых</string>
     <string name="str_data">Данные</string>
     <string name="str_about">О программе</string>
+    <string name="str_week">Неделя</string>
+    <string name="str_month">Месяц</string>
+    <string name="str_year">Год</string>
+    <string name="str_period">Период</string>
     
     <string name="click_delete">Удалить</string>
     <string name="click_rename">Переименовать</string>

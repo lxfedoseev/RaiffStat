@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.net.Uri;
@@ -65,7 +66,8 @@ public class MainRaiffStat extends SherlockActivity{
 			
 			@Override
 			public void onClick(View arg0) {
-				
+				Intent tabsActivity = new Intent(getBaseContext(), ReportTabs.class);
+    			startActivity(tabsActivity);
 			}
 		});
 		

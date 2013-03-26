@@ -68,8 +68,13 @@
               android:screenOrientation="portrait">
         </activity>
 
-    	<activity android:name="CategoryDestributionList"  
+    	<activity android:name=".CategoryDestributionList"  
               android:label="@string/exp_categories"
+              android:screenOrientation="portrait">
+        </activity>
+        
+    	<activity android:name=".ReportTabs"  
+              android:label="@string/report_name"
               android:screenOrientation="portrait">
         </activity>
         

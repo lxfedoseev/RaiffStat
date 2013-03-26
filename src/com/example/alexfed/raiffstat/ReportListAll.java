@@ -10,34 +10,34 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.jjoe64.graphview.LineGraphView;
-
 import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.LinearLayout.LayoutParams;
 
+import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries;
-import com.jjoe64.graphview.BarGraphView;
+import com.jjoe64.graphview.LineGraphView;
 
-public class ReportListAll extends ListActivity {
+public class ReportListAll extends SherlockListFragment {
 
 
 	private final String LOG = "ReportListAll";
@@ -46,58 +46,95 @@ public class ReportListAll extends ListActivity {
 	private String dayTo;
 	private int sortItemIndex = 0;
 	private int sortType;
+	private boolean bundleEmpty = true;
+	private FragmentActivity activity;
 	
+	static final int SUMMARY_ID = Menu.FIRST;
+    static final int SORT_ID = Menu.FIRST+1;
+    static final int GRAPH_ID = Menu.FIRST+2;
+    static final int PERIOD_ID = Menu.FIRST+3;
+    
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_raiff_report);
-		dayFrom = getIntent().getStringExtra("day_from");
-		dayTo = getIntent().getStringExtra("day_to");
-		
+		activity = getActivity();	
 		sortType = StaticValues.SORT_BY_DATE;
-		inflateList();
+        Bundle bundle = getArguments();
+		bundleEmpty = bundle ==null;
+		if(!bundleEmpty){
+			dayFrom = bundle.getString("day_from");
+			dayTo = bundle.getString("day_to");
+		}
+	}
+	
+	@Override public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        // We have a menu item to show in action bar.
+        setHasOptionsMenu(true);
+        inflateList();
+	}
+
+	/* (non-Javadoc)
+	 * @see android.support.v4.app.ListFragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
+	 */
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.activity_raiff_report, null);
+		return view;  
 	}
 
 	
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_report_list, menu);
-		return true;
+	public void onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu,
+			MenuInflater inflater) {
+		if(bundleEmpty){
+			MenuItem periodItem = menu.add(Menu.NONE, PERIOD_ID, 0, R.string.menu_period);
+			periodItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		}
+		MenuItem summaryItem = menu.add(Menu.NONE, SUMMARY_ID, 0, R.string.menu_summary);
+		summaryItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+	    MenuItem sortItem = menu.add(Menu.NONE, SORT_ID, 0, R.string.menu_sort);
+	    sortItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+	    MenuItem graphItem = menu.add(Menu.NONE, GRAPH_ID, 0, R.string.menu_graph);
+	    graphItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		super.onCreateOptionsMenu(menu, inflater);
 	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-    		case R.id.menu_summary:
-    			doSummary();
+        switch (item.getItemId()) {
+            case SUMMARY_ID:
+            	doSummary();
+                return true;
+            case SORT_ID:
+            	doSort();
     			return true;
-    		case R.id.menu_sort:
-    			doSort();
+            case GRAPH_ID:
+            	doDrawGraph();
     			return true;
-    		case R.id.menu_graph:
-    			doDrawGraph();
+            case PERIOD_ID:
+            	//TODO:
     			return true;
-    		default:
-    			return super.onOptionsItemSelected(item);
-		}
-   
+            default:
+                return super.onOptionsItemSelected(item);
+        }
 	}
 	
-	
 	private void doDrawGraph(){
-		LinearLayout graphLayout = new LinearLayout(getBaseContext());
-		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		getActivity();
+		LinearLayout graphLayout = new LinearLayout(activity);
+		AlertDialog.Builder alert = new AlertDialog.Builder(activity);
 		  
-		DatabaseHandler db = new DatabaseHandler(this);
+		DatabaseHandler db = new DatabaseHandler(activity);
 		List<TransactionEntry> trs = db.getTransactionsForGraph(convertStringDate(dayFrom+ " 00:00:00"), 
 				convertStringDate(dayTo+ " 23:59:59"), getResources().getString(R.string.spinner_all), StaticValues.CURR_RUB);
 		if(trs.size()<1){
-			  Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_no_values) + " " + StaticValues.CURR_RUB, 
+			  Toast.makeText(activity, getResources().getString(R.string.toast_no_values) + " " + StaticValues.CURR_RUB, 
 					  Toast.LENGTH_LONG).show();
 			  db.close();
 			  return;
@@ -150,7 +187,7 @@ public class ReportListAll extends ListActivity {
 		}
 		db.close();
 
-		LineGraphView graphView = new LineGraphView(this, "%"){ 
+		LineGraphView graphView = new LineGraphView(activity, "%"){ 
 			   @Override  
 			   protected String formatLabel(double value, boolean isValueX) {  
 			      if (isValueX) {
@@ -171,10 +208,10 @@ public class ReportListAll extends ListActivity {
 			   }  
 		}; 
 		
-		 int height = (int)getBaseContext().getResources().getDisplayMetrics().heightPixels/2;
+		 int height = (int)activity.getResources().getDisplayMetrics().heightPixels/2;
 		 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, height);
-		 params.rightMargin = (int) convertDpToPixel(5, getBaseContext());
-		 params.leftMargin = (int) convertDpToPixel(5, getBaseContext());
+		 params.rightMargin = (int) convertDpToPixel(5, activity);
+		 params.leftMargin = (int) convertDpToPixel(5, activity);
 		 graphView.setLayoutParams(params);
 		  
 		  graphView.setBackgroundColor(Color.WHITE);
@@ -217,17 +254,17 @@ public class ReportListAll extends ListActivity {
 	private void inflateList(){
 		getListView().setDivider(null);
 		queryDateIntervalPlace(convertStringDate(dayFrom+ " 00:00:00"), convertStringDate(dayTo+ " 23:59:59"), getResources().getString(R.string.spinner_all));
-		setListAdapter(new ReportListAdapter(this, transactions));
+		setListAdapter(new ReportListAdapter(activity, transactions));
 	}
 	
 	private void queryDateInterval(long start, long end){	
-		DatabaseHandler db = new DatabaseHandler(this);
+		DatabaseHandler db = new DatabaseHandler(activity);
 		transactions = db.getTransactionsDateInterval(start, end);
 		db.close();
 	}
 	
 	private void queryDateIntervalPlace(long start, long end, String place){	
-		DatabaseHandler db = new DatabaseHandler(this);
+		DatabaseHandler db = new DatabaseHandler(activity);
 		transactions = db.getTransactionsDateIntervalPlace(start, end, place, sortType, true);
 		db.close();
 	}
@@ -300,7 +337,7 @@ public class ReportListAll extends ListActivity {
 		
 		message += "\r\n"+ getResources().getString(R.string.str_tr_number) + ": " + transactions.size();
 		
-		new AlertDialog.Builder(this)
+		new AlertDialog.Builder(activity)
 	    .setMessage(message)
 	    .setPositiveButton(R.string.dialog_ok, new android.content.DialogInterface.OnClickListener() {                
 	        @Override
@@ -313,12 +350,12 @@ public class ReportListAll extends ListActivity {
 	
 	  private void doSort(){
 		  if(transactions.size()<2){
-			  Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_one_value), 
+			  Toast.makeText(activity, getResources().getString(R.string.toast_one_value), 
 					  Toast.LENGTH_LONG).show();
 			  return;
 		  }
 		  
-		  AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		  AlertDialog.Builder alert = new AlertDialog.Builder(activity);
 
 		  final CharSequence[] choiceList;
 		  CharSequence[] choiceListLocal = {getResources().getString(R.string.dialog_sort_by_date),
@@ -343,7 +380,7 @@ public class ReportListAll extends ListActivity {
 					sortType = sortItemIndex;
 					inflateList();
 				}else{
-					Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show(); 
+					Toast.makeText(activity, getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show(); 
 				}
 			}
 		});
