@@ -101,7 +101,8 @@ public class ReportTabs extends SherlockFragmentActivity{
         int month = c.get(Calendar.MONTH)+1;
         return c.get(Calendar.DAY_OF_MONTH) + "/"+month+"/" + c.get(Calendar.YEAR);
 	}
-	
+
+
 	/**
      * This is a helper class that implements the management of tabs and all
      * details of connecting a ViewPager with associated TabHost.  It relies on a

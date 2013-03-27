@@ -50,6 +50,8 @@
     <string name="str_month">Month</string>
     <string name="str_year">Year</string>
     <string name="str_period">Period</string>
+    <string name="str_from">from: </string>
+    <string name="str_to">to: </string>
     
     <string name="click_delete">Delete</string>
     <string name="click_rename">Rename</string>
@@ -87,6 +89,8 @@
 	<string name="dialog_csv_export">Export to File</string>
     <string name="dialog_csv_import">Import from File</string>
     <string name="dialog_edit_category">Edit category</string>
+    <string name="dialog_period_start">Period start</string>
+    <string name="dialog_period_end">Period end</string>
 	
 	<string name="progress_sms_scanning">Scanning SMS ...</string>
 	<string name="progress_csv_scanning">Scanning file ...</string>

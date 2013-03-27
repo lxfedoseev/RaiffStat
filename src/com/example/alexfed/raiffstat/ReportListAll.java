@@ -1,8 +1,10 @@
 package com.example.alexfed.raiffstat;
 
+import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,6 +15,7 @@ import java.util.Set;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -22,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -37,6 +41,7 @@ import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
 
+
 public class ReportListAll extends SherlockListFragment {
 
 
@@ -48,6 +53,8 @@ public class ReportListAll extends SherlockListFragment {
 	private int sortType;
 	private boolean bundleEmpty = true;
 	private FragmentActivity activity;
+	private DatePicker datePicker;
+	
 	
 	static final int SUMMARY_ID = Menu.FIRST;
     static final int SORT_ID = Menu.FIRST+1;
@@ -122,15 +129,64 @@ public class ReportListAll extends SherlockListFragment {
             	doDrawGraph();
     			return true;
             case PERIOD_ID:
-            	//TODO:
+            	showDatePickerDialog(true);
     			return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
 	}
 	
+    private void showDatePickerDialog(boolean isFrom) {
+    	final boolean localIsFrom = isFrom;
+    	AlertDialog.Builder alert = new AlertDialog.Builder(activity);
+    	datePicker = new DatePicker(activity);
+    	final Calendar c = Calendar.getInstance();
+    	if(isFrom)
+    		c.add(Calendar.DAY_OF_YEAR, -7);
+        datePicker.init(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), null);
+        
+    	int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+		if (currentapiVersion >= 11) {
+			 try {
+			    Method m = datePicker.getClass().getMethod("setCalendarViewShown", boolean.class);
+			    m.invoke(datePicker, false);
+			  }
+			  catch (Exception e) {} // eat exception in our case
+		}
+		
+		if(isFrom){
+			alert.setTitle(R.string.dialog_period_start);
+		}else{
+			alert.setTitle(R.string.dialog_period_end);
+		}
+		alert.setPositiveButton(R.string.dialog_ok, new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				int actualMonth = datePicker.getMonth() + 1;
+				if(localIsFrom){
+					dayFrom = datePicker.getDayOfMonth() + "/" + actualMonth + "/" + datePicker.getYear();
+					showDatePickerDialog(false);
+				}else{
+					dayTo = datePicker.getDayOfMonth() + "/" + actualMonth + "/" + datePicker.getYear();
+					inflateList();
+				}
+			}
+		});
+		alert.setNegativeButton(R.string.dialog_cancel, new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// Do nothing
+				
+			}
+		});
+    	alert.setView(datePicker);
+    	alert.show();
+    }
+    
 	private void doDrawGraph(){
-		getActivity();
+		//getActivity();
 		LinearLayout graphLayout = new LinearLayout(activity);
 		AlertDialog.Builder alert = new AlertDialog.Builder(activity);
 		  
@@ -397,6 +453,7 @@ public class ReportListAll extends SherlockListFragment {
 		  
 		alert.show();
 	  }
+	  
 
     private static class ReportListAdapter extends BaseAdapter {
     	private final String LOG = "ReportListAdapter";
