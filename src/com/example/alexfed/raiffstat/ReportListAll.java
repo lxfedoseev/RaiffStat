@@ -192,7 +192,7 @@ public class ReportListAll extends SherlockListFragment {
 		  
 		DatabaseHandler db = new DatabaseHandler(activity);
 		List<TransactionEntry> trs = db.getTransactionsForGraph(convertStringDate(dayFrom+ " 00:00:00"), 
-				convertStringDate(dayTo+ " 23:59:59"), getResources().getString(R.string.spinner_all), StaticValues.CURR_RUB);
+				convertStringDate(dayTo+ " 23:59:59"), StaticValues.CURR_RUB);
 		if(trs.size()<1){
 			  Toast.makeText(activity, getResources().getString(R.string.toast_no_values) + " " + StaticValues.CURR_RUB, 
 					  Toast.LENGTH_LONG).show();
@@ -313,19 +313,19 @@ public class ReportListAll extends SherlockListFragment {
 	
 	private void inflateList(){
 		getListView().setDivider(null);
-		queryDateIntervalPlace(convertStringDate(dayFrom+ " 00:00:00"), convertStringDate(dayTo+ " 23:59:59"), getResources().getString(R.string.spinner_all));
+		queryDateIntervalPlace(convertStringDate(dayFrom+ " 00:00:00"), convertStringDate(dayTo+ " 23:59:59"));
 		setListAdapter(new ReportListAdapter(activity, transactions));
 	}
 	
-	private void queryDateInterval(long start, long end){	
+	/*private void queryDateInterval(long start, long end){	
 		DatabaseHandler db = new DatabaseHandler(activity);
 		transactions = db.getTransactionsDateInterval(start, end);
 		db.close();
-	}
+	}*/
 	
-	private void queryDateIntervalPlace(long start, long end, String place){	
+	private void queryDateIntervalPlace(long start, long end){	
 		DatabaseHandler db = new DatabaseHandler(activity);
-		transactions = db.getTransactionsDateIntervalPlace(start, end, place, sortType, true);
+		transactions = db.getTransactionsDateInterval(start, end, sortType, true);
 		db.close();
 	}
 	

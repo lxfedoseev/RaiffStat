@@ -11,10 +11,8 @@ public class RaiffParser {
 	private String _amount_curr;
 	private double _remainder;
 	private String _remainder_curr;
-    private String _terminal;
+    private String _place;
     private String _card;
-    private String _place; 
-    private int _in_place;
     private int _type;
     private int _exp_category;
     
@@ -24,10 +22,8 @@ public class RaiffParser {
     	this._amount_curr = "unknown";
     	this._remainder = 0.0;
     	this._remainder_curr = "unknown";
-    	this._terminal = "unknown";
-    	this._card = "unknown";
     	this._place = "unknown";
-    	this._in_place = 0;
+    	this._card = "unknown";
     	this._type = StaticValues.TRANSACTION_TYPE_UNKNOWN;
     	this._exp_category = StaticValues.EXPENSE_CATEGORY_UNKNOWN;
     }
@@ -47,8 +43,7 @@ public class RaiffParser {
 	    			parseIncomeCardAndAmount(tokens[0]);
 	    			parseRemainder(tokens[1]);
 	    			this._type = StaticValues.TRANSACTION_TYPE_INCOME;
-	    			this._terminal = context.getResources().getString(R.string.str_earned);
-	    			this._place = this._terminal;
+	    			this._place = context.getResources().getString(R.string.str_earned);
 	    			return true;
     			}catch (Exception e) {
     				smthIsWrong = true;
@@ -64,13 +59,12 @@ public class RaiffParser {
     					if(this._amount<0){
     						this._type = StaticValues.TRANSACTION_TYPE_EXPENSE;
     						this._amount = Math.abs(this._amount);
-    						this._terminal = context.getResources().getString(R.string.str_spent);
+    						this._place = context.getResources().getString(R.string.str_spent);
     						
     					}else{
     						this._type = StaticValues.TRANSACTION_TYPE_INCOME;
-    						this._terminal = context.getResources().getString(R.string.str_earned);
+    						this._place = context.getResources().getString(R.string.str_earned);
     					}
-    					this._place = this._terminal;
     					return true;
     				}catch (Exception e) {  
 						return false;
@@ -91,7 +85,7 @@ public class RaiffParser {
 				try{
 					parseCard(tokens[0]);
 					parseAmount(tokens[2]);
-					parseTerminal(tokens[4]);
+					parsePlace(tokens[4]);
 					parseRemainder(tokens[5]);
 					this._type = StaticValues.TRANSACTION_TYPE_DENIAL;
 					return true;
@@ -102,7 +96,7 @@ public class RaiffParser {
 				try{
 					parseCard(tokens[0]);
 					parseAmount(tokens[1]);
-					parseTerminal(tokens[3]);
+					parsePlace(tokens[3]);
 					parseRemainder(tokens[4]);
 					this._type = StaticValues.TRANSACTION_TYPE_EXPENSE;
 					return true;
@@ -120,7 +114,7 @@ public class RaiffParser {
     	
     	String delims = "[,]+"; 
     	String[] tokens = line.split(delims);
-    	if(tokens.length<11){
+    	if(tokens.length<9){
     		return false;
     	}
     	else{
@@ -130,11 +124,9 @@ public class RaiffParser {
     			this._amount_curr = tokens[3].trim();
     			this._remainder = Double.parseDouble(tokens[4].trim());
     			this._remainder_curr = tokens[5].trim();
-    			this._terminal = tokens[6].trim();
+    			this._place = tokens[6].trim();
     			this._card = tokens[7].trim();
-    			this._place = tokens[8].trim();
-    			this._in_place = Integer.parseInt(tokens[9].trim());
-    			this._type = Integer.parseInt(tokens[10].trim());
+    			this._type = Integer.parseInt(tokens[8].trim());
     			this._exp_category = StaticValues.EXPENSE_CATEGORY_UNKNOWN;
     			
     			return true;
@@ -173,13 +165,11 @@ public class RaiffParser {
 		}
     }
     
-    private void parseTerminal(String str) throws Exception{
+    private void parsePlace(String str) throws Exception{
     	String delims = "[:]+"; 
 		String[] tokens = str.split(delims);
 		if(tokens.length>1){
-			this._terminal = tokens[1].trim().replace(StaticValues.DELIMITER, " ");//need to remove "," to support CSV
-			this._place = this._terminal;
-			this._in_place = 0;
+			this._place = tokens[1].trim().replace(StaticValues.DELIMITER, " ");//need to remove "," to support CSV
 		}else{
 			throw new Exception("tokens.length<=1");
 		}
@@ -291,20 +281,12 @@ public class RaiffParser {
     	return this._remainder_curr;
     }
     
-    public String getTerminal(){
-    	return this._terminal;
+    public String getPlace(){
+    	return this._place;
     }
     
     public String getCard(){
     	return this._card;
-    }
-    
-    public String getPlace(){
-    	return this._place;
-    }
-
-    public int getInPlace(){
-    	return this._in_place;
     }
     
     public int getType(){

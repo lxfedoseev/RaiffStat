@@ -50,9 +50,9 @@ public class SMSReceiver extends BroadcastReceiver {
         	parsedWell = prs.parseSmsBody(context, body.trim(), date); 
             
         if(parsedWell){
-        	myLog.LOGD(LOG, prs.getCard() + " & " +  prs.getTerminal() + " & " + 
+        	myLog.LOGD(LOG, prs.getCard() + " & " +  prs.getPlace() + " & " + 
         			 prs.getAmount() + " & " + prs.getAmountCurr() + " & " 
-        			 + prs.getRemainder() + " & " + prs.getRemainderCurr() + " & " + prs.getPlace() + " & " + prs.getInPlace() + " & " + dateString);
+        			 + prs.getRemainder() + " & " + prs.getRemainderCurr() + " & " + dateString);
             	
         	mergeTransactionToDB(context, prs);
         }
@@ -61,22 +61,9 @@ public class SMSReceiver extends BroadcastReceiver {
 	private void mergeTransactionToDB(Context context, RaiffParser prs){
 		DatabaseHandler db = new DatabaseHandler(context);
 		db.mergeTransaction(new TransactionEntry(prs.getDateTime(), prs.getAmount(), prs.getAmountCurr(),
-				prs.getRemainder(), prs.getRemainderCurr(), prs.getTerminal(), prs.getCard(), 
-				prs.getPlace(), prs.getInPlace(), prs.getType(), prs.getExpCategory()));
+				prs.getRemainder(), prs.getRemainderCurr(), prs.getPlace(), prs.getCard(), 
+				prs.getType(), prs.getExpCategory()));
 		db.close();
-		
-		/*List<TransactionEntry> transactions = db.getTransactionsTerminal(prs.getTerminal());
-		if(!transactions.isEmpty()){
-			db.addTransaction(new TransactionEntry(prs.getDateTime(), prs.getAmount(), prs.getAmountCurr(),
-					prs.getRemainder(), prs.getRemainderCurr(), prs.getTerminal(), prs.getCard(), 
-					transactions.get(0).getPlace(), transactions.get(0).getInPlace(), prs.getType(), 
-					transactions.get(0).getExpCategory()));
-		}else{
-			db.addTransaction(new TransactionEntry(prs.getDateTime(), prs.getAmount(), prs.getAmountCurr(),
-				prs.getRemainder(), prs.getRemainderCurr(), prs.getTerminal(), prs.getCard(), 
-				prs.getPlace(), prs.getInPlace(), prs.getType(), prs.getExpCategory()));  
-		}
-		db.close();*/
 	}
 
 }

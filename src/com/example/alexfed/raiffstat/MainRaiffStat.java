@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -25,6 +26,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -41,7 +44,6 @@ public class MainRaiffStat extends SherlockActivity{
 	private int impExpItemIndex = 0;
 	private String dirName = "RaiffStat";
 	private int itemIndex = 0;
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -83,7 +85,14 @@ public class MainRaiffStat extends SherlockActivity{
 			
 			@Override
 			public void onClick(View arg0) {
+				//Intent placesActivity = new Intent(getBaseContext(), PlacesList.class);
+    			//startActivity(placesActivity);
 				
+				/*Fragment newFragment = new PlacesList();
+				FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+				transaction.replace(R.id.fragment_container, newFragment);
+				transaction.addToBackStack(null);
+				transaction.commit();*/
 			}
 		});
 
@@ -224,10 +233,10 @@ public class MainRaiffStat extends SherlockActivity{
 	                	parsedWell = prs.parseSmsBody(getBaseContext(), strbody.trim(), longDate);
 	                    
 	                if(parsedWell){
-	                	myLog.LOGD(LOG, prs.getCard() + " & " +  prs.getPlace() + " & " + 
+	                	myLog.LOGD(LOG, prs.getCard() + " & " + 
 	                			prs.getAmount() + " & " + prs.getAmountCurr() + " & " 
-	                			+ prs.getRemainder() + " & " + prs.getRemainderCurr() + " & " + prs.getPlace() + " & " + 
-	                			prs.getInPlace() + " & " + prs.getType() + " & " + dateString);
+	                			+ prs.getRemainder() + " & " + prs.getRemainderCurr() + 
+	                			" & " + prs.getType() + " & " + dateString);
 	                    	
 	                	//addTransactionToDB(longDate, prs);
 	                	mergeTransactionToDB(prs);
@@ -272,8 +281,8 @@ public class MainRaiffStat extends SherlockActivity{
 	private void mergeTransactionToDB(RaiffParser prs){
 		DatabaseHandler db = new DatabaseHandler(this);
 		db.mergeTransaction(new TransactionEntry(prs.getDateTime(), prs.getAmount(), prs.getAmountCurr(),
-				prs.getRemainder(), prs.getRemainderCurr(), prs.getTerminal(), prs.getCard(), 
-				prs.getPlace(), prs.getInPlace(), prs.getType(), prs.getExpCategory()));
+				prs.getRemainder(), prs.getRemainderCurr(), prs.getPlace(), prs.getCard(), 
+				prs.getType(), prs.getExpCategory()));
 		db.close();
 	}
 	
@@ -309,10 +318,8 @@ public class MainRaiffStat extends SherlockActivity{
 				    		t.getAmountCurr() + StaticValues.DELIMITER +
 				    		t.getRemainder() + StaticValues.DELIMITER +
 				    		t.getRemainderCurr() + StaticValues.DELIMITER +
-				    		t.getTerminal() + StaticValues.DELIMITER +
-				    		t.getCard() + StaticValues.DELIMITER +
 				    		t.getPlace() + StaticValues.DELIMITER +
-				    		t.getInPlace() + StaticValues.DELIMITER + 
+				    		t.getCard() + StaticValues.DELIMITER +
 				    		t.getType() + "\r\n");
 	    			out.flush();
 	    		}
@@ -457,10 +464,10 @@ public class MainRaiffStat extends SherlockActivity{
                 if(prs.parseCSVLine(strLine.trim())){
                 	String dateString = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date(prs.getDateTime()));
                 	
-                	myLog.LOGD(LOG, prs.getCard() + " & " +  prs.getPlace() + " & " + 
+                	myLog.LOGD(LOG, prs.getCard() + " & " + 
                 			prs.getAmount() + " & " + prs.getAmountCurr() + " & " 
-                			+ prs.getRemainder() + " & " + prs.getRemainderCurr() + " & " + prs.getPlace() + " & " + 
-                			prs.getInPlace() + " & " + prs.getType() + " & " + dateString);
+                			+ prs.getRemainder() + " & " + prs.getRemainderCurr() + " & " + prs.getPlace() +  
+                			" & " + prs.getType() + " & " + dateString);
                     	
                 	mergeTransactionToDB(prs);
                 }else{

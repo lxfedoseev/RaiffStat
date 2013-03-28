@@ -1,181 +1,181 @@
 package com.example.alexfed.raiffstat;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
-public class PlacesList extends ListActivity {
+public class PlacesList extends SherlockListFragment {
+
 
 	private final String LOG = "PlacesList";
-	private List<String> places;
-	private final int CTX_MENU_ITEM_DELETE = 0; 
-	private final int CTX_MENU_ITEM_RENAME = 1;
-	private final int CTX_MENU_ITEM_EDIT = 2;
-
-	private ProgressDialog progressBar;
+	private List<Model> modelList;
+	private int itemIndex = 0;
 	
+	private ProgressDialog progressBar;
+	private FragmentActivity activity;
+	
+	static final int MAKE_ID = Menu.FIRST;
+    static final int ADD_ID = Menu.FIRST+1;
+    
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_raiff_report);
-		
-		//inflateList();
-		setClickListeners();
+		activity = getActivity();
+	}
+	
+	@Override public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        // We have a menu item to show in action bar.
+        setHasOptionsMenu(true);
+        inflateList();
+	}
+	
+	/* (non-Javadoc)
+	 * @see android.support.v4.app.ListFragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
+	 */
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.activity_raiff_report, null);
+		return view;  
 	}
 	
 	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		inflateList();
-	}
+	public void onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu,
+			MenuInflater inflater) {
 
-	private void inflateList(){
-		getListView().setDivider(null);
-		queryDistinctPlaces();
-		setListAdapter(new PlacesListAdapter(this, places));
+		MenuItem makeItem = menu.add(Menu.NONE, MAKE_ID, 0, R.string.menu_add);
+		makeItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+	    
+		MenuItem addItem = menu.add(Menu.NONE, ADD_ID, 0, R.string.menu_add);
+		addItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 	}
-
-	private void queryDistinctPlaces(){	
-		DatabaseHandler db = new DatabaseHandler(this);
-		places = db.getDistinctPlacesForPlaceList();
-		db.close();
-	}
-	
-	
-	void setClickListeners(){
-		ListView lv = getListView();
-	     lv.setOnItemClickListener(
-	    		 new AdapterView.OnItemClickListener() {
-					@Override
-					public void onItemClick(AdapterView<?> arg0, View arg1,
-							int pos, long id) {
-						onListItemClick(arg1,pos,id); 
-					} 
-		});
-	}
-	
-	protected void onListItemClick(View v, int pos, long id) { 
-		final int localPos = pos;
-		final String[] items = new String [] {
-        		getResources().getString(R.string.click_delete),
-        		getResources().getString(R.string.click_rename),
-        		getResources().getString(R.string.click_edit)
-        };
-        
-        ArrayAdapter<String> stringAdapter  = new ArrayAdapter<String> (this, android.R.layout.select_dialog_item,items);
-        AlertDialog.Builder builder     = new AlertDialog.Builder(this);
-        
-        builder.setTitle(places.get(localPos));
-        builder.setAdapter( stringAdapter, new DialogInterface.OnClickListener() {
-            public void onClick( DialogInterface dialog, int item ) {
-            	
-            	if(item == CTX_MENU_ITEM_DELETE){
-            		//Delete the place here
-            		deletePlaceWithProgressBar(places.get(localPos));
-            	}else if(item == CTX_MENU_ITEM_RENAME){
-            		//Handle item rename here
-            		renamePlace(places.get(localPos));
-            	}else if(item == CTX_MENU_ITEM_EDIT){
-            		Intent myIntent;
-			    	myIntent = new Intent(PlacesList.this, PlaceDetailedList.class);
-			    	myIntent.putExtra("place", places.get(localPos));
-			    	PlacesList.this.startActivity(myIntent);
-            	}else{
-            		//Should not enter here
-            	}
-            }
-        } );
- 
-        final AlertDialog dialog = builder.create();
-		dialog.show();
-	}
-	
-	private void deletePlaceWithProgressBar(String place){
-		final String localPlace = place;
-		progressBar = new ProgressDialog(this);
-		progressBar.setCancelable(false);
-		progressBar.setMessage(getResources().getString(R.string.progress_working));
-		progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		progressBar.setProgress(0);
-		progressBar.show();
+	  
+		@Override
+		public boolean onOptionsItemSelected(MenuItem item) {
+			boolean hasSelection = false;
+			switch (item.getItemId()) {
+	    		case MAKE_ID:
+	    			for (Model m: modelList){
+	    		    	if(m.isSelected()){
+	    		    		hasSelection = true;
+	    		    		break;
+	    		    	}
+	    		    }
+	    			if(hasSelection){
+	    				makeNewPlace();
+	    			}else{
+	    				Toast.makeText(activity, getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show();
+	    			}
+	    			return true;
+	    		case ADD_ID:
+	    			DatabaseHandler db = new DatabaseHandler(activity);
+	    			if(db.getDistinctPlacesForPlaceList().size()<1){
+	    				Toast.makeText(activity, getResources().getString(R.string.toast_no_place), Toast.LENGTH_LONG).show();
+	    				db.close();
+	    				return true;
+	    			}
+	    			for (Model m: modelList){
+	    		    	if(m.isSelected()){
+	    		    		hasSelection = true;
+	    		    		break;
+	    		    	}
+	    		    }
+	    			if(hasSelection){
+	    				addToPlace();
+	    			}else{
+	    				Toast.makeText(activity, getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show();
+	    			}
+	    			db.close();
+	    			return true;
+	    		default:
+	    			return super.onOptionsItemSelected(item);
+			}
+	   
+	  }
 		
-		new Thread(new Runnable() {
-			public void run() {
-				DatabaseHandler db = new DatabaseHandler(getBaseContext());
-				List<TransactionEntry> trs = db.getTransactionsPlaceFixed(localPlace);
-				for (TransactionEntry t:trs){
-					t.setPlace(t.getTerminal());
-					t.setInPlace(0);
-					t.setExpCategory(StaticValues.EXPENSE_CATEGORY_UNKNOWN);
-					db.updateTransaction(t);
-				}
-			    db.close();
-			    progressBar.dismiss();
-				PlacesList.this.runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						inflateList();
-					}
-				});
-					  
+	  private void inflateList(){
+		  getListView().setDivider(null);
+		  modelList = getModel();
+		  ArrayAdapter<Model> adapter = new InteractiveArrayAdapter(activity, modelList);
+		  setListAdapter(adapter);
+	  }
+
+	  private List<Model> getModel() {
+		List<Model> list = new ArrayList<Model>();
+	    List <String> distTerminals = new ArrayList<String>();
+	    distTerminals = queryUnplacedDistinctTerminals();
+	    
+	    for (String s: distTerminals){
+	    	list.add(get(s));
+	    }
+	    return list;
+	  }
+
+	  private Model get(String s) {
+	    return new Model(s);
+	  }
+	  
+	  private List<String> queryUnplacedDistinctTerminals(){	
+			DatabaseHandler db = new DatabaseHandler(activity);
+			//TODO:
+			//List<String> ls = db.getUnplacedDistinctTerminals();
+			List<String> ls = new ArrayList<String>();
+			db.close();
+			return ls;
+			
 		}
-		}).start();
-		
-	}
-	
-	  private void renamePlace(String place){
-		  AlertDialog.Builder alert = new AlertDialog.Builder(this);
+	  
+	  private void makeNewPlace(){
+		  AlertDialog.Builder alert = new AlertDialog.Builder(activity);
 
-		  alert.setTitle(R.string.long_click_place_rename);
-		  alert.setMessage("Input new place name");
-		  alert.setMessage(R.string.ctx_new_place_name);
-		  final String localPlace = place;
+		  alert.setTitle(getResources().getString(R.string.str_place));
+		  alert.setMessage(getResources().getString(R.string.ctx_place_name));
+
 		  // Set an EditText view to get user input 
-		  final EditText input = new EditText(this);
-		  input.setSingleLine();
+		  final EditText input = new EditText(activity);
 		  alert.setView(input);
+		  input.setSingleLine();
+		  //final Context context = getBaseContext();
 		  alert.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
 		  public void onClick(DialogInterface dialog, int whichButton) {
 		    String value = input.getText().toString();
 		    value = value.trim();
 		    if(!value.isEmpty()){
 		    	if(value.equalsIgnoreCase(getResources().getString(R.string.spinner_all))){
-		    		//Toast.makeText(getApplicationContext(), "Place " + value + " is not allowed", Toast.LENGTH_LONG).show();
-		    		Toast.makeText(getApplicationContext(), getResources().getString(R.string.str_place) + " " + value + " " + 
-		    				getResources().getString(R.string.str_forbidden), Toast.LENGTH_LONG).show();
+		    		Toast.makeText(activity, getResources().getString(R.string.str_place) + " " + 
+		    					value + " " + getResources().getString(R.string.str_forbidden), Toast.LENGTH_LONG).show();
 		    		return;
 		    	}
 		    	if(value.contains(",")){
-		    		Toast.makeText(getApplicationContext(), getResources().getString(R.string.str_comma_usage) + " " + 
+		    		Toast.makeText(activity, activity.getResources().getString(R.string.str_comma_usage) + " " + 
 	    					getResources().getString(R.string.str_forbidden), Toast.LENGTH_LONG).show();
 		    		return;
 		    	}
-		    	renamePlaceWithProgressBar(localPlace, value);
-			}else{
-		    	Toast.makeText(getApplicationContext(), getResources().getString(R.string.str_forbidden_empty_place), Toast.LENGTH_LONG).show(); 
+		    	
+		    	makeNewPlaceWithProgressBar(value);
+		    }else{
+		    	Toast.makeText(activity, getResources().getString(R.string.str_forbidden_empty_place), Toast.LENGTH_LONG).show(); 
 		    }
 		  }
 		  });
@@ -188,29 +188,35 @@ public class PlacesList extends ListActivity {
 
 		  alert.show();
 	  }
-
-	  private void renamePlaceWithProgressBar(String placeName, String newPlaceName){
+	  
+	  private void makeNewPlaceWithProgressBar(String placeName){
 		  final String localPlaceName = placeName;
-		  final String localNewPlaceName = newPlaceName;
-		  progressBar = new ProgressDialog(this);
+			progressBar = new ProgressDialog(activity);
 			progressBar.setCancelable(false);
 			progressBar.setMessage(getResources().getString(R.string.progress_working));
 			progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			progressBar.setProgress(0);
 			progressBar.show();
 			
-		  new Thread(new Runnable() {
+			new Thread(new Runnable() {
 				public void run() {
-					DatabaseHandler db = new DatabaseHandler(getBaseContext());
-				    List<TransactionEntry> transactions = db.getTransactionsPlaceFixed(localPlaceName);
-				    for(TransactionEntry t : transactions){
-				    	t.setPlace(localNewPlaceName);
-				    	t.setInPlace(1);
-				    	db.updateTransaction(t);
+					DatabaseHandler db = new DatabaseHandler(activity);
+				    for (Model m: modelList){
+				    	if(m.isSelected()){
+				    		//TODO:
+				    		//List<TransactionEntry> transactions = db.getTransactionsTerminal(m.getName());
+				    		List<TransactionEntry> transactions = new ArrayList<TransactionEntry>();
+				    		for(TransactionEntry t : transactions){
+				    			//t.setPlace(localPlaceName);
+				    			//t.setInPlace(1);
+				    			t.setExpCategory(StaticValues.EXPENSE_CATEGORY_UNKNOWN);
+				    			db.updateTransaction(t);
+				    		}
+				    	}
 				    }
 				    db.close();
 				    progressBar.dismiss();
-					PlacesList.this.runOnUiThread(new Runnable() {
+				    activity.runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
 							inflateList();
@@ -220,85 +226,87 @@ public class PlacesList extends ListActivity {
 			}
 			}).start();
 	  }
+
+	  private void addToPlace(){
+		  AlertDialog.Builder alert = new AlertDialog.Builder(activity);
+		  DatabaseHandler db = new DatabaseHandler(activity);
+		  List<String> placeList = db.getDistinctPlacesForPlaceList();
+		  db.close();
+		  
+		  final CharSequence[] choiceList = placeList.toArray(new CharSequence[placeList.size()]);
+		  alert.setTitle(getResources().getString(R.string.str_place));		  
+		  itemIndex = -1;
+		  alert.setSingleChoiceItems(choiceList, -1, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				itemIndex = which;
+			}
+		});
+		alert.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				if(itemIndex > -1){
+					addToPlaceWithProgressBar(choiceList[itemIndex]);
+				}else{
+					Toast.makeText(activity, getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show(); 
+				}
+			}
+		});
+		alert.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+			}
+		});
+		  
+		alert.show();
+	  }
 	  
-    private static class PlacesListAdapter extends BaseAdapter {
-    	private LayoutInflater mInflater;
-        private List<String> places;
-        
-        public PlacesListAdapter(Context context, List<String> places) {
-            // Cache the LayoutInflate to avoid asking for a new one each time.
-            mInflater = LayoutInflater.from(context);
-            this.places = places;
-        }
+	  private void addToPlaceWithProgressBar(CharSequence choice){
+		  final CharSequence localChoice = choice;
+		  
+		  progressBar = new ProgressDialog(activity);
+			progressBar.setCancelable(false);
+			progressBar.setMessage(getResources().getString(R.string.progress_working));
+			progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			progressBar.setProgress(0);
+			progressBar.show();
+			
+			new Thread(new Runnable() {
+				public void run() {
+					DatabaseHandler db = new DatabaseHandler(activity);
+					for (Model m: modelList){
+				    	if(m.isSelected()){
+				    		//TODO: 
+				    		//List<TransactionEntry> transactions = db.getTransactionsTerminal(m.getName());
+				    		//List<TransactionEntry> trForPlace = db.getTransactionsPlaceFixed(localChoice.toString());
+				    		List<TransactionEntry> transactions = new ArrayList<TransactionEntry>();
+				    		List<TransactionEntry> trForPlace = new ArrayList<TransactionEntry>();
+				    		for(TransactionEntry t : transactions){
+				    			//t.setPlace(localChoice.toString());
+				    			//t.setInPlace(1);
+				    			t.setExpCategory(trForPlace.get(0).getExpCategory());
+				    			db.updateTransaction(t);
+				    		}
+				    	}
+				    }
+				    db.close();
+				    progressBar.dismiss();
+				    activity.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							inflateList();
+						}
+					});
+						  
+			}
+			}).start();
+		  
+	  }
 
-        /**
-         * The number of items in the list is determined by the number of speeches
-         * in our array.
-         *
-         * @see android.widget.ListAdapter#getCount()
-         */
-        public int getCount() {
-            return this.places.size();
-        }
-
-        /**
-         * Since the data comes from an array, just returning the index is
-         * sufficent to get at the data. If we were using a more complex data
-         * structure, we would return whatever object represents one row in the
-         * list.
-         *
-         * @see android.widget.ListAdapter#getItem(int)
-         */
-        public Object getItem(int position) {
-            return places.get(position);
-        }
-
-        /**
-         * Use the array index as a unique id.
-         *
-         * @see android.widget.ListAdapter#getItemId(int)
-         */
-        public long getItemId(int position) {
-            return position;
-        }
-
-        /**
-         * Make a view to hold each row.
-         *
-         * @see android.widget.ListAdapter#getView(int, android.view.View,
-         *      android.view.ViewGroup)
-         */
-        public View getView(int position, View convertView, ViewGroup parent) {
-            // A ViewHolder keeps references to children views to avoid unneccessary calls
-            // to findViewById() on each row.
-            ViewHolder holder;
-
-            // When convertView is not null, we can reuse it directly, there is no need
-            // to reinflate it. We only inflate a new View when the convertView supplied
-            // by ListView is null.
-            if (convertView == null) {
-            	convertView = mInflater.inflate(R.layout.row_place, null); 
-                // Creates a ViewHolder and store references to the two children views
-                // we want to bind data to.
-                holder = new ViewHolder();
-                holder.place = (TextView) convertView.findViewById(R.id.place);
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-            // Bind the data efficiently with the holder.
-            setListEntry(holder, this.places.get(position));
-           	    	  	    	
-	    	return convertView;
-        }
-        
-        static class ViewHolder {
-            TextView place;
-        }
-        
-        private void setListEntry(ViewHolder holder, String place){
-        		holder.place.setText(place);
-        }
-    }
 }
-	  
