@@ -17,7 +17,6 @@ import java.util.regex.Pattern;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -26,16 +25,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.app.SherlockListFragment;
 
-public class MainRaiffStat extends SherlockActivity{
+public class MainRaiffStat extends SherlockFragmentActivity {
 	
 	private final String LOG = "MainRaiffStat";
 	private ProgressDialog progressBar;
@@ -88,11 +87,15 @@ public class MainRaiffStat extends SherlockActivity{
 				//Intent placesActivity = new Intent(getBaseContext(), PlacesList.class);
     			//startActivity(placesActivity);
 				
-				/*Fragment newFragment = new PlacesList();
-				FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-				transaction.replace(R.id.fragment_container, newFragment);
+				/*SherlockListFragment newFragment = new PlacesList();
+				
+				FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+				//transaction.remove(this);
+				transaction.add(newFragment, "PlacesList");
+				//transaction.replace(R.id.fragment_container, newFragment);
+			
 				transaction.addToBackStack(null);
-				transaction.commit();*/
+				transaction.commit(); */
 			}
 		});
 

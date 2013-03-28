@@ -64,7 +64,7 @@ public class PlacesList extends SherlockListFragment {
 	public void onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu,
 			MenuInflater inflater) {
 
-		MenuItem makeItem = menu.add(Menu.NONE, MAKE_ID, 0, R.string.menu_add);
+		MenuItem makeItem = menu.add(Menu.NONE, MAKE_ID, 0, R.string.menu_make_place);
 		makeItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 	    
 		MenuItem addItem = menu.add(Menu.NONE, ADD_ID, 0, R.string.menu_add);
