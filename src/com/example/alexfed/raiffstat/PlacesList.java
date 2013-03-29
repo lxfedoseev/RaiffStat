@@ -5,22 +5,18 @@ import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-public class PlacesList extends SherlockListFragment {
+public class PlacesList extends SherlockListActivity{
 
 
 	private final String LOG = "PlacesList";
@@ -28,7 +24,7 @@ public class PlacesList extends SherlockListFragment {
 	private int itemIndex = 0;
 	
 	private ProgressDialog progressBar;
-	private FragmentActivity activity;
+	private Context context;
 	
 	static final int MAKE_ID = Menu.FIRST;
     static final int ADD_ID = Menu.FIRST+1;
@@ -40,36 +36,28 @@ public class PlacesList extends SherlockListFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		activity = getActivity();
+		context = getBaseContext();
 	}
 	
-	@Override public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        // We have a menu item to show in action bar.
-        setHasOptionsMenu(true);
-        inflateList();
+	  @Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		inflateList();
 	}
-	
-	/* (non-Javadoc)
-	 * @see android.support.v4.app.ListFragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
-	 */
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.activity_raiff_report, null);
-		return view;  
-	}
-	
-	@Override
-	public void onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu,
-			MenuInflater inflater) {
 
-		MenuItem makeItem = menu.add(Menu.NONE, MAKE_ID, 0, R.string.menu_make_place);
-		makeItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-	    
-		MenuItem addItem = menu.add(Menu.NONE, ADD_ID, 0, R.string.menu_add);
-		addItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-	}
+	@Override
+		public boolean onCreateOptionsMenu(Menu menu) {
+			// TODO Auto-generated method stub
+		  MenuItem makeItem = menu.add(Menu.NONE, MAKE_ID, 0, R.string.menu_make_place);
+		  makeItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		  
+		  MenuItem addItem = menu.add(Menu.NONE, ADD_ID, 0, R.string.menu_add);
+		  addItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		  return true;
+		  
+			//return super.onCreateOptionsMenu(menu);
+		}
 	  
 		@Override
 		public boolean onOptionsItemSelected(MenuItem item) {
@@ -85,13 +73,13 @@ public class PlacesList extends SherlockListFragment {
 	    			if(hasSelection){
 	    				makeNewPlace();
 	    			}else{
-	    				Toast.makeText(activity, getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show();
+	    				Toast.makeText(context, getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show();
 	    			}
 	    			return true;
 	    		case ADD_ID:
-	    			DatabaseHandler db = new DatabaseHandler(activity);
+	    			DatabaseHandler db = new DatabaseHandler(context);
 	    			if(db.getDistinctPlacesForPlaceList().size()<1){
-	    				Toast.makeText(activity, getResources().getString(R.string.toast_no_place), Toast.LENGTH_LONG).show();
+	    				Toast.makeText(context, getResources().getString(R.string.toast_no_place), Toast.LENGTH_LONG).show();
 	    				db.close();
 	    				return true;
 	    			}
@@ -104,7 +92,7 @@ public class PlacesList extends SherlockListFragment {
 	    			if(hasSelection){
 	    				addToPlace();
 	    			}else{
-	    				Toast.makeText(activity, getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show();
+	    				Toast.makeText(context, getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show();
 	    			}
 	    			db.close();
 	    			return true;
@@ -113,11 +101,11 @@ public class PlacesList extends SherlockListFragment {
 			}
 	   
 	  }
-		
-	  private void inflateList(){
+
+	private void inflateList(){
 		  getListView().setDivider(null);
 		  modelList = getModel();
-		  ArrayAdapter<Model> adapter = new InteractiveArrayAdapter(activity, modelList);
+		  ArrayAdapter<Model> adapter = new InteractiveArrayAdapter(this, modelList);
 		  setListAdapter(adapter);
 	  }
 
@@ -137,7 +125,7 @@ public class PlacesList extends SherlockListFragment {
 	  }
 	  
 	  private List<String> queryUnplacedDistinctTerminals(){	
-			DatabaseHandler db = new DatabaseHandler(activity);
+			DatabaseHandler db = new DatabaseHandler(context);
 			//TODO:
 			//List<String> ls = db.getUnplacedDistinctTerminals();
 			List<String> ls = new ArrayList<String>();
@@ -147,13 +135,13 @@ public class PlacesList extends SherlockListFragment {
 		}
 	  
 	  private void makeNewPlace(){
-		  AlertDialog.Builder alert = new AlertDialog.Builder(activity);
+		  AlertDialog.Builder alert = new AlertDialog.Builder(context);
 
 		  alert.setTitle(getResources().getString(R.string.str_place));
 		  alert.setMessage(getResources().getString(R.string.ctx_place_name));
 
 		  // Set an EditText view to get user input 
-		  final EditText input = new EditText(activity);
+		  final EditText input = new EditText(context);
 		  alert.setView(input);
 		  input.setSingleLine();
 		  //final Context context = getBaseContext();
@@ -163,19 +151,19 @@ public class PlacesList extends SherlockListFragment {
 		    value = value.trim();
 		    if(!value.isEmpty()){
 		    	if(value.equalsIgnoreCase(getResources().getString(R.string.spinner_all))){
-		    		Toast.makeText(activity, getResources().getString(R.string.str_place) + " " + 
+		    		Toast.makeText(context, getResources().getString(R.string.str_place) + " " + 
 		    					value + " " + getResources().getString(R.string.str_forbidden), Toast.LENGTH_LONG).show();
 		    		return;
 		    	}
 		    	if(value.contains(",")){
-		    		Toast.makeText(activity, activity.getResources().getString(R.string.str_comma_usage) + " " + 
+		    		Toast.makeText(context, getResources().getString(R.string.str_comma_usage) + " " + 
 	    					getResources().getString(R.string.str_forbidden), Toast.LENGTH_LONG).show();
 		    		return;
 		    	}
 		    	
 		    	makeNewPlaceWithProgressBar(value);
 		    }else{
-		    	Toast.makeText(activity, getResources().getString(R.string.str_forbidden_empty_place), Toast.LENGTH_LONG).show(); 
+		    	Toast.makeText(context, getResources().getString(R.string.str_forbidden_empty_place), Toast.LENGTH_LONG).show(); 
 		    }
 		  }
 		  });
@@ -191,7 +179,7 @@ public class PlacesList extends SherlockListFragment {
 	  
 	  private void makeNewPlaceWithProgressBar(String placeName){
 		  final String localPlaceName = placeName;
-			progressBar = new ProgressDialog(activity);
+			progressBar = new ProgressDialog(context);
 			progressBar.setCancelable(false);
 			progressBar.setMessage(getResources().getString(R.string.progress_working));
 			progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -200,7 +188,7 @@ public class PlacesList extends SherlockListFragment {
 			
 			new Thread(new Runnable() {
 				public void run() {
-					DatabaseHandler db = new DatabaseHandler(activity);
+					DatabaseHandler db = new DatabaseHandler(context);
 				    for (Model m: modelList){
 				    	if(m.isSelected()){
 				    		//TODO:
@@ -216,7 +204,7 @@ public class PlacesList extends SherlockListFragment {
 				    }
 				    db.close();
 				    progressBar.dismiss();
-				    activity.runOnUiThread(new Runnable() {
+				    PlacesList.this.runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
 							inflateList();
@@ -228,8 +216,8 @@ public class PlacesList extends SherlockListFragment {
 	  }
 
 	  private void addToPlace(){
-		  AlertDialog.Builder alert = new AlertDialog.Builder(activity);
-		  DatabaseHandler db = new DatabaseHandler(activity);
+		  AlertDialog.Builder alert = new AlertDialog.Builder(context);
+		  DatabaseHandler db = new DatabaseHandler(context);
 		  List<String> placeList = db.getDistinctPlacesForPlaceList();
 		  db.close();
 		  
@@ -252,7 +240,7 @@ public class PlacesList extends SherlockListFragment {
 				if(itemIndex > -1){
 					addToPlaceWithProgressBar(choiceList[itemIndex]);
 				}else{
-					Toast.makeText(activity, getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show(); 
+					Toast.makeText(context, getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show(); 
 				}
 			}
 		});
@@ -270,7 +258,7 @@ public class PlacesList extends SherlockListFragment {
 	  private void addToPlaceWithProgressBar(CharSequence choice){
 		  final CharSequence localChoice = choice;
 		  
-		  progressBar = new ProgressDialog(activity);
+		  progressBar = new ProgressDialog(context);
 			progressBar.setCancelable(false);
 			progressBar.setMessage(getResources().getString(R.string.progress_working));
 			progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -279,7 +267,7 @@ public class PlacesList extends SherlockListFragment {
 			
 			new Thread(new Runnable() {
 				public void run() {
-					DatabaseHandler db = new DatabaseHandler(activity);
+					DatabaseHandler db = new DatabaseHandler(context);
 					for (Model m: modelList){
 				    	if(m.isSelected()){
 				    		//TODO: 
@@ -297,7 +285,7 @@ public class PlacesList extends SherlockListFragment {
 				    }
 				    db.close();
 				    progressBar.dismiss();
-				    activity.runOnUiThread(new Runnable() {
+				    PlacesList.this.runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
 							inflateList();
