@@ -59,8 +59,8 @@
 	<string name="click_ctx_dialog_title">Контекстное меню</string>
 	<string name="click_edit_name">Изменить название</string>
 	<string name="click_edit_color">Изменить цвет</string>
-	<string name="click_assign_category">Назначить категорию</string>
-	<string name="click_remove_category">Убрать категорию</string>
+	<string name="click_assign_category">Назначить</string>
+	<string name="click_remove_category">Убрать</string>
 	
 	<string name="toast_nothing_selected">Ничего не выбрано</string>
 	<string name="toast_db_empty">База пуста</string>

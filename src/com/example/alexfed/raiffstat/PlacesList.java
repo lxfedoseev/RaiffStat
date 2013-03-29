@@ -3,13 +3,14 @@ package com.example.alexfed.raiffstat;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockListActivity;
@@ -26,8 +27,8 @@ public class PlacesList extends SherlockListActivity{
 	private ProgressDialog progressBar;
 	private Context context;
 	
-	static final int MAKE_ID = Menu.FIRST;
-    static final int ADD_ID = Menu.FIRST+1;
+	static final int ASSIGN_ID = Menu.FIRST;
+    static final int REMOVE_ID = Menu.FIRST+1;
     
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -36,6 +37,7 @@ public class PlacesList extends SherlockListActivity{
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_raiff_report);
 		context = getBaseContext();
 	}
 	
@@ -48,53 +50,45 @@ public class PlacesList extends SherlockListActivity{
 
 	@Override
 		public boolean onCreateOptionsMenu(Menu menu) {
-			// TODO Auto-generated method stub
-		  MenuItem makeItem = menu.add(Menu.NONE, MAKE_ID, 0, R.string.menu_make_place);
-		  makeItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		  MenuItem assignItem = menu.add(Menu.NONE, ASSIGN_ID, 0, R.string.click_assign_category);
+		  assignItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 		  
-		  MenuItem addItem = menu.add(Menu.NONE, ADD_ID, 0, R.string.menu_add);
-		  addItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		  MenuItem removeItem = menu.add(Menu.NONE, REMOVE_ID, 0, R.string.click_remove_category);
+		  removeItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 		  return true;
-		  
-			//return super.onCreateOptionsMenu(menu);
 		}
 	  
 		@Override
 		public boolean onOptionsItemSelected(MenuItem item) {
 			boolean hasSelection = false;
+			for (Model m: modelList){
+		    	if(m.isSelected()){
+		    		hasSelection = true;
+		    		break;
+		    	}
+		    }
 			switch (item.getItemId()) {
-	    		case MAKE_ID:
-	    			for (Model m: modelList){
-	    		    	if(m.isSelected()){
-	    		    		hasSelection = true;
-	    		    		break;
-	    		    	}
-	    		    }
+	    		case ASSIGN_ID:
 	    			if(hasSelection){
-	    				makeNewPlace();
+	    				List<String> places = new ArrayList<String>();
+	    				for (Model m: modelList){
+	    			    	if(m.isSelected()){
+	    			    		places.add(m.getPlace());
+	    			    	}
+	    			    }
+	    				Intent categoriesActivity = new Intent(getBaseContext(), CategoryList.class);
+	    				categoriesActivity.putStringArrayListExtra("places", (ArrayList<String>) places);
+	        			startActivity(categoriesActivity);
 	    			}else{
 	    				Toast.makeText(context, getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show();
 	    			}
 	    			return true;
-	    		case ADD_ID:
-	    			DatabaseHandler db = new DatabaseHandler(context);
-	    			if(db.getDistinctPlacesForPlaceList().size()<1){
-	    				Toast.makeText(context, getResources().getString(R.string.toast_no_place), Toast.LENGTH_LONG).show();
-	    				db.close();
-	    				return true;
-	    			}
-	    			for (Model m: modelList){
-	    		    	if(m.isSelected()){
-	    		    		hasSelection = true;
-	    		    		break;
-	    		    	}
-	    		    }
+	    		case REMOVE_ID:
 	    			if(hasSelection){
-	    				addToPlace();
+	    				removeCategoryWithProgressBar();
 	    			}else{
 	    				Toast.makeText(context, getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show();
 	    			}
-	    			db.close();
 	    			return true;
 	    		default:
 	    			return super.onOptionsItemSelected(item);
@@ -110,93 +104,27 @@ public class PlacesList extends SherlockListActivity{
 	  }
 
 	  private List<Model> getModel() {
-		List<Model> list = new ArrayList<Model>();
-	    List <String> distTerminals = new ArrayList<String>();
-	    distTerminals = queryUnplacedDistinctTerminals();
-	    
-	    for (String s: distTerminals){
-	    	list.add(get(s));
-	    }
-	    return list;
-	  }
-
-	  private Model get(String s) {
-	    return new Model(s);
+		DatabaseHandler db = new DatabaseHandler(context);
+		List<Model> list = db.getPlacesWithCategories();
+		db.close();
+		return list;
 	  }
 	  
-	  private List<String> queryUnplacedDistinctTerminals(){	
-			DatabaseHandler db = new DatabaseHandler(context);
-			//TODO:
-			//List<String> ls = db.getUnplacedDistinctTerminals();
-			List<String> ls = new ArrayList<String>();
-			db.close();
-			return ls;
-			
-		}
-	  
-	  private void makeNewPlace(){
-		  AlertDialog.Builder alert = new AlertDialog.Builder(context);
-
-		  alert.setTitle(getResources().getString(R.string.str_place));
-		  alert.setMessage(getResources().getString(R.string.ctx_place_name));
-
-		  // Set an EditText view to get user input 
-		  final EditText input = new EditText(context);
-		  alert.setView(input);
-		  input.setSingleLine();
-		  //final Context context = getBaseContext();
-		  alert.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
-		  public void onClick(DialogInterface dialog, int whichButton) {
-		    String value = input.getText().toString();
-		    value = value.trim();
-		    if(!value.isEmpty()){
-		    	if(value.equalsIgnoreCase(getResources().getString(R.string.spinner_all))){
-		    		Toast.makeText(context, getResources().getString(R.string.str_place) + " " + 
-		    					value + " " + getResources().getString(R.string.str_forbidden), Toast.LENGTH_LONG).show();
-		    		return;
-		    	}
-		    	if(value.contains(",")){
-		    		Toast.makeText(context, getResources().getString(R.string.str_comma_usage) + " " + 
-	    					getResources().getString(R.string.str_forbidden), Toast.LENGTH_LONG).show();
-		    		return;
-		    	}
-		    	
-		    	makeNewPlaceWithProgressBar(value);
-		    }else{
-		    	Toast.makeText(context, getResources().getString(R.string.str_forbidden_empty_place), Toast.LENGTH_LONG).show(); 
-		    }
-		  }
-		  });
-
-		  alert.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
-		    public void onClick(DialogInterface dialog, int whichButton) {
-		      // Canceled.
-		    }
-		  });
-
-		  alert.show();
-	  }
-	  
-	  private void makeNewPlaceWithProgressBar(String placeName){
-		  final String localPlaceName = placeName;
-			progressBar = new ProgressDialog(context);
-			progressBar.setCancelable(false);
-			progressBar.setMessage(getResources().getString(R.string.progress_working));
-			progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			progressBar.setProgress(0);
-			progressBar.show();
-			
-			new Thread(new Runnable() {
+	  private void removeCategoryWithProgressBar(){
+		  progressBar = new ProgressDialog(this);
+		  progressBar.setCancelable(false);
+		  progressBar.setMessage(getResources().getString(R.string.progress_working));
+		  progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		  progressBar.setProgress(0);
+		  progressBar.show();
+		  
+		  new Thread(new Runnable() {
 				public void run() {
 					DatabaseHandler db = new DatabaseHandler(context);
-				    for (Model m: modelList){
+					for (Model m: modelList){
 				    	if(m.isSelected()){
-				    		//TODO:
-				    		//List<TransactionEntry> transactions = db.getTransactionsTerminal(m.getName());
-				    		List<TransactionEntry> transactions = new ArrayList<TransactionEntry>();
-				    		for(TransactionEntry t : transactions){
-				    			//t.setPlace(localPlaceName);
-				    			//t.setInPlace(1);
+				    		List<TransactionEntry> trForPlace = db.getTransactionsPlaceFixed(m.getPlace());
+				    		for(TransactionEntry t : trForPlace){
 				    			t.setExpCategory(StaticValues.EXPENSE_CATEGORY_UNKNOWN);
 				    			db.updateTransaction(t);
 				    		}
@@ -213,88 +141,6 @@ public class PlacesList extends SherlockListActivity{
 						  
 			}
 			}).start();
-	  }
-
-	  private void addToPlace(){
-		  AlertDialog.Builder alert = new AlertDialog.Builder(context);
-		  DatabaseHandler db = new DatabaseHandler(context);
-		  List<String> placeList = db.getDistinctPlacesForPlaceList();
-		  db.close();
-		  
-		  final CharSequence[] choiceList = placeList.toArray(new CharSequence[placeList.size()]);
-		  alert.setTitle(getResources().getString(R.string.str_place));		  
-		  itemIndex = -1;
-		  alert.setSingleChoiceItems(choiceList, -1, new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
-				itemIndex = which;
-			}
-		});
-		alert.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
-				if(itemIndex > -1){
-					addToPlaceWithProgressBar(choiceList[itemIndex]);
-				}else{
-					Toast.makeText(context, getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show(); 
-				}
-			}
-		});
-		alert.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
-			}
-		});
-		  
-		alert.show();
-	  }
-	  
-	  private void addToPlaceWithProgressBar(CharSequence choice){
-		  final CharSequence localChoice = choice;
-		  
-		  progressBar = new ProgressDialog(context);
-			progressBar.setCancelable(false);
-			progressBar.setMessage(getResources().getString(R.string.progress_working));
-			progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			progressBar.setProgress(0);
-			progressBar.show();
-			
-			new Thread(new Runnable() {
-				public void run() {
-					DatabaseHandler db = new DatabaseHandler(context);
-					for (Model m: modelList){
-				    	if(m.isSelected()){
-				    		//TODO: 
-				    		//List<TransactionEntry> transactions = db.getTransactionsTerminal(m.getName());
-				    		//List<TransactionEntry> trForPlace = db.getTransactionsPlaceFixed(localChoice.toString());
-				    		List<TransactionEntry> transactions = new ArrayList<TransactionEntry>();
-				    		List<TransactionEntry> trForPlace = new ArrayList<TransactionEntry>();
-				    		for(TransactionEntry t : transactions){
-				    			//t.setPlace(localChoice.toString());
-				    			//t.setInPlace(1);
-				    			t.setExpCategory(trForPlace.get(0).getExpCategory());
-				    			db.updateTransaction(t);
-				    		}
-				    	}
-				    }
-				    db.close();
-				    progressBar.dismiss();
-				    PlacesList.this.runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							inflateList();
-						}
-					});
-						  
-			}
-			}).start();
-		  
 	  }
 
 }

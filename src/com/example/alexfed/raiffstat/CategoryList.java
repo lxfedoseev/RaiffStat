@@ -1,18 +1,14 @@
 package com.example.alexfed.raiffstat;
 
-import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +19,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.actionbarsherlock.app.SherlockListActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
 /*
  * Possible categories:
@@ -42,19 +42,21 @@ import android.widget.Toast;
  * - Entertainment
  * - Education
  */
-public class CategoryList extends ListActivity {
+public class CategoryList extends SherlockListActivity {
 	private final String LOG = "CategoryList";
 	
 	private List<CategoryEntry> categories;
 	private String catName;
 	private Context context;
-	private String place;
+	private ArrayList<String> places;
 	
 	private final int COLOR_DIALOG_NEW = 0;
 	private final int COLOR_DIALOG_MODIFY = 1;
 	private int colorDlgType;
 	private int position;
 	private ProgressDialog progressBar;
+	
+	static final int ADD_ID = Menu.FIRST;
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
@@ -64,8 +66,8 @@ public class CategoryList extends ListActivity {
 		super.onCreate(savedInstanceState);
 		context = this;
 		setContentView(R.layout.activity_raiff_report);
-		place = getIntent().getStringExtra("place");
-	    setTitle(place);
+		places = getIntent().getStringArrayListExtra("places");
+	    setTitle(places.get(0));
 	    
 	    setClickListeners();
 
@@ -102,15 +104,15 @@ public class CategoryList extends ListActivity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_categories_list, menu);
+		MenuItem addItem = menu.add(Menu.NONE, ADD_ID, 0, R.string.menu_add);
+		addItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 		return true;
 	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-    		case R.id.menu_add:
+    		case ADD_ID:
     			doAddCategory();
     			return true;
 
@@ -174,10 +176,12 @@ public class CategoryList extends ListActivity {
 		new Thread(new Runnable() {
 			public void run() {
 				DatabaseHandler db = new DatabaseHandler(getBaseContext());
-				List<TransactionEntry> trs = db.getTransactionsPlace(place);
-				for(TransactionEntry t : trs){
-					t.setExpCategory(categories.get(localPos).getID());
-					db.updateTransaction(t);
+				for(String s: places){
+					List<TransactionEntry> trs = db.getTransactionsPlace(s);
+					for(TransactionEntry t : trs){
+						t.setExpCategory(categories.get(localPos).getID());
+						db.updateTransaction(t);
+					}
 				}
         		db.close();
 			    progressBar.dismiss();

@@ -676,6 +676,7 @@ containing a value of this type.
         public static final int abs__split_action_bar_is_narrow=0x7f050001;
     }
     public static final class color {
+        public static final int about_selector=0x7f060009;
         public static final int abs__background_holo_dark=0x7f060000;
         public static final int abs__background_holo_light=0x7f060001;
         public static final int abs__bright_foreground_disabled_holo_dark=0x7f060004;
@@ -685,11 +686,13 @@ containing a value of this type.
         public static final int abs__bright_foreground_inverse_holo_dark=0x7f060006;
         public static final int abs__bright_foreground_inverse_holo_light=0x7f060007;
         public static final int abs__holo_blue_light=0x7f060008;
-        public static final int abs__primary_text_disable_only_holo_dark=0x7f060009;
-        public static final int abs__primary_text_disable_only_holo_light=0x7f06000a;
-        public static final int abs__primary_text_holo_dark=0x7f06000b;
-        public static final int abs__primary_text_holo_light=0x7f06000c;
-        public static final int tiles_selector=0x7f06000d;
+        public static final int abs__primary_text_disable_only_holo_dark=0x7f06000a;
+        public static final int abs__primary_text_disable_only_holo_light=0x7f06000b;
+        public static final int abs__primary_text_holo_dark=0x7f06000c;
+        public static final int abs__primary_text_holo_light=0x7f06000d;
+        public static final int data_selector=0x7f06000e;
+        public static final int places_selector=0x7f06000f;
+        public static final int report_selector=0x7f060010;
     }
     public static final class dimen {
         /**  Default height of an action bar. 
@@ -936,6 +939,14 @@ containing a value of this type.
         public static final int list_background2=0x7f02007a;
         public static final int list_background3=0x7f02007b;
         public static final int outcome_logo=0x7f02007c;
+        public static final int square_blue_dark=0x7f02007d;
+        public static final int square_blue_light=0x7f02007e;
+        public static final int square_green_dark=0x7f02007f;
+        public static final int square_green_light=0x7f020080;
+        public static final int square_red_dark=0x7f020081;
+        public static final int square_red_light=0x7f020082;
+        public static final int square_yellow_dark=0x7f020083;
+        public static final int square_yellow_light=0x7f020084;
     }
     public static final class id {
         public static final int abs__action_bar=0x7f040022;
@@ -994,7 +1005,7 @@ containing a value of this type.
         public static final int button_report=0x7f040035;
         public static final int card=0x7f04004b;
         public static final int category=0x7f040050;
-        public static final int check=0x7f040054;
+        public static final int check=0x7f040053;
         public static final int color=0x7f040052;
         public static final int datePicker=0x7f040048;
         public static final int datePickerFrom=0x7f04003a;
@@ -1005,20 +1016,19 @@ containing a value of this type.
         public static final int disableHome=0x7f040009;
         public static final int edit_query=0x7f040027;
         public static final int homeAsUp=0x7f040006;
-        public static final int label=0x7f040053;
         public static final int listMode=0x7f040002;
-        public static final int menu_add=0x7f04005a;
-        public static final int menu_categories=0x7f040058;
-        public static final int menu_clear_db=0x7f040059;
-        public static final int menu_exclude_from_place=0x7f04005b;
-        public static final int menu_graph=0x7f04005f;
-        public static final int menu_import_export=0x7f040055;
-        public static final int menu_make_place=0x7f040060;
-        public static final int menu_manage_places=0x7f040057;
-        public static final int menu_manage_terminals=0x7f040056;
-        public static final int menu_settings=0x7f04005c;
-        public static final int menu_sort=0x7f04005e;
-        public static final int menu_summary=0x7f04005d;
+        public static final int menu_add=0x7f040059;
+        public static final int menu_categories=0x7f040057;
+        public static final int menu_clear_db=0x7f040058;
+        public static final int menu_exclude_from_place=0x7f04005a;
+        public static final int menu_graph=0x7f04005e;
+        public static final int menu_import_export=0x7f040054;
+        public static final int menu_make_place=0x7f04005f;
+        public static final int menu_manage_places=0x7f040056;
+        public static final int menu_manage_terminals=0x7f040055;
+        public static final int menu_settings=0x7f04005b;
+        public static final int menu_sort=0x7f04005d;
+        public static final int menu_summary=0x7f04005c;
         public static final int name=0x7f040051;
         public static final int normal=0x7f040001;
         public static final int pager=0x7f040049;

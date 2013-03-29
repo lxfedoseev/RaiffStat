@@ -5,10 +5,10 @@
     android:background="@drawable/list_background3">
 
     <TextView
-        android:id="@+id/label"
+        android:id="@+id/place"
         android:layout_width="wrap_content"
         android:layout_height="54dip"
-        android:text="@+id/label"
+        android:text="@+id/place"
         android:textSize="20sp" 
         android:layout_toLeftOf="@+id/check"
         android:layout_alignParentLeft="true"
@@ -24,5 +24,16 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp">
     </CheckBox>
+    
+    <TextView
+        android:id="@+id/category"
+        android:layout_width="wrap_content"
+        android:layout_height="30dip"
+        android:text="@+id/category"
+        android:textSize="12sp" 
+        android:layout_below="@+id/check"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="5dp">
+    </TextView>
 
 </RelativeLayout>

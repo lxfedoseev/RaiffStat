@@ -80,7 +80,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(CAT_KEY_COLOR, Color.GREEN); 
         db.insert(TABLE_CATEGORIES, null, values);
         
-        values.clear();
+        values.clear(); 
         values.put(CAT_KEY_NAME, context.getResources().getString(R.string.category_health));
         values.put(CAT_KEY_COLOR, Color.BLUE); 
         db.insert(TABLE_CATEGORIES, null, values);
@@ -422,40 +422,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return transactionList;
     }
 
-    /*public  List<TransactionEntry> getTransactionsAmountFixed(double amount){
-    	String countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + " WHERE " + KEY_AMOUNT + " = ?";
-    	return queryDB(countQuery, new String[] {String.valueOf(amount)});
-    }*/
-    
-    /*public List<TransactionEntry> getTransactionsAmountInterval(double amountStar, double amountEnd) {
-    	String countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
-    			" WHERE " + " ( " + KEY_AMOUNT + " >= ? )" + " AND " + " ( " + KEY_AMOUNT + " <= ? )" +
-    			" ORDER BY " + KEY_DATE_TIME + " DESC";
-    	return queryDB(countQuery, new String[] {String.valueOf(amountStar), String.valueOf(amountEnd)});
-    }*/
-    
+  
     public List<TransactionEntry> getTransactionsDateInterval(long dateStart, long dateEnd){
     	String countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
     			" WHERE " + " ( " + KEY_DATE_TIME + " >= ? )" + " AND " + " ( " + KEY_DATE_TIME + " <= ? )" +
     			" ORDER BY " + KEY_DATE_TIME + " DESC";
     	return queryDB(countQuery, new String[] {String.valueOf(dateStart), String.valueOf(dateEnd)});
     }
-    
-    /*public List<TransactionEntry> getTransactionsDateIntervalTerminal(long dateStart, long dateEnd, String terminal){
-    	String countQuery;
-    	if(terminal.equalsIgnoreCase(context.getResources().getString(R.string.spinner_all))){
-    		countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
-    			" WHERE " + " ( " + KEY_DATE_TIME + " >= ? )" + " AND " + " ( " + KEY_DATE_TIME + " <= ? )" +
-    			" ORDER BY " + KEY_DATE_TIME + " DESC";
-    		return queryDB(countQuery, new String[] {String.valueOf(dateStart), String.valueOf(dateEnd)});
-    	}else{
-    		countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
-        			" WHERE " + " ( " + KEY_DATE_TIME + " >= ? )" + " AND " + " ( " + KEY_DATE_TIME + " <= ? )" + 
-    				" AND " + " ( " + KEY_TERMINAL + " = ? )" +
-        			" ORDER BY " + KEY_DATE_TIME + " DESC";
-    		return queryDB(countQuery, new String[] {String.valueOf(dateStart), String.valueOf(dateEnd), terminal});
-    	}
-    }*/
     
     public List<TransactionEntry> getTransactionsDateInterval(long dateStart, long dateEnd, 
     																	int sortType, boolean isDesc){
@@ -524,68 +497,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	return date;
     }
     
-    /*public  List<TransactionEntry> getTransactionsTerminal(String place){
-    	String countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + " WHERE " + KEY_PLACE + " = ?";
+    public  List<TransactionEntry> getTransactionsPlaceFixed(String place){
+    	String countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + " WHERE " + "( " + KEY_PLACE + " = ?" + " ) ";
     	return queryDB(countQuery, new String[] {place});
-    }*/
-    
-   /* public  List<TransactionEntry> getTransactionsPlaceFixed(String place){
-    	String countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + " WHERE " + "( " + KEY_PLACE + " = ?" + " ) " + " AND "+
-    			" ( " + KEY_IN_PLACE + " = 1 )";
-    	return queryDB(countQuery, new String[] {place});
-    }*/
-    
-   /* public  List<TransactionEntry> getPlacedTransactionsTerminalFixed(String terminal){
-    	String countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + " WHERE " + "( " + KEY_TERMINAL + " = ?" + " ) " + " AND "+
-    			" ( " + KEY_IN_PLACE + " = 1 )";
-    	return queryDB(countQuery, new String[] {terminal});
-    }*/
-    
+    }
+       
     public  List<TransactionEntry> getCatigorizedTransactionsPlaceFixed(String place){
     	String countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
     			" WHERE " + "( " + KEY_PLACE + " = ?" + " ) " + " AND "+
     			" ( " + KEY_EXP_CATEGORY + " > ? )";
     	return queryDB(countQuery, new String[] {place, String.valueOf(StaticValues.EXPENSE_CATEGORY_UNKNOWN)});
-    }
-    
-    /*public List<String> getTerminalsOfPlace(String place){
-    	List<String> terminals = new ArrayList<String>();
-    	SQLiteDatabase db = this.getWritableDatabase();	
-    	String countQuery = "SELECT DISTINCT " + KEY_TERMINAL + " FROM " + TABLE_TRANSACTIONS +
-    			" WHERE " + KEY_PLACE + " = ? " +
-    			" ORDER BY " + KEY_TERMINAL; 
-    	Cursor cursor = db.rawQuery(countQuery,  new String[] {place});
-    	
-    	if (cursor.moveToFirst()) {
-            do {
-            	terminals.add(cursor.getString(0));
-            } while (cursor.moveToNext());
-        }
-    	cursor.close();
-    	db.close();
-    	return terminals;
-    }*/
-    
-    public List<CategorizedPlaceModel> getCategorizedPlaces(){
-    	List<CategorizedPlaceModel> vals = new ArrayList<CategorizedPlaceModel>();
-    	SQLiteDatabase db = this.getWritableDatabase();	
-    	//http://zetcode.com/db/sqlite/joins/
-    	String countQuery = "SELECT DISTINCT " + KEY_PLACE + ", "  + CAT_KEY_NAME + ", " + CAT_KEY_COLOR +
-    			" FROM " + TABLE_TRANSACTIONS + " LEFT JOIN " + TABLE_CATEGORIES + 
-    			" ON " + TABLE_TRANSACTIONS + "." + KEY_EXP_CATEGORY + " = " + TABLE_CATEGORIES + "." + CAT_KEY_ID +
-    			" WHERE " + TABLE_TRANSACTIONS + "." + KEY_TYPE + "=" + StaticValues.TRANSACTION_TYPE_EXPENSE +
-    			" ORDER BY " + KEY_PLACE; 
-    			
-    	Cursor cursor = db.rawQuery(countQuery, null);
-    	
-    	if (cursor.moveToFirst()) {
-            do {
-            	vals.add(new CategorizedPlaceModel(cursor.getString(0), cursor.getString(1), cursor.getInt(2)));
-            } while (cursor.moveToNext());
-        }
-    	cursor.close();
-    	db.close();
-    	return vals;
     }
  
     public  List<TransactionEntry> getTransactionsPlace(String place){
@@ -608,6 +529,28 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	cursor.close();
     	db.close();
     	return distVals;
+    }
+    
+    public List<Model> getPlacesWithCategories(){
+    	List<Model> vals = new ArrayList<Model>();
+    	SQLiteDatabase db = this.getWritableDatabase();	
+    	//http://zetcode.com/db/sqlite/joins/
+    	String countQuery = "SELECT DISTINCT " + KEY_PLACE + ", "  + CAT_KEY_NAME + ", " + CAT_KEY_COLOR +
+    			" FROM " + TABLE_TRANSACTIONS + " LEFT JOIN " + TABLE_CATEGORIES + 
+    			" ON " + TABLE_TRANSACTIONS + "." + KEY_EXP_CATEGORY + " = " + TABLE_CATEGORIES + "." + CAT_KEY_ID +
+    			" WHERE " + TABLE_TRANSACTIONS + "." + KEY_TYPE + "=" + StaticValues.TRANSACTION_TYPE_EXPENSE +
+    			" ORDER BY " + KEY_PLACE; 
+    			
+    	Cursor cursor = db.rawQuery(countQuery, null);
+    	
+    	if (cursor.moveToFirst()) {
+            do {
+            	vals.add(new Model(cursor.getString(0), cursor.getString(1), cursor.getInt(2)));
+            } while (cursor.moveToNext());
+        }
+    	cursor.close();
+    	db.close();
+    	return vals;
     }
     
 }

@@ -551,17 +551,8 @@ public class ReportListAll extends SherlockListFragment {
         	String timeString = new SimpleDateFormat("HH:mm:ss").format(new Date(longDate));
         	
         	if(entry.getType() == StaticValues.TRANSACTION_TYPE_INCOME){
-        		int myGreen = Color.argb(255, 0, 127, 14);
-        		//holder.date_time.setTextColor(myGreen);
-        		//holder.card.setTextColor(myGreen);
-        		//holder.amount.setTextColor(myGreen);
-        		//holder.type.setTextColor(myGreen);
         		holder.type.setImageDrawable(context.getResources().getDrawable(R.drawable.income_logo));
         	}else{//expense
-        		//holder.date_time.setTextColor(Color.RED);
-        		//holder.card.setTextColor(Color.RED);
-        		//holder.amount.setTextColor(Color.RED);
-        		//holder.type.setTextColor(Color.RED);
         		holder.type.setImageDrawable(context.getResources().getDrawable(R.drawable.outcome_logo));
         	}
         	
@@ -569,12 +560,6 @@ public class ReportListAll extends SherlockListFragment {
         	holder.place.setText(entry.getPlace());
             holder.card.setText(context.getResources().getString(R.string.str_card) + ": " + entry.getCard());                
             holder.amount.setText(entry.getAmount() + " " + entry.getAmountCurr());
-           /* holder.type.setText(""); 
-            if(entry.getType() == StaticValues.TRANSACTION_TYPE_EXPENSE){
-            	holder.type.setText("-");
-            }else if(entry.getType() == StaticValues.TRANSACTION_TYPE_INCOME){
-            	holder.type.setText("+");
-            }*/
         }
     }
 
