@@ -37,6 +37,7 @@ public class PlacesList extends SherlockListActivity{
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		setTheme(R.style.Theme_Sherlock_Light_DarkActionBar);
 		setContentView(R.layout.activity_raiff_report);
 		context = getBaseContext();
 	}

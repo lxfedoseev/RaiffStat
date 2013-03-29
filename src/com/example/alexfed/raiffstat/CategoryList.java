@@ -64,6 +64,7 @@ public class CategoryList extends SherlockListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		setTheme(R.style.Theme_Sherlock_Light_DarkActionBar);
 		context = this;
 		setContentView(R.layout.activity_raiff_report);
 		places = getIntent().getStringArrayListExtra("places");

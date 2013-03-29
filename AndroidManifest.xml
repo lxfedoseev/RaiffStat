@@ -48,7 +48,7 @@
               android:screenOrientation="portrait">
         </activity>
         
-    	<activity android:name=".ReportTabs"  
+    	<activity android:name=".ReportTabs"   
               android:label="@string/report_name"
               android:screenOrientation="portrait">
         </activity>
