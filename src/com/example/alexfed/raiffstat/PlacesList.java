@@ -94,24 +94,22 @@ public class PlacesList extends SherlockListActivity{
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
 		getSupportActionBar().setNavigationMode(getSupportActionBar().NAVIGATION_MODE_LIST);
 		//SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.places_display_array, android.R.layout.simple_spinner_dropdown_item);
+		//SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.places_display_array, android.R.layout.simple_dropdown_item_1line);
 		SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.places_display_array, R.layout.spinner_selector_text_view);
 		mOnNavigationListener = new OnNavigationListener() {
             public boolean onNavigationItemSelected(int itemPosition, long itemId) {
                 switch (itemPosition) {
                 case 0:
                 	displayFilter = StaticValues.PLACES_ALL;
-                	inflateList();
                     break;
                 case 1:
                 	displayFilter = StaticValues.PLACES_CATEGORY_IN;
-                	inflateList();
                     break;
                 case 2:
                 	displayFilter = StaticValues.PLACES_CATEGORY_OUT;
-                	inflateList();
                     break;
                 }
-
+                inflateList();
                 return true;
             }
         };
