@@ -61,7 +61,7 @@ public class MainRaiffStat extends SherlockActivity {
 		Button btnReport = (Button) findViewById(R.id.button_report);
 		Button btnData = (Button) findViewById(R.id.button_data);
 		Button btnPlaces = (Button) findViewById(R.id.button_places);
-		Button btnAbout = (Button) findViewById(R.id.button_about);
+		Button btnCategories = (Button) findViewById(R.id.button_categories);
 		
 		btnReport.setOnClickListener(new OnClickListener() {
 			
@@ -89,11 +89,12 @@ public class MainRaiffStat extends SherlockActivity {
 			}
 		});
 
-		btnAbout.setOnClickListener(new OnClickListener() {
+		btnCategories.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View arg0) {
-				
+				Intent categoriesActivity = new Intent(getBaseContext(), CategoryList.class);
+    			startActivity(categoriesActivity);
 			}
 		});
 	}

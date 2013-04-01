@@ -9,5 +9,5 @@
         <item name="android:windowNoTitle">true</item>
         <!-- API 14 theme customizations can go here. -->
     </style>
-
+   
 </resources>

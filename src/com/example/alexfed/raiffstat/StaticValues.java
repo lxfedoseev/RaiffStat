@@ -21,4 +21,8 @@ public class StaticValues {
 	public static String DELIMITER = ",";
 	
 	public static String CURR_RUB = "RUB";
+	
+	public static int PLACES_ALL = 0;
+	public static int PLACES_CATEGORY_IN = 1;
+	public static int PLACES_CATEGORY_OUT = 2;
 }

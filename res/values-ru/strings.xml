@@ -52,6 +52,8 @@
     <string name="str_period">Период</string>
     <string name="str_from">с: </string>
     <string name="str_to">по: </string>
+    <string name="str_select_category">Выберите категорию</string>
+    <string name="str_categories">Категории</string>
     
     <string name="click_delete">Удалить</string>
     <string name="click_rename">Переименовать</string>
@@ -91,6 +93,7 @@
     <string name="dialog_edit_category">Исправить категорию</string>
 	<string name="dialog_period_start">Дата начала периода</string>
     <string name="dialog_period_end">Дата окончания периода</string>
+    <string name="dialog_no_category">Без категории</string>
     
 	<string name="progress_sms_scanning">Сканирую СМС ...</string>
 	<string name="progress_csv_scanning">Сканирую файл ...</string>
@@ -105,4 +108,11 @@
 	<string name="category_food">Продукты питания</string>
 	<string name="category_health">Здоровье</string>
 	<string name="category_clothes">Одежда</string>
+	
+    <string-array name="places_display_array">
+        <item>Все</item>
+        <item>В категориях</item>
+        <item>Без категорий</item>
+    </string-array>
+	
 </resources>

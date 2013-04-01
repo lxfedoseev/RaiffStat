@@ -8,6 +8,9 @@
 package com.example.alexfed.raiffstat;
 
 public final class R {
+    public static final class array {
+        public static final int places_display_array=0x7f0b0000;
+    }
     public static final class attr {
         /**  Custom divider drawable to use for elements in the action bar. 
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -676,7 +679,6 @@ containing a value of this type.
         public static final int abs__split_action_bar_is_narrow=0x7f050001;
     }
     public static final class color {
-        public static final int about_selector=0x7f060009;
         public static final int abs__background_holo_dark=0x7f060000;
         public static final int abs__background_holo_light=0x7f060001;
         public static final int abs__bright_foreground_disabled_holo_dark=0x7f060004;
@@ -686,10 +688,11 @@ containing a value of this type.
         public static final int abs__bright_foreground_inverse_holo_dark=0x7f060006;
         public static final int abs__bright_foreground_inverse_holo_light=0x7f060007;
         public static final int abs__holo_blue_light=0x7f060008;
-        public static final int abs__primary_text_disable_only_holo_dark=0x7f06000a;
-        public static final int abs__primary_text_disable_only_holo_light=0x7f06000b;
-        public static final int abs__primary_text_holo_dark=0x7f06000c;
-        public static final int abs__primary_text_holo_light=0x7f06000d;
+        public static final int abs__primary_text_disable_only_holo_dark=0x7f060009;
+        public static final int abs__primary_text_disable_only_holo_light=0x7f06000a;
+        public static final int abs__primary_text_holo_dark=0x7f06000b;
+        public static final int abs__primary_text_holo_light=0x7f06000c;
+        public static final int categories_selector=0x7f06000d;
         public static final int data_selector=0x7f06000e;
         public static final int places_selector=0x7f06000f;
         public static final int report_selector=0x7f060010;
@@ -999,7 +1002,7 @@ containing a value of this type.
         public static final int ambilwarna_warnaLama=0x7f040044;
         public static final int amount=0x7f04004d;
         public static final int btnApply=0x7f04003d;
-        public static final int button_about=0x7f040039;
+        public static final int button_categories=0x7f040039;
         public static final int button_data=0x7f040036;
         public static final int button_places=0x7f040038;
         public static final int button_report=0x7f040035;
@@ -1017,18 +1020,18 @@ containing a value of this type.
         public static final int edit_query=0x7f040027;
         public static final int homeAsUp=0x7f040006;
         public static final int listMode=0x7f040002;
-        public static final int menu_add=0x7f040059;
-        public static final int menu_categories=0x7f040057;
-        public static final int menu_clear_db=0x7f040058;
-        public static final int menu_exclude_from_place=0x7f04005a;
-        public static final int menu_graph=0x7f04005e;
-        public static final int menu_import_export=0x7f040054;
-        public static final int menu_make_place=0x7f04005f;
-        public static final int menu_manage_places=0x7f040056;
-        public static final int menu_manage_terminals=0x7f040055;
-        public static final int menu_settings=0x7f04005b;
-        public static final int menu_sort=0x7f04005d;
-        public static final int menu_summary=0x7f04005c;
+        public static final int menu_add=0x7f04005a;
+        public static final int menu_categories=0x7f040058;
+        public static final int menu_clear_db=0x7f040059;
+        public static final int menu_exclude_from_place=0x7f04005b;
+        public static final int menu_graph=0x7f04005f;
+        public static final int menu_import_export=0x7f040055;
+        public static final int menu_make_place=0x7f040060;
+        public static final int menu_manage_places=0x7f040057;
+        public static final int menu_manage_terminals=0x7f040056;
+        public static final int menu_settings=0x7f04005c;
+        public static final int menu_sort=0x7f04005e;
+        public static final int menu_summary=0x7f04005d;
         public static final int name=0x7f040051;
         public static final int normal=0x7f040001;
         public static final int pager=0x7f040049;
@@ -1039,6 +1042,7 @@ containing a value of this type.
         public static final int showHome=0x7f040005;
         public static final int showTitle=0x7f040007;
         public static final int spinnerPlace=0x7f04003c;
+        public static final int spinnerSelectorTextView=0x7f040054;
         public static final int tabMode=0x7f040003;
         public static final int tableRow1=0x7f040034;
         public static final int tableRow2=0x7f040037;
@@ -1087,14 +1091,15 @@ containing a value of this type.
         public static final int rowbuttonlayout=0x7f030022;
         public static final int sherlock_spinner_dropdown_item=0x7f030023;
         public static final int sherlock_spinner_item=0x7f030024;
+        public static final int spinner_selector_text_view=0x7f030025;
     }
     public static final class menu {
-        public static final int activity_raiff_stat=0x7f0b0000;
-        public static final int menu_categories_list=0x7f0b0001;
-        public static final int menu_place_detailed_list=0x7f0b0002;
-        public static final int menu_places_list=0x7f0b0003;
-        public static final int menu_report_list=0x7f0b0004;
-        public static final int menu_terminals_list=0x7f0b0005;
+        public static final int activity_raiff_stat=0x7f0c0000;
+        public static final int menu_categories_list=0x7f0c0001;
+        public static final int menu_place_detailed_list=0x7f0c0002;
+        public static final int menu_places_list=0x7f0c0003;
+        public static final int menu_report_list=0x7f0c0004;
+        public static final int menu_terminals_list=0x7f0c0005;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
@@ -1143,33 +1148,34 @@ containing a value of this type.
          */
         public static final int abs__shareactionprovider_share_with_application=0x7f090009;
         public static final int app_name=0x7f09000f;
-        public static final int btn_apply=0x7f090069;
-        public static final int category_clothes=0x7f09006f;
-        public static final int category_food=0x7f09006d;
-        public static final int category_health=0x7f09006e;
-        public static final int click_assign_category=0x7f090049;
-        public static final int click_ctx_dialog_title=0x7f090046;
-        public static final int click_delete=0x7f090043;
-        public static final int click_edit=0x7f090045;
-        public static final int click_edit_color=0x7f090048;
-        public static final int click_edit_name=0x7f090047;
-        public static final int click_remove_category=0x7f09004a;
-        public static final int click_rename=0x7f090044;
-        public static final int ctx_category_name=0x7f090059;
-        public static final int ctx_new_place_name=0x7f090057;
-        public static final int ctx_place_name=0x7f090058;
-        public static final int dialog_cancel=0x7f09005b;
-        public static final int dialog_csv_export=0x7f090061;
-        public static final int dialog_csv_import=0x7f090062;
-        public static final int dialog_edit_category=0x7f090063;
-        public static final int dialog_ok=0x7f09005a;
-        public static final int dialog_period_end=0x7f090065;
-        public static final int dialog_period_start=0x7f090064;
-        public static final int dialog_sms_import=0x7f090060;
-        public static final int dialog_sort_by_amount=0x7f09005d;
-        public static final int dialog_sort_by_date=0x7f09005c;
-        public static final int dialog_sort_by_place=0x7f09005e;
-        public static final int dialog_sort_type=0x7f09005f;
+        public static final int btn_apply=0x7f09006c;
+        public static final int category_clothes=0x7f090072;
+        public static final int category_food=0x7f090070;
+        public static final int category_health=0x7f090071;
+        public static final int click_assign_category=0x7f09004b;
+        public static final int click_ctx_dialog_title=0x7f090048;
+        public static final int click_delete=0x7f090045;
+        public static final int click_edit=0x7f090047;
+        public static final int click_edit_color=0x7f09004a;
+        public static final int click_edit_name=0x7f090049;
+        public static final int click_remove_category=0x7f09004c;
+        public static final int click_rename=0x7f090046;
+        public static final int ctx_category_name=0x7f09005b;
+        public static final int ctx_new_place_name=0x7f090059;
+        public static final int ctx_place_name=0x7f09005a;
+        public static final int dialog_cancel=0x7f09005d;
+        public static final int dialog_csv_export=0x7f090063;
+        public static final int dialog_csv_import=0x7f090064;
+        public static final int dialog_edit_category=0x7f090065;
+        public static final int dialog_no_category=0x7f090068;
+        public static final int dialog_ok=0x7f09005c;
+        public static final int dialog_period_end=0x7f090067;
+        public static final int dialog_period_start=0x7f090066;
+        public static final int dialog_sms_import=0x7f090062;
+        public static final int dialog_sort_by_amount=0x7f09005f;
+        public static final int dialog_sort_by_date=0x7f09005e;
+        public static final int dialog_sort_by_place=0x7f090060;
+        public static final int dialog_sort_type=0x7f090061;
         public static final int distrib_categories=0x7f090023;
         public static final int exp_categories=0x7f090022;
         public static final int hello_world=0x7f090010;
@@ -1194,17 +1200,18 @@ containing a value of this type.
         public static final int menu_summary=0x7f090016;
         public static final int place_detailed=0x7f09001a;
         public static final int places_name=0x7f090019;
-        public static final int progress_csv_scanning=0x7f090067;
-        public static final int progress_sms_scanning=0x7f090066;
-        public static final int progress_working=0x7f090068;
+        public static final int progress_csv_scanning=0x7f09006a;
+        public static final int progress_sms_scanning=0x7f090069;
+        public static final int progress_working=0x7f09006b;
         public static final int report_name=0x7f090015;
-        public static final int settings_bg_color_confirm=0x7f09006a;
-        public static final int settings_bg_color_dialog=0x7f09006c;
-        public static final int settings_default_color_confirm=0x7f09006b;
+        public static final int settings_bg_color_confirm=0x7f09006d;
+        public static final int settings_bg_color_dialog=0x7f09006f;
+        public static final int settings_default_color_confirm=0x7f09006e;
         public static final int spinner_all=0x7f090024;
         public static final int str_about=0x7f09003d;
         public static final int str_amount=0x7f09002e;
         public static final int str_card=0x7f09002d;
+        public static final int str_categories=0x7f090044;
         public static final int str_category=0x7f090038;
         public static final int str_category_undefined=0x7f09003a;
         public static final int str_comma_usage=0x7f09003b;
@@ -1221,24 +1228,25 @@ containing a value of this type.
         public static final int str_no_data=0x7f090034;
         public static final int str_period=0x7f09002c;
         public static final int str_place=0x7f09002b;
+        public static final int str_select_category=0x7f090043;
         public static final int str_spent=0x7f090032;
         public static final int str_to=0x7f090042;
         public static final int str_tr_number=0x7f09002f;
         public static final int str_week=0x7f09003e;
         public static final int str_year=0x7f090040;
         public static final int terminals_name=0x7f090018;
-        public static final int toast_db_empty=0x7f09004c;
-        public static final int toast_dir_failed=0x7f09004f;
-        public static final int toast_exp_failed=0x7f090050;
-        public static final int toast_imp_failed=0x7f090052;
-        public static final int toast_no_files=0x7f090051;
-        public static final int toast_no_place=0x7f09004d;
-        public static final int toast_no_sms=0x7f090056;
-        public static final int toast_no_storage=0x7f09004e;
-        public static final int toast_no_values=0x7f090055;
-        public static final int toast_nothing_selected=0x7f09004b;
-        public static final int toast_one_value=0x7f090054;
-        public static final int toast_pars_failed=0x7f090053;
+        public static final int toast_db_empty=0x7f09004e;
+        public static final int toast_dir_failed=0x7f090051;
+        public static final int toast_exp_failed=0x7f090052;
+        public static final int toast_imp_failed=0x7f090054;
+        public static final int toast_no_files=0x7f090053;
+        public static final int toast_no_place=0x7f09004f;
+        public static final int toast_no_sms=0x7f090058;
+        public static final int toast_no_storage=0x7f090050;
+        public static final int toast_no_values=0x7f090057;
+        public static final int toast_nothing_selected=0x7f09004d;
+        public static final int toast_one_value=0x7f090056;
+        public static final int toast_pars_failed=0x7f090055;
     }
     public static final class style {
         /** 

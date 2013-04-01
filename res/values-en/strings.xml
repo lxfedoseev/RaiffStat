@@ -52,6 +52,8 @@
     <string name="str_period">Period</string>
     <string name="str_from">from: </string>
     <string name="str_to">to: </string>
+    <string name="str_select_category">Select category</string>
+    <string name="str_categories">Categories</string>
     
     <string name="click_delete">Delete</string>
     <string name="click_rename">Rename</string>
@@ -91,6 +93,7 @@
     <string name="dialog_edit_category">Edit category</string>
     <string name="dialog_period_start">Period start</string>
     <string name="dialog_period_end">Period end</string>
+    <string name="dialog_no_category">Without category</string>
 	
 	<string name="progress_sms_scanning">Scanning SMS ...</string>
 	<string name="progress_csv_scanning">Scanning file ...</string>
@@ -106,4 +109,10 @@
 	<string name="category_health">Health</string>
 	<string name="category_clothes">Clothes</string>
 	
+    <string-array name="places_display_array">
+        <item>All</item>
+        <item>In categories</item>
+        <item>Without categories</item>
+    </string-array>
+
 </resources>

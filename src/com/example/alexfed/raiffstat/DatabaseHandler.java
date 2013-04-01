@@ -531,15 +531,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	return distVals;
     }
     
-    public List<Model> getPlacesWithCategories(){
+    public List<Model> getAllPlacesAndCategories(int filter){
     	List<Model> vals = new ArrayList<Model>();
     	SQLiteDatabase db = this.getWritableDatabase();	
     	//http://zetcode.com/db/sqlite/joins/
     	String countQuery = "SELECT DISTINCT " + KEY_PLACE + ", "  + CAT_KEY_NAME + ", " + CAT_KEY_COLOR +
     			" FROM " + TABLE_TRANSACTIONS + " LEFT JOIN " + TABLE_CATEGORIES + 
     			" ON " + TABLE_TRANSACTIONS + "." + KEY_EXP_CATEGORY + " = " + TABLE_CATEGORIES + "." + CAT_KEY_ID +
-    			" WHERE " + TABLE_TRANSACTIONS + "." + KEY_TYPE + "=" + StaticValues.TRANSACTION_TYPE_EXPENSE +
-    			" ORDER BY " + KEY_PLACE; 
+    			" WHERE " + TABLE_TRANSACTIONS + "." + KEY_TYPE + "=" + StaticValues.TRANSACTION_TYPE_EXPENSE;
+    	
+    	if(filter == StaticValues.PLACES_CATEGORY_IN){
+    		countQuery += " AND " + " ( " + TABLE_TRANSACTIONS + "." + KEY_EXP_CATEGORY + ">" + 
+    							StaticValues.EXPENSE_CATEGORY_UNKNOWN + " ) ";
+    	}else if(filter == StaticValues.PLACES_CATEGORY_OUT){
+    		countQuery += " AND " + " ( " + TABLE_TRANSACTIONS + "." + KEY_EXP_CATEGORY + "=" + 
+    							StaticValues.EXPENSE_CATEGORY_UNKNOWN + " ) ";
+    	}
+    	countQuery += " ORDER BY " + KEY_PLACE;
     			
     	Cursor cursor = db.rawQuery(countQuery, null);
     	
@@ -551,6 +559,33 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	cursor.close();
     	db.close();
     	return vals;
+    }
+    
+        
+    // Getting All categories
+    public List<CategoryEntry> getAllCategoriesOrdered() {
+        List<CategoryEntry> categoryList = new ArrayList<CategoryEntry>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_CATEGORIES + " ORDER BY " + CAT_KEY_NAME;
+ 
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+ 
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+            	CategoryEntry c = new CategoryEntry(); 
+                c.setID(cursor.getInt(0));
+                c.setName(cursor.getString(1));
+                c.setColor(cursor.getInt(2));
+                // Adding category to list
+                categoryList.add(c);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        // return transaction list
+        return categoryList;
     }
     
 }

@@ -36,9 +36,9 @@ import com.actionbarsherlock.view.MenuItem;
  * - For kid
  * - Furniture
  * - Electronics
- * - Public utilites
+ * - Public utilities
  * - Communication (telephone)
- * - Jewerly
+ * - Jewelry
  * - Entertainment
  * - Education
  */
@@ -48,13 +48,11 @@ public class CategoryList extends SherlockListActivity {
 	private List<CategoryEntry> categories;
 	private String catName;
 	private Context context;
-	private ArrayList<String> places;
 	
 	private final int COLOR_DIALOG_NEW = 0;
 	private final int COLOR_DIALOG_MODIFY = 1;
 	private int colorDlgType;
 	private int position;
-	private ProgressDialog progressBar;
 	
 	static final int ADD_ID = Menu.FIRST;
 	/* (non-Javadoc)
@@ -67,11 +65,8 @@ public class CategoryList extends SherlockListActivity {
 		setTheme(R.style.Theme_Sherlock_Light_DarkActionBar);
 		context = this;
 		setContentView(R.layout.activity_raiff_report);
-		places = getIntent().getStringArrayListExtra("places");
-	    setTitle(places.get(0));
 	    
 	    setClickListeners();
-
 	}
 	
 	@Override
@@ -93,14 +88,6 @@ public class CategoryList extends SherlockListActivity {
 	    		} 
 	    }); 
 		
-	    lv.setOnItemClickListener(
-	    		 new AdapterView.OnItemClickListener() {
-					@Override
-					public void onItemClick(AdapterView<?> arg0, View arg1,
-							int pos, long id) {
-						onListItemClick(arg1,pos,id); 
-					} 
-		});
 	}
 	
 	@Override
@@ -161,36 +148,6 @@ public class CategoryList extends SherlockListActivity {
 		dialog.show();
 	} 
 	
-	protected void onListItemClick(View v, int pos, long id) { 
-		assignCategoryWithProgressBar(pos);
-	}
-
-	private void assignCategoryWithProgressBar(int pos){
-		final int localPos = pos;
-		progressBar = new ProgressDialog(this);
-		progressBar.setCancelable(false);
-		progressBar.setMessage(getResources().getString(R.string.progress_working));
-		progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		progressBar.setProgress(0);
-		progressBar.show();
-		
-		new Thread(new Runnable() {
-			public void run() {
-				DatabaseHandler db = new DatabaseHandler(getBaseContext());
-				for(String s: places){
-					List<TransactionEntry> trs = db.getTransactionsPlace(s);
-					for(TransactionEntry t : trs){
-						t.setExpCategory(categories.get(localPos).getID());
-						db.updateTransaction(t);
-					}
-				}
-        		db.close();
-			    progressBar.dismiss();
-			    finish();	  
-		}
-		}).start();
-		
-	}
 	
 	private void doEditCategoryColor(int pos){
 		colorDlgType = COLOR_DIALOG_MODIFY;
@@ -292,7 +249,7 @@ public class CategoryList extends SherlockListActivity {
 	}
 	
 	private void inflateList(){
-		getListView().setDivider(null);
+		//getListView().setDivider(null);
 		DatabaseHandler db = new DatabaseHandler(this);
 		categories = db.getAllCategories();
 		db.close();
