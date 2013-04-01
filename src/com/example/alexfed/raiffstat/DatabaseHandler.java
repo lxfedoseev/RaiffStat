@@ -465,6 +465,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     														currency});
     }
     
+    public List<TransactionEntry>  getTransactionsWithCategory(CategoryEntry cat){
+    	String countQuery  = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
+    			" WHERE " + KEY_EXP_CATEGORY + "=?";
+    	
+    	return queryDB(countQuery, new String[] {String.valueOf(cat.getID())});
+    }
+    
     public List<String> getDistinctPlaces(){
     	List<String> distVals = new ArrayList<String>();
     	SQLiteDatabase db = this.getWritableDatabase();	

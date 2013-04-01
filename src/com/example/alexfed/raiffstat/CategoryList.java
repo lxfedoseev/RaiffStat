@@ -53,6 +53,7 @@ public class CategoryList extends SherlockListActivity {
 	private final int COLOR_DIALOG_MODIFY = 1;
 	private int colorDlgType;
 	private int position;
+	private ProgressDialog progressBar;
 	
 	static final int ADD_ID = Menu.FIRST;
 	/* (non-Javadoc)
@@ -132,10 +133,7 @@ public class CategoryList extends SherlockListActivity {
 					doEditCategoryColor(localPos);
 					break;
 				case 2:
-					DatabaseHandler db = new DatabaseHandler(context);
-					db.deleteCategory(categories.get(localPos));
-					db.close();
-					inflateList();
+					deleteCategoryWithProgressBar(localPos);
 					break;
 				default:
 					//do nothing
@@ -148,7 +146,37 @@ public class CategoryList extends SherlockListActivity {
 		dialog.show();
 	} 
 	
-	
+	private void deleteCategoryWithProgressBar(int pos){
+		final int localPos = pos;
+		progressBar = new ProgressDialog(this);
+		progressBar.setCancelable(false);
+		progressBar.setMessage(getResources().getString(R.string.progress_working));
+		progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progressBar.setProgress(0);
+		progressBar.show();
+		  
+		  new Thread(new Runnable() {
+				public void run() {
+					DatabaseHandler db = new DatabaseHandler(context);
+					db.deleteCategory(categories.get(localPos));
+					List<TransactionEntry> trs = db.getTransactionsWithCategory(categories.get(localPos));
+					for(TransactionEntry t:trs){
+						t.setExpCategory(StaticValues.EXPENSE_CATEGORY_UNKNOWN);
+						db.updateTransaction(t);
+					}
+					
+				    db.close();
+				    progressBar.dismiss();
+				    CategoryList.this.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							inflateList();
+						}
+					});
+						  
+			}
+			}).start();
+	}
 	private void doEditCategoryColor(int pos){
 		colorDlgType = COLOR_DIALOG_MODIFY;
 		position = pos;
