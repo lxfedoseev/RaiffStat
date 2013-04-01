@@ -38,8 +38,7 @@ public class PlacesList extends SherlockListActivity{
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		//setTheme(R.style.Theme_Sherlock_Light_DarkActionBar);
-		setTheme(R.style.Theme_Sherlock_Light);
+		setTheme(R.style.Theme_Sherlock_Light_DarkActionBar);
 		setContentView(R.layout.activity_raiff_report);
 		context = getBaseContext();
 		displayFilter = StaticValues.PLACES_ALL;
@@ -94,8 +93,8 @@ public class PlacesList extends SherlockListActivity{
 		
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
 		getSupportActionBar().setNavigationMode(getSupportActionBar().NAVIGATION_MODE_LIST);
-		SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.places_display_array, android.R.layout.simple_spinner_dropdown_item);
-		//SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.places_display_array, R.layout.spinner_selector_text_view);
+		//SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.places_display_array, android.R.layout.simple_spinner_dropdown_item);
+		SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.places_display_array, R.layout.spinner_selector_text_view);
 		mOnNavigationListener = new OnNavigationListener() {
             public boolean onNavigationItemSelected(int itemPosition, long itemId) {
                 switch (itemPosition) {
