@@ -5,9 +5,14 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -212,15 +217,44 @@ public class ReportListAll extends SherlockListFragment {
 			sum.put(t.getExpCategory(), sum.get(t.getExpCategory())+t.getAmount());
 			totalSum += t.getAmount();
 		}
+		Map<Integer, Double> sortedSum = sortByComparator(sum);
 		
 		GraphViewSeries[] sers = new GraphViewSeries[cats.size()];
 		int i = 0;
 		String catName = "";
 		int catColor = 0xff000000;
-		int thickness = 50;
+		int thickness = (int)((activity.getResources().getDisplayMetrics().widthPixels)*0.07);//7% of the screen's width
 		double maxVal = Double.MIN_VALUE;
 		double percents = 0.0;
-		for(Integer c: cats){
+		
+		for (Map.Entry<Integer, Double> entry : sortedSum.entrySet()) {
+			
+			if(((Integer)entry.getKey()) == StaticValues.EXPENSE_CATEGORY_UNKNOWN){
+				catName = getResources().getString(R.string.str_category_undefined);
+				catColor = 0xff000000;
+			}else{
+				CategoryEntry cat = db.getCategory(((Integer)entry.getKey()));
+				catName = cat.getName();
+				catColor = cat.getColor();
+			}
+			percents = ((Double)entry.getValue()/totalSum)*100;
+			maxVal = Math.max(maxVal, percents);
+			GraphViewData[] data = new GraphViewData[2];
+			data[0] = new GraphViewData(i+1, 0);
+			data[1] = new GraphViewData(i+1, percents);
+			percents = Math.round(percents);
+			if(percents < 0.1){
+				catName = catName + " < 0.1%";
+			}else{
+				int per = (int) percents;
+				catName = catName + " " + per + "%";
+			}
+			sers[i] = new GraphViewSeries(catName, 
+					new GraphViewSeries.GraphViewSeriesStyle(catColor, thickness), data);
+			i++;
+			
+		}
+		/*for(Integer c: cats){
 			if(c == StaticValues.EXPENSE_CATEGORY_UNKNOWN){
 				catName = getResources().getString(R.string.str_category_undefined);
 				catColor = 0xff000000;
@@ -244,10 +278,11 @@ public class ReportListAll extends SherlockListFragment {
 			sers[i] = new GraphViewSeries(catName, 
 					new GraphViewSeries.GraphViewSeriesStyle(catColor, thickness), data);
 			i++;
-		}
+		}*/
+		
 		db.close();
 
-		LineGraphView graphView = new LineGraphView(activity, "%"){ 
+		LineGraphView graphView = new LineGraphView(activity, "%"){  
 			   @Override  
 			   protected String formatLabel(double value, boolean isValueX) {  
 			      if (isValueX) {
@@ -302,6 +337,28 @@ public class ReportListAll extends SherlockListFragment {
 		  });
 
 		  alert.show(); 
+	}
+	
+	//http://www.mkyong.com/java/how-to-sort-a-map-in-java/
+	private static Map sortByComparator(Map unsortMap) {
+		 
+		List list = new LinkedList(unsortMap.entrySet());
+ 
+		// sort list based on comparator
+		Collections.sort(list, new Comparator() {
+			public int compare(Object o1, Object o2) {
+				return ((Comparable) ((Map.Entry) (o1)).getValue()).compareTo(((Map.Entry) (o2)).getValue())*(-1);
+			}
+		});
+ 
+		// put sorted list into map again
+                //LinkedHashMap make sure order in which keys were inserted
+		Map sortedMap = new LinkedHashMap();
+		for (Iterator it = list.iterator(); it.hasNext();) {
+			Map.Entry entry = (Map.Entry) it.next();
+			sortedMap.put(entry.getKey(), entry.getValue());
+		}
+		return sortedMap;
 	}
 	
 	private float convertDpToPixel(float dp,Context context){

@@ -1147,10 +1147,10 @@ containing a value of this type.
          */
         public static final int abs__shareactionprovider_share_with_application=0x7f090009;
         public static final int app_name=0x7f09000f;
-        public static final int btn_apply=0x7f09006c;
-        public static final int category_clothes=0x7f090072;
-        public static final int category_food=0x7f090070;
-        public static final int category_health=0x7f090071;
+        public static final int btn_apply=0x7f09006d;
+        public static final int category_clothes=0x7f090073;
+        public static final int category_food=0x7f090071;
+        public static final int category_health=0x7f090072;
         public static final int click_assign_category=0x7f09004b;
         public static final int click_ctx_dialog_title=0x7f090048;
         public static final int click_delete=0x7f090045;
@@ -1166,6 +1166,7 @@ containing a value of this type.
         public static final int dialog_csv_export=0x7f090063;
         public static final int dialog_csv_import=0x7f090064;
         public static final int dialog_edit_category=0x7f090065;
+        public static final int dialog_new_category=0x7f090069;
         public static final int dialog_no_category=0x7f090068;
         public static final int dialog_ok=0x7f09005c;
         public static final int dialog_period_end=0x7f090067;
@@ -1199,13 +1200,13 @@ containing a value of this type.
         public static final int menu_summary=0x7f090016;
         public static final int place_detailed=0x7f09001a;
         public static final int places_name=0x7f090019;
-        public static final int progress_csv_scanning=0x7f09006a;
-        public static final int progress_sms_scanning=0x7f090069;
-        public static final int progress_working=0x7f09006b;
+        public static final int progress_csv_scanning=0x7f09006b;
+        public static final int progress_sms_scanning=0x7f09006a;
+        public static final int progress_working=0x7f09006c;
         public static final int report_name=0x7f090015;
-        public static final int settings_bg_color_confirm=0x7f09006d;
-        public static final int settings_bg_color_dialog=0x7f09006f;
-        public static final int settings_default_color_confirm=0x7f09006e;
+        public static final int settings_bg_color_confirm=0x7f09006e;
+        public static final int settings_bg_color_dialog=0x7f090070;
+        public static final int settings_default_color_confirm=0x7f09006f;
         public static final int spinner_all=0x7f090024;
         public static final int str_about=0x7f09003d;
         public static final int str_amount=0x7f09002e;

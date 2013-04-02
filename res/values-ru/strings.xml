@@ -94,6 +94,7 @@
 	<string name="dialog_period_start">Дата начала периода</string>
     <string name="dialog_period_end">Дата окончания периода</string>
     <string name="dialog_no_category">Без категории</string>
+    <string name="dialog_new_category">Новая</string>
     
 	<string name="progress_sms_scanning">Сканирую СМС ...</string>
 	<string name="progress_csv_scanning">Сканирую файл ...</string>

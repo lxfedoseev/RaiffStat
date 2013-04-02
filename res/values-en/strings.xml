@@ -94,6 +94,7 @@
     <string name="dialog_period_start">Period start</string>
     <string name="dialog_period_end">Period end</string>
     <string name="dialog_no_category">Without category</string>
+	<string name="dialog_new_category">New</string>
 	
 	<string name="progress_sms_scanning">Scanning SMS ...</string>
 	<string name="progress_csv_scanning">Scanning file ...</string>

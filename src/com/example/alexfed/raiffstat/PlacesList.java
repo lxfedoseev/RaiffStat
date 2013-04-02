@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ public class PlacesList extends SherlockListActivity{
 	private Context context;
 	private int displayFilter;
 	OnNavigationListener mOnNavigationListener;
+	private String catName;
 	
 	static final int ASSIGN_ID = Menu.FIRST;
 
@@ -40,7 +42,8 @@ public class PlacesList extends SherlockListActivity{
 		super.onCreate(savedInstanceState);
 		setTheme(R.style.Theme_Sherlock_Light_DarkActionBar);
 		setContentView(R.layout.activity_raiff_report);
-		context = getBaseContext();
+		//context = getBaseContext();
+		context = this;
 		displayFilter = StaticValues.PLACES_ALL;
 		setDropDownActionBar();
 	}
@@ -159,17 +162,62 @@ public class PlacesList extends SherlockListActivity{
 					}
 				}
 			});
-		  
-		  alert.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+		  alert.setNeutralButton(R.string.dialog_new_category, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
+					doAddCategory();
 				}
 			});
 
 			alert.show();
 	  }
 	  
+		private void doAddCategory(){
+			
+			AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+			  alert.setTitle(getResources().getString(R.string.str_category));
+			  alert.setMessage(getResources().getString(R.string.ctx_category_name));
+
+			  // Set an EditText view to get user input 
+			  final EditText input = new EditText(this);
+			  input.setSingleLine();
+			  alert.setView(input);
+			  alert.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+			  public void onClick(DialogInterface dialog, int whichButton) {
+			    String value = input.getText().toString();
+			    value = value.trim();
+			    if(!value.isEmpty()){	
+			    	catName = value;
+					AmbilWarnaDialog dialogColor = new AmbilWarnaDialog(context, 0xff00ff00 ,new ColorChangedListener());
+					dialogColor.show();
+			    }else{
+			    	Toast.makeText(getApplicationContext(), getResources().getString(R.string.str_forbidden_empty_category), Toast.LENGTH_LONG).show(); 
+			    }
+			  }
+			  });
+
+			  alert.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+			    public void onClick(DialogInterface dialog, int whichButton) {
+			      // Canceled.
+			    }
+			  });
+
+			  alert.show();
+		}
+	
+		private final class ColorChangedListener implements  AmbilWarnaDialog.OnAmbilWarnaListener {
+			public void onCancel(AmbilWarnaDialog dialog){
+				
+			}
+			public void onOk(AmbilWarnaDialog dialog, int color){
+				DatabaseHandler db = new DatabaseHandler(context);
+				db.addCategory(new CategoryEntry(catName, color));
+				db.close();
+				assignCategory();
+			}
+		}
+		
 	  private void assignCategoryWithProgressBar(Integer choice){
 		  final Integer localChoice = choice;
 		  progressBar = new ProgressDialog(this);
