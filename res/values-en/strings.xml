@@ -42,7 +42,7 @@
     <string name="str_files">Files</string>
     <string name="str_category">Category</string>
     <string name="str_forbidden_empty_category">Category name can\'t be empty</string>
-    <string name="str_category_undefined">Category\r\nundefined</string>
+    <string name="str_category_undefined">Category undefined</string>
     <string name="str_comma_usage">Using comma</string>
     <string name="str_data">Data</string>
     <string name="str_about">About</string>

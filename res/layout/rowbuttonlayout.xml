@@ -6,9 +6,9 @@
     <TextView
         android:id="@+id/place"
         android:layout_width="wrap_content"
-        android:layout_height="54dip"
+        android:layout_height="40dip"
         android:text="@+id/place"
-        android:textSize="20sp" 
+        android:textSize="16sp" 
         android:layout_toLeftOf="@+id/check"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="5dp">
@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="12dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp">
     </CheckBox>
@@ -27,12 +27,12 @@
     <TextView
         android:id="@+id/category"
         android:layout_width="wrap_content"
-        android:layout_height="30dip"
+        android:layout_height="20dip"
         android:text="@+id/category"
-        android:textSize="12sp" 
-        android:layout_below="@+id/check"
-        android:layout_marginLeft="5dp"
-        android:layout_marginBottom="5dp">
+        android:textSize="14sp" 
+        android:layout_below="@+id/place"
+        android:layout_marginBottom="5dp"
+        android:layout_toLeftOf="@+id/check">
     </TextView>
 
 </RelativeLayout>
