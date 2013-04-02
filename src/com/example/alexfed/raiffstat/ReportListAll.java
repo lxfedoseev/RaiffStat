@@ -322,7 +322,7 @@ public class ReportListAll extends SherlockListFragment {
 		  graphView.getGraphViewStyle().setVerticalLabelsColor(Color.BLACK);
 		  graphView.setShowLegend(true); 
 		  graphView.setLegendAlign(GraphView.LegendAlign.TOP);  
-		  graphView.setLegendWidth(200); 
+		  graphView.setLegendWidth(200);
 			
 			//setLabelParams(graphView);
 			
