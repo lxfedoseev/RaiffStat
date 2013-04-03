@@ -211,9 +211,11 @@ public class ReportListAll extends SherlockListFragment {
 	private void doSummary(){
     	if(dayFrom == null || dayTo == null){
     		//TODO: toast something
+    		return;
     	}
     	if(transactions.isEmpty()){
     		//TODO: toast something
+    		return;
     	}
     	DatabaseHandler db = new DatabaseHandler(activity);
 		List<TransactionEntry> trs = db.getTransactionsForGraph(convertStringDate(dayFrom+ " 00:00:00"), 
