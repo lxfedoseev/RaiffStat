@@ -48,8 +48,6 @@ public class ReportSummary extends SherlockListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setTheme(R.style.Theme_Sherlock_Light_DarkActionBar);
-		mHead = new ArrayList<SummaryHeadEntry>();
-		mBar = new ArrayList<SummaryBarEntry>();
 		dayFrom = getIntent().getStringExtra("day_from");
 		dayTo = getIntent().getStringExtra("day_to");
 	}
@@ -62,6 +60,8 @@ public class ReportSummary extends SherlockListActivity {
 	}
 	
 	private void inflateList(){
+		mHead = new ArrayList<SummaryHeadEntry>();
+		mBar = new ArrayList<SummaryBarEntry>();
 		doInitHead();
 		doInitGraph();
 		setListAdapter(new MyCustomAdapter(this, mHead, mBar, mGraph));
