@@ -26,6 +26,7 @@
     <string name="menu_import_export">Import/Export</string>
     <string name="menu_categories">Expense Categories</string>
     <string name="menu_period">Enter period</string>
+    <string name="menu_totally">Totally</string>
     
     <string name="str_place">Place</string>
     <string name="str_period">Period</string>

@@ -21,6 +21,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -65,6 +66,7 @@ public class ReportListAll extends SherlockListFragment {
     static final int SORT_ID = Menu.FIRST+1;
     static final int GRAPH_ID = Menu.FIRST+2;
     static final int PERIOD_ID = Menu.FIRST+3;
+    static final int TOTALLY_ID = Menu.FIRST+4;
     
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -118,6 +120,9 @@ public class ReportListAll extends SherlockListFragment {
 		
 	    MenuItem sortItem = menu.add(Menu.NONE, SORT_ID, 0, R.string.menu_sort);
 	    sortItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		
+		MenuItem totallyItem = menu.add(Menu.NONE, TOTALLY_ID, 0, R.string.menu_totally);
+		totallyItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 	
@@ -135,6 +140,29 @@ public class ReportListAll extends SherlockListFragment {
     			return true;
             case PERIOD_ID:
             	showDatePickerDialog(true);
+    			return true;
+            case TOTALLY_ID:
+            	if(dayFrom == null || dayTo == null){
+            		//TODO: toast something
+            		return true;
+            	}
+            	if(transactions.isEmpty()){
+            		//TODO: toast something
+            		return true;
+            	}
+            	DatabaseHandler db = new DatabaseHandler(activity);
+        		List<TransactionEntry> trs = db.getTransactionsForGraph(convertStringDate(dayFrom+ " 00:00:00"), 
+        				convertStringDate(dayTo+ " 23:59:59"), StaticValues.CURR_RUB);
+        		db.close();
+        		if(trs.size()<1){
+        			  Toast.makeText(activity, getResources().getString(R.string.toast_no_values) + " " + StaticValues.CURR_RUB, 
+        					  Toast.LENGTH_LONG).show();
+        			  return true;	  
+        		}
+            	Intent myIntent = new Intent(activity, ReportSummary.class);
+            	myIntent.putExtra("day_from", dayFrom);
+            	myIntent.putExtra("day_to", dayTo);
+            	activity.startActivity(myIntent);
     			return true;
             default:
                 return super.onOptionsItemSelected(item);
