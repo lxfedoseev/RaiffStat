@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
@@ -30,6 +31,7 @@ public class PlacesList extends SherlockListActivity{
 	private int displayFilter;
 	OnNavigationListener mOnNavigationListener;
 	private String catName;
+	private TextView mTextEmpty;
 	
 	static final int ASSIGN_ID = Menu.FIRST;
 
@@ -42,6 +44,7 @@ public class PlacesList extends SherlockListActivity{
 		super.onCreate(savedInstanceState);
 		setTheme(R.style.Theme_Sherlock_Light_DarkActionBar);
 		setContentView(R.layout.activity_raiff_report);
+		mTextEmpty = (TextView) findViewById(android.R.id.empty);
 		//context = getBaseContext();
 		context = this;
 		displayFilter = StaticValues.PLACES_ALL;
@@ -90,6 +93,7 @@ public class PlacesList extends SherlockListActivity{
 		  modelList = getModel();
 		  ArrayAdapter<Model> adapter = new InteractiveArrayAdapter(this, modelList);
 		  setListAdapter(adapter);
+		  mTextEmpty.setText(R.string.toast_no_place);
 	  }
 
 	private void setDropDownActionBar(){

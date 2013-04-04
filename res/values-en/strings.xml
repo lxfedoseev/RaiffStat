@@ -55,6 +55,9 @@
     <string name="str_to">to: </string>
     <string name="str_select_category">Select category</string>
     <string name="str_categories">Categories</string>
+    <string name="str_period_no_data">No data for required time period</string>
+    <string name="str_period_use_menu">Use menu to set up required time period</string>
+    <string name="str_no_categories">There are no categories</string>
     
     <string name="click_delete">Delete</string>
     <string name="click_rename">Rename</string>

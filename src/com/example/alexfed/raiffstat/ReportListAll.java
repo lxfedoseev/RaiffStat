@@ -31,6 +31,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -60,7 +61,7 @@ public class ReportListAll extends SherlockListFragment {
 	private boolean bundleEmpty = true;
 	private FragmentActivity activity;
 	private DatePicker datePicker;
-	
+	private TextView mTextEmpty;
 	
 	static final int SUMMARY_ID = Menu.FIRST;
     static final int SORT_ID = Menu.FIRST+1;
@@ -97,27 +98,34 @@ public class ReportListAll extends SherlockListFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.activity_raiff_report, null);
+		mTextEmpty = (TextView) view.findViewById(android.R.id.empty);
 		return view;  
 	}
-
-	
+	/*
+	 * https://github.com/JakeWharton/ActionBarSherlock/issues/272#issuecomment-4004069
+	 * 
+	 * Modifying com.actionbarsherlock.internal.view.menu.ActionMenuView to inherit from 
+	 * LinearLayout instead of IcsLinearLayout as proposed earlier in this thread seems 
+	 * to be a valid workaround for this issue in 4.1.0, side effect being that dividers 
+	 * will not display between action items.
+	 */
 	@Override
 	public void onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu,
 			MenuInflater inflater) {
 		if(bundleEmpty){
 			MenuItem periodItem = menu.add(Menu.NONE, PERIOD_ID, 0, R.string.menu_period);
-			periodItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-			//periodItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+			//periodItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+			periodItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 		}
     
 		MenuItem summaryItem = menu.add(Menu.NONE, SUMMARY_ID, 0, R.string.menu_summary);
-		summaryItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-		//summaryItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+		//summaryItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		summaryItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 		summaryItem.setIcon(R.drawable.ic_action_line_chart);
 		
 	    MenuItem sortItem = menu.add(Menu.NONE, SORT_ID, 0, R.string.menu_sort);
-	    sortItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-	    //sortItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+	    //sortItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+	    sortItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
 		super.onCreateOptionsMenu(menu, inflater);
 	}
@@ -192,6 +200,11 @@ public class ReportListAll extends SherlockListFragment {
 		getListView().setDivider(null);
 		queryDateIntervalPlace(convertStringDate(dayFrom+ " 00:00:00"), convertStringDate(dayTo+ " 23:59:59"));
 		setListAdapter(new ReportListAdapter(activity, transactions));
+		if(transactions.isEmpty() && !bundleEmpty){
+			mTextEmpty.setText(R.string.str_period_no_data);
+		}else if(bundleEmpty){
+			mTextEmpty.setText(R.string.str_period_use_menu); 
+		}
 	}
 	
 	private void queryDateIntervalPlace(long start, long end){	

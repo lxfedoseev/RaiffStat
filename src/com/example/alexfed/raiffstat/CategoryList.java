@@ -54,6 +54,7 @@ public class CategoryList extends SherlockListActivity {
 	private int colorDlgType;
 	private int position;
 	private ProgressDialog progressBar;
+	private TextView mTextEmpty;
 	
 	static final int ADD_ID = Menu.FIRST;
 	/* (non-Javadoc)
@@ -66,7 +67,8 @@ public class CategoryList extends SherlockListActivity {
 		setTheme(R.style.Theme_Sherlock_Light_DarkActionBar);
 		context = this;
 		setContentView(R.layout.activity_raiff_report);
-	    
+		mTextEmpty = (TextView) findViewById(android.R.id.empty);
+		
 	    setClickListeners();
 	}
 	
@@ -282,6 +284,7 @@ public class CategoryList extends SherlockListActivity {
 		categories = db.getAllCategories();
 		db.close();
 		setListAdapter(new CategoryListAdapter(this, categories));
+		mTextEmpty.setText(R.string.str_no_categories);
 	}
 	
     private static class CategoryListAdapter extends BaseAdapter {

@@ -386,7 +386,7 @@ public class ReportSummary extends SherlockListActivity {
 	                break;
 	            case TYPE_BAR_INFO:
 	            	holderBar.name.setText(mBarData.get(position-5).getName());
-	            	holderBar.percent.setText(mBarData.get(position-5).getPercent().toString()+" %");
+	            	holderBar.percent.setText(mBarData.get(position-5).getPercent().toString()+"%");
 	            	holderBar.amount.setText(mBarData.get(position-5).getAmount().toString() + " " + StaticValues.CURR_RUB);
 	            	holderBar.color.setBackgroundColor(mBarData.get(position-5).getColor());
 	                break;

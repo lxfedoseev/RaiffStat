@@ -55,6 +55,9 @@
     <string name="str_to">по: </string>
     <string name="str_select_category">Выберите категорию</string>
     <string name="str_categories">Категории</string>
+    <string name="str_period_no_data">Нет данных на запрашиваемый период</string>
+    <string name="str_period_use_menu">Воспользуйтесь меню, чтобы задать желаемый период</string>
+    <string name="str_no_categories">Нет категорий</string>
     
     <string name="click_delete">Удалить</string>
     <string name="click_rename">Переименовать</string>
@@ -67,7 +70,7 @@
 	
 	<string name="toast_nothing_selected">Ничего не выбрано</string>
 	<string name="toast_db_empty">База пуста</string>
-	<string name="toast_no_place">Нет созданных мест</string>
+	<string name="toast_no_place">Мест нет</string>
 	<string name="toast_no_storage">Внешняя память недоступна</string>
 	<string name="toast_dir_failed">Не смог создать директорию</string>
 	<string name="toast_exp_failed">Ошибка экспорта</string>
