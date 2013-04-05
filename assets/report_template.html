@@ -16,7 +16,7 @@
   <div>
     <table style="width: 1277px; height: 30px;" border="1" cellpadding="8" cellspacing="1">
       <tbody>
-        <tr bgcolor="#FF8A16">
+        <tr bgcolor="#000000">
 	  <th align="center" width="12.5%">
             <div style="text-align: center;">
                 <span style="font-size: 11px; color: rgb(255, 255, 255); font-family: Verdana;">
@@ -257,8 +257,93 @@
     </table>	
   </div>
 
-<br>
-    
+<br> 
+
+<canvas id="graphSpace" width="800" height="400"></canvas>
+
+<script>
+var graphCanvas = document.getElementById('graphSpace');
+// Ensure that the element is available within the DOM
+if (graphCanvas && graphCanvas.getContext) {
+  // Open a 2D context within the canvas
+  var context = graphCanvas.getContext('2d');
+
+  // Bar chart data
+  NUM = 5;
+  var names = new Array(NUM);
+  names[0] = "Health";
+  names[1] = "Food";
+  names[2] = "Clothes";
+  names[3] = "Medicine";
+  names[4] = "Car";
+
+  var data = new Array(NUM);
+  data[0] = "50.0,50000.0,#F423FF";
+  data[1] = "20.0,20000.0,#70FF96";
+  data[2] = "15.0,15000.0,#3089FF";
+  data[3] = "10.0,10000.0,#FFBE3D";
+  data[4] = "5.0,5000.0,#FF1500";
+
+  var maxPercent = 50.0;
+  // Draw the bar chart
+  drawBarChart(context, names, data, 50, 100, (graphCanvas.height - 20), 50, maxPercent);
+}
+
+function drawBarChart(context, names, data, startX, barWidth, chartHeight, markDataIncrementsIn, maxPercent) {
+  var factor = chartHeight / maxPercent;
+  // Draw the x and y axes
+  context.lineWidth = "1.0";
+  var startY = 380;
+  drawLine(context, startX, startY, startX, 30); 
+  drawLine(context, startX, startY, 570, startY);			
+  context.lineWidth = "0.0";
+  var maxValue = 0;
+  for (var i=0; i < data.length; i++) {
+    var name = names[i];
+    // Extract the data
+    var values = data[i].split(",");
+    var height = parseFloat(values[0]);
+    if (parseFloat(height) > parseFloat(maxValue)) maxValue = height;
+	
+    // Write the data to the chart
+    context.fillStyle = values[2];
+    drawRectangle(context,startX + (i * barWidth) + i,(chartHeight - height*factor),barWidth,height*factor,true);
+	
+    // Add the column title to the x-axis
+    context.textAlign = "left";
+    context.fillStyle = "#000";
+    context.fillText(name, startX + (i * barWidth) + i, chartHeight + 10, 200);		
+  }
+  // Add some data markers to the y-axis
+  var numMarkers = Math.ceil(maxValue / markDataIncrementsIn);
+  context.textAlign = "right";
+  context.fillStyle = "#000";
+  var markerValue = 0;
+  for (var i=0; i < numMarkers; i++) {		
+    context.fillText(markerValue, (startX - 5), (chartHeight - markerValue), 50);
+    markerValue += markDataIncrementsIn;
+  }
+}
+// drawLine - draws a line on a canvas context from the start point to the end point 
+function drawLine(contextO, startx, starty, endx, endy) {
+  contextO.beginPath();
+  contextO.moveTo(startx, starty);
+  contextO.lineTo(endx, endy);
+  contextO.closePath();
+  contextO.stroke();
+}
+
+// drawRectangle - draws a rectangle on a canvas context using the dimensions specified
+function drawRectangle(contextO, x, y, w, h, fill) {			
+  contextO.beginPath();
+  contextO.rect(x, y, w, h);
+  contextO.closePath();
+  contextO.stroke();
+  if (fill) contextO.fill();
+}
+
+</script>
+<br>   
       
     <div>
       <table style="width: 1277px; height: 30px;" bgcolor="#777777" border="0" cellpadding="8" cellspacing="0">
