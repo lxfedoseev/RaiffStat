@@ -257,7 +257,84 @@
     </table>	
   </div>
 
-<br> 
+<br>
+
+<div>
+    <table style="width: 400px; height: 30px;" border="0" cellpadding="0" cellspacing="0">
+      <tbody>
+	<tr>
+	  <td align="center">
+              <div style="text-align: center;">
+                <span style="font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;">
+                  <b>Period</b> 
+                  </span>
+              </div>
+          </td>
+	  <td align="center">
+              <div style="text-align: center;">
+                <span style="font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;">
+                  1/4/2013 ~ 8/4/2013 
+                  </span>
+              </div>
+          </td>
+	</tr>
+
+	<tr>
+	  <td align="center">
+              <div style="text-align: center;">
+                <span style="font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;">
+                  <b>Expense</b> 
+                  </span>
+              </div>
+          </td>
+	  <td align="center">
+              <div style="text-align: center;">
+                <span style="font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;">
+                  6181.7 RUB
+                  </span>
+              </div>
+          </td>
+	</tr>
+
+	<tr>
+	  <td align="center">
+              <div style="text-align: center;">
+                <span style="font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;">
+                  <b>Income</b> 
+                  </span>
+              </div>
+          </td>
+	  <td align="center">
+              <div style="text-align: center;">
+                <span style="font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;">
+                  100 RUB
+                  </span>
+              </div>
+          </td>
+	</tr>
+
+	<tr>
+	  <td align="center">
+              <div style="text-align: center;">
+                <span style="font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;">
+                  <b>Transaction number</b> 
+                  </span>
+              </div>
+          </td>
+	  <td align="center">
+              <div style="text-align: center;">
+                <span style="font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;">
+                  5
+                  </span>
+              </div>
+          </td>
+	</tr>
+	
+      </tbody>
+    </table>
+</div>
+
+<br>
 <!-- http://www.html5laboratory.com/creating-a-bar-chart-with-canvas.php -->
 
 <canvas id="graphSpace" width="800" height="400"></canvas>
@@ -311,7 +388,7 @@ if (graphCanvas && graphCanvas.getContext) {
   if(NUM<7) barWidth = 100;
   else barWidth = (graphCanvas.width - startX - 20 - (NUM * gap) ) / NUM;
   // Draw the bar chart
-  drawBarChart(context, names, data, startX, barWidth, graphCanvas.height-30, 6, maxPercent, gap);
+  drawBarChart(context, names, data, startX, barWidth, graphCanvas.height-10, 6, maxPercent, gap);
 }
 
 function drawBarChart(context, names, data, startX, barWidth, chartHeight, numMarkers, maxPercent, gap) {
@@ -352,11 +429,11 @@ function drawBarChart(context, names, data, startX, barWidth, chartHeight, numMa
     drawRectangle(context,startX + (i+1)*gap + (i * barWidth) ,(chartHeight - height*factor),barWidth,height*factor,true);
 	
     // Add the column title to the x-axis
-    context.textAlign = "left";
-    context.fillStyle = "#000";
-    context.fillText(name, startX + (i+1)*gap + (i * barWidth), chartHeight + 10, 200);		
-    context.fillText(values[0]+"%", startX + (i+1)*gap + (i * barWidth), chartHeight + 20, 200);	
-    context.fillText(values[1]+"RUB", startX + (i+1)*gap + (i * barWidth), chartHeight + 30, 200);	
+    //context.textAlign = "left";
+    //context.fillStyle = "#000";
+    //context.fillText(name, startX + (i+1)*gap + (i * barWidth), chartHeight + 10, 200);		
+    //context.fillText(values[0]+"%", startX + (i+1)*gap + (i * barWidth), chartHeight + 20, 200);	
+    //context.fillText(values[1]+"RUB", startX + (i+1)*gap + (i * barWidth), chartHeight + 30, 200);	
   }
 }
 // drawLine - draws a line on a canvas context from the start point to the end point 
@@ -378,7 +455,110 @@ function drawRectangle(contextO, x, y, w, h, fill) {
 }
 
 </script>
-<br>   
+<br> 
+
+  <div>
+    <table style="width: 400px; height: 30px;" border="0" cellpadding="0" cellspacing="0">
+      <tbody>
+        <tr>
+          <td align="center">
+              <div style="text-align: center;">
+                <span style="font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;">
+                  <div style="background-color:#F423FF;width:10px;height:10px;"></div> 
+                  </span>
+              </div>
+          </td> 
+          <td align="center">
+              <div style="text-align: center;">
+                <span style="font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;">
+                  Health
+                  </span>
+              </div>
+          </td>
+	  <td align="center">
+              <div style="text-align: center;">
+                <span style="font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;">
+                  50.0%
+                  </span>
+              </div>
+          </td>
+	  <td align="center">
+              <div style="text-align: center;">
+                <span style="font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;">
+                  50000.0 RUB
+                  </span>
+              </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td align="center">
+              <div style="text-align: center;">
+                <span style="font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;">
+                  <div style="background-color:#70FF96;width:10px;height:10px;"></div> 
+                  </span>
+              </div>
+          </td> 
+          <td align="center">
+              <div style="text-align: center;">
+                <span style="font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;">
+                  Food
+                  </span>
+              </div>
+          </td>
+	  <td align="center">
+              <div style="text-align: center;">
+                <span style="font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;">
+                  20.0%
+                  </span>
+              </div>
+          </td>
+	  <td align="center">
+              <div style="text-align: center;">
+                <span style="font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;">
+                  20000.0 RUB
+                  </span>
+              </div>
+          </td>
+        </tr>
+
+	<tr>
+          <td align="center">
+              <div style="text-align: center;">
+                <span style="font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;">
+                  <div style="background-color:#3089FF;width:10px;height:10px;"></div> 
+                  </span>
+              </div>
+          </td> 
+          <td align="center">
+              <div style="text-align: center;">
+                <span style="font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;">
+                  Clothes
+                  </span>
+              </div>
+          </td>
+	  <td align="center">
+              <div style="text-align: center;">
+                <span style="font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;">
+                  15.0%
+                  </span>
+              </div>
+          </td>
+	  <td align="center">
+              <div style="text-align: center;">
+                <span style="font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;">
+                  15000.0 RUB
+                  </span>
+              </div>
+          </td>
+        </tr>
+
+
+      </tbody>
+    </table>
+  </div>
+
+<br>  
       
     <div>
       <table style="width: 1277px; height: 30px;" bgcolor="#777777" border="0" cellpadding="8" cellspacing="0">
