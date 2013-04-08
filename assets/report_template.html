@@ -270,13 +270,23 @@ if (graphCanvas && graphCanvas.getContext) {
   var context = graphCanvas.getContext('2d');
 
   // Bar chart data
-  NUM = 5;
+  NUM = 15;
   var names = new Array(NUM);
   names[0] = "Health";
   names[1] = "Food";
   names[2] = "Clothes";
   names[3] = "Medicine";
-  names[4] = "Car";
+  names[4] = "Car"; 
+  names[5] = "Option 01";
+  names[6] = "Option 02";
+  names[7] = "Option 03";
+  names[8] = "Option 04";
+  names[9] = "Option 05"; 
+  names[10] = "Option 06";
+  names[11] = "Option 07";
+  names[12] = "Option 08";
+  names[13] = "Option 09";
+  names[14] = "Option 10";
 
   var data = new Array(NUM);
   data[0] = "50.0,50000.0,#F423FF";
@@ -284,45 +294,69 @@ if (graphCanvas && graphCanvas.getContext) {
   data[2] = "15.0,15000.0,#3089FF";
   data[3] = "10.0,10000.0,#FFBE3D";
   data[4] = "5.0,5000.0,#FF1500";
+  data[5] = "5.0,5000.0,#FF1500";
+  data[6] = "5.0,5000.0,#FF1500";
+  data[7] = "5.0,5000.0,#FF1500";
+  data[8] = "5.0,5000.0,#FF1500";
+  data[9] = "5.0,5000.0,#FF1500";
+  data[10] = "5.0,5000.0,#FF1500";
+  data[11] = "5.0,5000.0,#FF1500";
+  data[12] = "5.0,5000.0,#FF1500";
+  data[13] = "5.0,5000.0,#FF1500";
+  data[14] = "5.0,5000.0,#FF1500";
 
   var maxPercent = 50.0;
+  var gap = 10;
+  var startX = 50;
+  if(NUM<7) barWidth = 100;
+  else barWidth = (graphCanvas.width - startX - 20 - (NUM * gap) ) / NUM;
   // Draw the bar chart
-  drawBarChart(context, names, data, 50, 100, (graphCanvas.height - 20), 50, maxPercent);
+  drawBarChart(context, names, data, startX, barWidth, graphCanvas.height-30, 6, maxPercent, gap);
 }
 
-function drawBarChart(context, names, data, startX, barWidth, chartHeight, markDataIncrementsIn, maxPercent) {
+function drawBarChart(context, names, data, startX, barWidth, chartHeight, numMarkers, maxPercent, gap) {
   var factor = chartHeight / maxPercent;
   // Draw the x and y axes
   context.lineWidth = "1.0";
-  var startY = 380;
-  drawLine(context, startX, startY, startX, 30); 
-  drawLine(context, startX, startY, 570, startY);			
+  var startY = chartHeight;
+  drawLine(context, startX, startY, startX, 0); 
+  drawLine(context, startX, startY, NUM*(gap+barWidth)+startX+20, startY);			
+  drawLine(context, startX, 0, NUM*(gap+barWidth)+startX+20, 0);
+  drawLine(context, NUM*(gap+barWidth)+startX+20, 0, NUM*(gap+barWidth)+startX+20, startY);
+  
+  // Add some data markers to the y-axis
+  context.textAlign = "right";
+  context.fillStyle = "#000";
+  var step = maxPercent / numMarkers;
+  var stepNum = chartHeight / numMarkers;
+  var markerValue = 0;
+  for (var i=0; i <= numMarkers; i++) {
+    if(i==numMarkers) markerValue = maxPercent;		
+    context.fillText(markerValue, (startX - 5), (chartHeight - stepNum*i+10), 50);
+    drawLine(context, startX, (chartHeight - stepNum*i), NUM*(gap+barWidth)+startX+20, (chartHeight - stepNum*i));
+    markerValue += step;
+    markerValue *= 100;
+    markerValue = Math.round(markerValue);
+    markerValue /= 100;
+  }
+
   context.lineWidth = "0.0";
-  var maxValue = 0;
   for (var i=0; i < data.length; i++) {
     var name = names[i];
     // Extract the data
     var values = data[i].split(",");
     var height = parseFloat(values[0]);
-    if (parseFloat(height) > parseFloat(maxValue)) maxValue = height;
 	
     // Write the data to the chart
     context.fillStyle = values[2];
-    drawRectangle(context,startX + (i * barWidth) + i,(chartHeight - height*factor),barWidth,height*factor,true);
+    drawRectangle(context,startX + (i+1)*gap + (i * barWidth) ,(chartHeight - height*factor),barWidth,height*factor,true);
 	
     // Add the column title to the x-axis
     context.textAlign = "left";
     context.fillStyle = "#000";
-    context.fillText(name, startX + (i * barWidth) + i, chartHeight + 10, 200);		
-  }
-  // Add some data markers to the y-axis
-  var numMarkers = Math.ceil(maxValue / markDataIncrementsIn);
-  context.textAlign = "right";
-  context.fillStyle = "#000";
-  var markerValue = 0;
-  for (var i=0; i < numMarkers; i++) {		
-    context.fillText(markerValue, (startX - 5), (chartHeight - markerValue), 50);
-    markerValue += markDataIncrementsIn;
+    context.fillText(name, startX + (i+1)*gap + (i * barWidth), chartHeight + 10, 200);		
+    context.fillText(values[0]+"%", startX + (i+1)*gap + (i * barWidth), chartHeight + 20, 200);	
+    context.fillText(values[1]+"RUB", startX + (i+1)*gap + (i * barWidth), chartHeight + 30, 200);	
   }
 }
 // drawLine - draws a line on a canvas context from the start point to the end point 
