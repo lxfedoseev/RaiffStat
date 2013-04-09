@@ -234,14 +234,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Cursor cursor = db.query(TABLE_CATEGORIES, new String[] { CAT_KEY_ID, CAT_KEY_NAME, CAT_KEY_COLOR }, 
                 KEY_ID + "=?",
                 new String[] { String.valueOf(id) }, null, null, null, null);
-
-        if (cursor != null)
-            cursor.moveToFirst();
-            CategoryEntry c = new CategoryEntry(cursor.getInt(0), cursor.getString(1), cursor.getInt(2));
+        
+        CategoryEntry c;
+        if (cursor.moveToFirst())
+            c = new CategoryEntry(cursor.getInt(0), cursor.getString(1), cursor.getInt(2));
+        else
+        	c = new CategoryEntry(StaticValues.EXPENSE_CATEGORY_UNKNOWN, "-", 0xffffffff);
             
         cursor.close();
         db.close();
-        // return transaction
+        // return category
         return c;
     }
  

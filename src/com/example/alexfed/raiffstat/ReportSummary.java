@@ -28,9 +28,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
 
 import com.actionbarsherlock.app.SherlockListActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
@@ -44,6 +47,7 @@ public class ReportSummary extends SherlockListActivity {
 	private GraphView mGraph;
 	private String dayFrom;
 	private String dayTo;
+	static final int SHARE_ID = Menu.FIRST;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -58,6 +62,31 @@ public class ReportSummary extends SherlockListActivity {
 		super.onResume();
 		inflateList();
 	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	  MenuItem shareItem = menu.add(Menu.NONE, SHARE_ID, 0, R.string.click_share);
+	  shareItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+	  return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+    		case SHARE_ID:
+    			// TODO:
+    			ReportHtml rep = new ReportHtml(this, dayFrom, dayTo, mHead, mBar);
+    			if(rep.saveHtml()){
+    				
+    			}else{
+    				
+    			}
+    			return true;
+    		default:
+    			return super.onOptionsItemSelected(item);
+		}
+   
+  }
 	
 	private void inflateList(){
 		mHead = new ArrayList<SummaryHeadEntry>();

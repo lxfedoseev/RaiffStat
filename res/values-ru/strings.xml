@@ -58,6 +58,10 @@
     <string name="str_period_no_data">Нет данных на запрашиваемый период</string>
     <string name="str_period_use_menu">Воспользуйтесь меню, чтобы задать желаемый период</string>
     <string name="str_no_categories">Нет категорий</string>
+    <string name="str_number">№</string>
+    <string name="str_date_time">День и время</string>
+    <string name="str_type">Тип</string>
+    <string name="str_remainder">Отстаток</string>
     
     <string name="click_delete">Удалить</string>
     <string name="click_rename">Переименовать</string>
@@ -67,6 +71,7 @@
 	<string name="click_edit_color">Изменить цвет</string>
 	<string name="click_assign_category">Назначить</string>
 	<string name="click_remove_category">Убрать</string>
+	<string name="click_share">Отправить</string>
 	
 	<string name="toast_nothing_selected">Ничего не выбрано</string>
 	<string name="toast_db_empty">База пуста</string>

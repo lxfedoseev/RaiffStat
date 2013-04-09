@@ -58,6 +58,10 @@
     <string name="str_period_no_data">No data for required time period</string>
     <string name="str_period_use_menu">Use menu to set up required time period</string>
     <string name="str_no_categories">There are no categories</string>
+    <string name="str_number">#</string>
+    <string name="str_date_time">Date and Time</string>
+    <string name="str_type">Type</string>
+    <string name="str_remainder">Remainder</string>
     
     <string name="click_delete">Delete</string>
     <string name="click_rename">Rename</string>
@@ -67,6 +71,7 @@
 	<string name="click_edit_color">Edit color</string>
 	<string name="click_assign_category">Assign</string>
 	<string name="click_remove_category">Remove</string>
+	<string name="click_share">Share</string>
 	
 	<string name="toast_nothing_selected">Nothing selected</string>
 	<string name="toast_db_empty">DataBase is empty</string>

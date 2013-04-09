@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="html_begin">&lt;!DOCTYPE html&gt;\r\n
+&lt;html&gt;\r\n
+  &lt;head&gt;\r\n
+    &lt;title&gt;RaiffStat Report&lt;/title&gt;\r\n
+    &lt;meta charset=\"UTF-8\"&gt;\r\n
+  &lt;/head&gt;\r\n
+  &lt;body&gt;\r\n
+	</string>
+	
+    <string name="html_end">  &lt;/body&gt;\r\n
+&lt;/html&gt;
+    </string>
+    
+    
+    <string name="html_head_table_begin">&lt;div&gt;\r\n
+    &lt;table style=\"width: 400px; height: 30px;\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\"&gt;\r\n
+      &lt;tbody&gt;\r\n
+    </string>
+	
+    <string name="html_head_table_end">&lt;/tbody&gt;\r\n
+    &lt;/table&gt;\r\n
+	&lt;/div&gt;\r\n
+	&lt;br&gt;\r\n   
+    </string>
+    
+    <string name="html_head_row">&lt;tr&gt;\r\n
+	  &lt;td align=\"center\"&gt;\r\n
+              &lt;div style=\"text-align: center;\"&gt;\r\n
+                &lt;span style=\"font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;\"&gt;\r\n
+                  &lt;b&gt;\r\n%1$s&lt;/b&gt;\r\n 
+                  &lt;/span&gt;\r\n
+              &lt;/div&gt;\r\n
+          &lt;/td&gt;\r\n
+	  &lt;td align=\"center\"&gt;\r\n
+              &lt;div style=\"text-align: center;\"&gt;\r\n
+                &lt;span style=\"font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;\"&gt;\r\n
+                  %2$s 
+                  &lt;/span&gt;\r\n
+              &lt;/div&gt;\r\n
+          &lt;/td&gt;\r\n
+	&lt;/tr&gt;\r\n
+	</string>
+	
+    <string name="html_main_table_begin">&lt;div&gt;\r\n
+    &lt;table style=\"width: 1024px; height: 30px;\" border=\"1\" cellpadding=\"8\" cellspacing=\"1\"&gt;\r\n
+      &lt;tbody&gt;\r\n
+    </string>
+    
+    <string name="html_main_table_end">&lt;/tbody&gt;\r\n
+    &lt;/table&gt;\r\n	
+    &lt;/div&gt;\r\n
+   &lt;br&gt;\r\n  
+    </string>
+    
+    <string name="html_main_table_title_row"> &lt;tr bgcolor=\"#000000\"&gt;\r\n
+	  &lt;th align=\"center\"&gt;\r\n
+            &lt;div style=\"text-align: center;\"&gt;\r\n
+                &lt;span style=\"font-size: 11px; color: rgb(255, 255, 255); font-family: Verdana;\"&gt;\r\n
+                %1$s 
+                &lt;/span&gt;\r\n
+             &lt;/div&gt;\r\n
+          &lt;/th&gt;\r\n	
+          &lt;th align=\"center\"&gt;\r\n
+            &lt;div style=\"text-align: center;\"&gt;\r\n
+                &lt;span style=\"font-size: 11px; color: rgb(255, 255, 255); font-family: Verdana;\"&gt;\r\n
+                %2$s 
+                &lt;/span&gt;\r\n
+             &lt;/div&gt;\r\n
+          &lt;/th&gt;\r\n
+	  &lt;th align=\"center\"&gt;\r\n
+            &lt;div style=\"text-align: center;\"&gt;\r\n
+                &lt;span style=\"font-size: 11px; color: rgb(255, 255, 255); font-family: Verdana;\"&gt;\r\n
+                %3$s
+                &lt;/span&gt;\r\n
+             &lt;/div&gt;\r\n
+          &lt;/th&gt;\r\n
+          &lt;th align=\"center\"&gt;\r\n
+            &lt;div style=\"text-align: center;\"&gt;\r\n
+                &lt;span style=\"font-size: 11px; color: rgb(255, 255, 255); font-family: Verdana;\"&gt;\r\n
+                %4$s
+                &lt;/span&gt;\r\n
+             &lt;/div&gt;\r\n
+          &lt;/th&gt;\r\n
+	  &lt;th align=\"center\"&gt;\r\n
+            &lt;div style=\"text-align: center;\"&gt;\r\n
+                &lt;span style=\"font-size: 11px; color: rgb(255, 255, 255); font-family: Verdana;\"&gt;\r\n
+                %5$s 
+                &lt;/span&gt;\r\n
+             &lt;/div&gt;\r\n
+          &lt;/th&gt;\r\n
+	    &lt;th align=\"center\"&gt;\r\n
+            &lt;div style=\"text-align: center;\"&gt;\r\n
+                &lt;span style=\"font-size: 11px; color: rgb(255, 255, 255); font-family: Verdana;\"&gt;\r\n
+                %6$s 
+                &lt;/span&gt;\r\n
+             &lt;/div&gt;\r\n
+          &lt;/th&gt;\r\n
+	  &lt;th align=\"center\"&gt;\r\n
+            &lt;div style=\"text-align: center;\"&gt;\r\n
+                &lt;span style=\"font-size: 11px; color: rgb(255, 255, 255); font-family: Verdana;\"&gt;\r\n
+                %7$s 
+                &lt;/span&gt;\r\n
+             &lt;/div&gt;\r\n
+          &lt;/th&gt;\r\n
+	  &lt;th align=\"center\"&gt;\r\n
+            &lt;div style=\"text-align: center;\"&gt;\r\n
+                &lt;span style=\"font-size: 11px; color: rgb(255, 255, 255); font-family: Verdana;\"&gt;\r\n
+                %8$s 
+                &lt;/span&gt;\r\n
+             &lt;/div&gt;\r\n
+          &lt;/th&gt;\r\n
+        &lt;/tr&gt;\r\n    
+    </string>
+    
+    <string name="html_main_table_row">&lt;tr bgcolor=\"%1$s\"&gt;\r\n
+          &lt;td align=\"center\"&gt;\r\n
+              &lt;div style=\"text-align: center;\"&gt;\r\n
+                &lt;span style=\"font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;\"&gt;\r\n
+                  %2$s 
+                  &lt;/span&gt;\r\n
+              &lt;/div&gt;\r\n
+          &lt;/td&gt;\r\n
+	  &lt;td align=\"center\"&gt;\r\n
+              &lt;div style=\"text-align: center;\"&gt;\r\n
+                &lt;span style=\"font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;\"&gt;\r\n
+                  %3$s 
+                  &lt;/span&gt;\r\n
+              &lt;/div&gt;\r\n
+          &lt;/td&gt;\r\n
+	  &lt;td align=\"center\"&gt;\r\n
+              &lt;div style=\"text-align: center;\"&gt;\r\n
+                &lt;span style=\"font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;\"&gt;\r\n
+                  %4$s 
+                  &lt;/span&gt;\r\n
+              &lt;/div>
+          &lt;/td>
+	  &lt;td align=\"center\"&gt;\r\n
+              &lt;div style=\"text-align: center;\"&gt;\r\n
+                &lt;span style=\"font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;\"&gt;\r\n
+                  %5$s 
+                  &lt;/span&gt;\r\n
+              &lt;/div&gt;\r\n
+          &lt;/td&gt;\r\n
+	  &lt;td align=\"center\"&gt;\r\n
+              &lt;div style=\"text-align: center;\"&gt;\r\n
+                &lt;span style=\"font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;\"&gt;\r\n
+                  %6$s 
+                  &lt;/span&gt;\r\n
+              &lt;/div&gt;\r\n
+          &lt;/td&gt;\r\n
+	  &lt;td align=\"center\"&gt;\r\n
+              &lt;div style=\"text-align: center;\"&gt;\r\n
+                &lt;span style=\"font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;\"&gt;\r\n
+                  %7$s 
+                  &lt;/span&gt;\r\n
+              &lt;/div&gt;\r\n
+          &lt;/td&gt;\r\n
+	  &lt;td align=\"center\"&gt;\r\n
+              &lt;div style=\"text-align: center;\"&gt;\r\n
+                &lt;span style=\"font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;\"&gt;\r\n
+                  %8$s 
+                  &lt;/span&gt;\r\n
+              &lt;/div&gt;\r\n
+          &lt;/td&gt;\r\n
+	 &lt;td align=\"center\"&gt;\r\n
+              &lt;div style=\"text-align: center;\"&gt;\r\n
+                &lt;span style=\"font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;\"&gt;\r\n
+                  %9$s 
+                  &lt;/span&gt;\r\n
+              &lt;/div&gt;\r\n
+          &lt;/td&gt;\r\n
+	&lt;/tr&gt;\r\n   
+    </string>
+    
+</resources>

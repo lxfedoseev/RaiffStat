@@ -25,4 +25,7 @@ public class StaticValues {
 	public static int PLACES_ALL = 0;
 	public static int PLACES_CATEGORY_IN = 1;
 	public static int PLACES_CATEGORY_OUT = 2;
+	
+	public static String DIR_NAME = "RaiffStat";
+	public static String HTML_REPORT_PREFIX = "RaiffStat_Report_";
 }
