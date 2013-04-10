@@ -19,7 +19,7 @@ public class ReportHtml {
 	private final String LOG = "ReportHtml";
 	
 	private String dayFrom;
-	private String dayTo;
+	private String dayTo; 
 	private List<SummaryHeadEntry> mHead;
 	private List<SummaryBarEntry> mBar;
 	private File mFile;
