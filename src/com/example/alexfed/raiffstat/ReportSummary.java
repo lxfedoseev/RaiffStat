@@ -17,8 +17,10 @@ import java.util.Map;
 import java.util.Set;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -27,17 +29,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
-import com.jjoe64.graphview.GraphView.GraphViewData;
 
 public class ReportSummary extends SherlockListActivity {
 	private final String LOG = "ReportSummary";
@@ -74,10 +75,14 @@ public class ReportSummary extends SherlockListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
     		case SHARE_ID:
-    			// TODO:
+    			// TODO: with progress bar
     			ReportHtml rep = new ReportHtml(this, dayFrom, dayTo, mHead, mBar);
     			if(rep.saveHtml()){
-    				
+    				Intent shareIntent = new Intent();
+    				shareIntent.setAction(Intent.ACTION_SEND);
+    				shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(rep.getFile()));
+    				shareIntent.setType("text/html");
+    				startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.click_share)));
     			}else{
     				
     			}

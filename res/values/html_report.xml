@@ -175,4 +175,132 @@
 	&lt;/tr&gt;\r\n   
     </string>
     
+    <string name="html_canvas">&lt;canvas id=\"graphSpace\" width=\"800\" height=\"400\"&gt;&lt;/canvas&gt;\r\n
+    </string>
+    
+    <string name="html_graph_script_begin">&lt;script&gt;\r\n
+	var graphCanvas = document.getElementById(\"graphSpace\");\r\n
+	if (graphCanvas %1$s graphCanvas.getContext) {\r\n
+  	var context = graphCanvas.getContext(\"2d\");\r\n 
+    </string>
+    
+    <string name="html_graph_script_end">var gap = 10;\r\n
+  var startX = 50;\r\n
+  if(NUM&lt;7) barWidth = 100;\r\n
+  else barWidth = (graphCanvas.width - startX - 20 - (NUM * gap) ) / NUM;\r\n
+  drawBarChart(context, names, data, startX, barWidth, graphCanvas.height-10, 6, maxPercent, gap);\r\n
+}\r\n
+
+function drawBarChart(context, names, data, startX, barWidth, chartHeight, numMarkers, maxPercent, gap) {\r\n
+  var factor = chartHeight / maxPercent;\r\n
+  context.lineWidth = \"1.0\";\r\n
+  var startY = chartHeight;\r\n
+  drawLine(context, startX, startY, startX, 0);\r\n
+  drawLine(context, startX, startY, NUM*(gap+barWidth)+startX+20, startY);\r\n			
+  drawLine(context, startX, 0, NUM*(gap+barWidth)+startX+20, 0);\r\n
+  drawLine(context, NUM*(gap+barWidth)+startX+20, 0, NUM*(gap+barWidth)+startX+20, startY);\r\n
+  
+  context.textAlign = \"right\";\r\n
+  var step = maxPercent / numMarkers;\r\n
+  var stepNum = chartHeight / numMarkers;\r\n
+  var markerValue = 0;\r\n
+  for (var i=0; i &lt;= numMarkers; i++) {\r\n
+    if(i==numMarkers) markerValue = maxPercent;\r\n		
+    context.fillText(markerValue, (startX - 5), (chartHeight - stepNum*i+10), 50);\r\n
+    drawLine(context, startX, (chartHeight - stepNum*i), NUM*(gap+barWidth)+startX+20, (chartHeight - stepNum*i));\r\n
+    markerValue += step;\r\n
+    markerValue *= 100;\r\n
+    markerValue = Math.round(markerValue);\r\n
+    markerValue /= 100;\r\n
+  }\r\n
+
+  context.lineWidth = \"0.0\";\r\n
+  for (var i=0; i &lt; data.length; i++) {\r\n
+    var name = names[i];\r\n
+    var values = data[i].split(\",\");\r\n
+    var height = parseFloat(values[0]);\r\n
+    context.fillStyle = values[2];\r\n
+    drawRectangle(context,startX + (i+1)*gap + (i * barWidth) ,(chartHeight - height*factor),barWidth,height*factor,true);\r\n	
+  }\r\n
+}\r\n
+function drawLine(contextO, startx, starty, endx, endy) {\r\n
+  contextO.beginPath();\r\n
+  contextO.moveTo(startx, starty);\r\n
+  contextO.lineTo(endx, endy);\r\n
+  contextO.closePath();\r\n
+  contextO.stroke();\r\n
+}\r\n
+
+function drawRectangle(contextO, x, y, w, h, fill) {\r\n			
+  contextO.beginPath();\r\n
+  contextO.rect(x, y, w, h);\r\n
+  contextO.closePath();\r\n
+  contextO.stroke();\r\n
+  if (fill) contextO.fill();\r\n
+}\r\n
+
+&lt;/script&gt;\r\n
+&lt;br&gt;\r\n 
+    </string>
+    
+    <string name="html_bar_table_begin">&lt;div&gt;\r\n
+    &lt;table style=\"width: 400px; height: 30px;\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\"&gt;\r\n
+      &lt;tbody&gt;\r\n
+      </string>
+      
+   <string name="html_bar_table_end">&lt;/tbody&gt;\r\n
+    &lt;/table&gt;\r\n
+  &lt;/div&gt;\r\n
+	&lt;br&gt;\r\n     
+   </string>
+   
+   <string name="html_bar_table_row">&lt;tr&gt;\r\n
+          &lt;td align=\"center\"&gt;\r\n
+              &lt;div style=\"text-align: center;\"&gt;\r\n
+                &lt;span style=\"font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;\"&gt;\r\n
+                  &lt;div style=\"background-color:%1$s;width:10px;height:10px;\">&lt;/div&gt;\r\n 
+                  &lt;/span&gt;\r\n
+              &lt;/div&gt;\r\n
+          &lt;/td&gt;\r\n 
+          &lt;td align=\"center\"&gt;\r\n
+              &lt;div style=\"text-align: center;\"&gt;\r\n
+                &lt;span style=\"font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;\"&gt;\r\n
+                  %2$s
+                  &lt;/span&gt;\r\n
+              &lt;/div&gt;\r\n
+          &lt;/td&gt;\r\n
+	  &lt;td align=\"center\"&gt;\r\n
+              &lt;div style=\"text-align: center;\"&gt;\r\n
+                &lt;span style=\"font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;\"&gt;\r\n
+                  %3$s
+                  &lt;/span&gt;\r\n
+              &lt;/div&gt;\r\n
+          &lt;/td&gt;\r\n
+	  &lt;td align=\"center\"&gt;\r\n
+              &lt;div style=\"text-align: center;\"&gt;\r\n
+                &lt;span style=\"font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;\"&gt;\r\n
+                  %4$s
+                  &lt;/span&gt;\r\n
+              &lt;/div&gt;\r\n
+          &lt;/td&gt;\r\n
+        &lt;/tr&gt;\r\n
+   </string>
+   
+   <string name="html_copyright">&lt;div&gt;\r\n
+      &lt;table style=\"width: 1024px; height: 30px;\" bgcolor=\"#777777\" border=\"0\" cellpadding=\"8\" cellspacing=\"0\"&gt;\r\n
+        &lt;tbody&gt;\r\n
+          &lt;tr>
+            &lt;td align=\"right\"&gt;\r\n
+              &lt;div style=\"text-align: right;\"&gt;\r\n
+                &lt;span style=\"font-size: 11px; color: rgb(255, 255, 255); font-family: Verdana;\"&gt;\r\n
+                  %1$s 
+                  &lt;/span&gt;\r\n
+              &lt;/div&gt;\r\n
+            &lt;/td&gt;\r\n
+          &lt;/tr&gt;\r\n
+        &lt;/tbody&gt;\r\n
+      &lt;/table&gt;\r\n
+    &lt;/div&gt;\r\n
+   </string>
+
 </resources>

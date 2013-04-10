@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class ReportHtml {
 	private String dayTo;
 	private List<SummaryHeadEntry> mHead;
 	private List<SummaryBarEntry> mBar;
+	private File mFile;
 	private Context mContext;
 	
 	public ReportHtml(Context context, String from, String to, 
@@ -50,6 +52,9 @@ public class ReportHtml {
 	    		doWriteHtmlBegin(out);
 	    		doWriteHead(out);
 	    		doWriteMainTable(out); 
+	    		doWriteGraph(out);
+	    		doWriteBarTable(out); 
+	    		doWriteCopyright(out);
 	    		doWriteHtmlEnd(out);
 	    		
 	    		out.close(); 
@@ -68,7 +73,7 @@ public class ReportHtml {
 	    	return false;
 	    }
 		
-		return false;
+		return true;
 	}
 	
 	private void doWriteHtmlBegin(BufferedWriter out) throws IOException{
@@ -161,6 +166,56 @@ public class ReportHtml {
 		}
 	}
 	
+	
+	private void doWriteGraph(BufferedWriter out) throws IOException{
+		try{
+			out.write(mContext.getResources().getString(R.string.html_canvas));
+			out.write(String.format(mContext.getResources().getString(R.string.html_graph_script_begin), "&&" ));
+
+			out.write("NUM = " + mBar.size() + ";\r\n");
+			out.write("var names = new Array(NUM);\r\n");
+			out.write("var data = new Array(NUM);\r\n");
+			String names = "";
+			String data = "";
+			int i=0;
+			for(SummaryBarEntry b:mBar){
+				names += "names[" + i + "] = \"" + b.getName() + "\";\r\n";
+				data += "data[" + i + "] = \"" + b.getPercent() + "," + b.getAmount() + "," 
+							+ String.format("#%06X", (0xFFFFFF & b.getColor())) + "\";\r\n";
+				i++;
+			}
+			out.write(names);
+			out.write(data);
+			out.write("var maxPercent = " + mBar.get(0).getPercent() + ";\r\n");
+			out.write(mContext.getResources().getString(R.string.html_graph_script_end));
+		}catch(IOException e){
+			throw e;
+		}
+	}
+	
+	private void doWriteBarTable(BufferedWriter out) throws IOException{
+		try{
+			out.write(mContext.getResources().getString(R.string.html_bar_table_begin));
+			for(SummaryBarEntry b:mBar){
+				out.write(String.format(mContext.getResources().getString(R.string.html_bar_table_row), 
+						String.format("#%06X", (0xFFFFFF & b.getColor())),
+						b.getName(), b.getPercent() + "%", b.getAmount() + " " + StaticValues.CURR_RUB));
+			}
+			out.write(mContext.getResources().getString(R.string.html_bar_table_end));
+		}catch(IOException e){
+			throw e;
+		}
+	}
+	
+	private void doWriteCopyright(BufferedWriter out) throws IOException{
+		try{
+			out.write(String.format(mContext.getResources().getString(R.string.html_copyright), 
+					"Copyright &copy; " + Calendar.getInstance().get(Calendar.YEAR) + " RaiffStat"));
+		}catch(IOException e){
+			throw e;
+		}
+	}
+	
 	private boolean createDirIfNotExists(String path) {
 	    boolean ret = true;
 
@@ -186,8 +241,14 @@ public class ReportHtml {
 	}
 
 	private String makeHtmlFileName(){	
-		return Environment.getExternalStorageDirectory()+ "/" + StaticValues.DIR_NAME + "/" + 
-					StaticValues.HTML_REPORT_PREFIX + dayFrom.replace("/", "_") + "--" + 
-					dayTo.replace("/", "_") + ".html";
+		String filePath = Environment.getExternalStorageDirectory()+ "/" + StaticValues.DIR_NAME + "/" + 
+				StaticValues.HTML_REPORT_PREFIX + dayFrom.replace("/", "_") + "--" + 
+				dayTo.replace("/", "_") + ".html";
+		mFile = new File(filePath);
+		return filePath;
+	}
+	
+	public File getFile(){
+		return this.mFile;
 	}
 }

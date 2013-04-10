@@ -335,13 +335,10 @@
 <canvas id="graphSpace" width="800" height="400"></canvas>
 
 <script>
-var graphCanvas = document.getElementById('graphSpace');
-// Ensure that the element is available within the DOM
+var graphCanvas = document.getElementById("graphSpace");
 if (graphCanvas && graphCanvas.getContext) {
-  // Open a 2D context within the canvas
-  var context = graphCanvas.getContext('2d');
+  var context = graphCanvas.getContext("2d");
 
-  // Bar chart data
   NUM = 15;
   var names = new Array(NUM);
   names[0] = "Health";
@@ -382,13 +379,11 @@ if (graphCanvas && graphCanvas.getContext) {
   var startX = 50;
   if(NUM<7) barWidth = 100;
   else barWidth = (graphCanvas.width - startX - 20 - (NUM * gap) ) / NUM;
-  // Draw the bar chart
   drawBarChart(context, names, data, startX, barWidth, graphCanvas.height-10, 6, maxPercent, gap);
 }
 
 function drawBarChart(context, names, data, startX, barWidth, chartHeight, numMarkers, maxPercent, gap) {
   var factor = chartHeight / maxPercent;
-  // Draw the x and y axes
   context.lineWidth = "1.0";
   var startY = chartHeight;
   drawLine(context, startX, startY, startX, 0); 
@@ -396,9 +391,7 @@ function drawBarChart(context, names, data, startX, barWidth, chartHeight, numMa
   drawLine(context, startX, 0, NUM*(gap+barWidth)+startX+20, 0);
   drawLine(context, NUM*(gap+barWidth)+startX+20, 0, NUM*(gap+barWidth)+startX+20, startY);
   
-  // Add some data markers to the y-axis
   context.textAlign = "right";
-  context.fillStyle = "#000";
   var step = maxPercent / numMarkers;
   var stepNum = chartHeight / numMarkers;
   var markerValue = 0;
@@ -415,23 +408,12 @@ function drawBarChart(context, names, data, startX, barWidth, chartHeight, numMa
   context.lineWidth = "0.0";
   for (var i=0; i < data.length; i++) {
     var name = names[i];
-    // Extract the data
     var values = data[i].split(",");
-    var height = parseFloat(values[0]);
-	
-    // Write the data to the chart
+    var height = parseFloat(values[0]);	
     context.fillStyle = values[2];
-    drawRectangle(context,startX + (i+1)*gap + (i * barWidth) ,(chartHeight - height*factor),barWidth,height*factor,true);
-	
-    // Add the column title to the x-axis
-    //context.textAlign = "left";
-    //context.fillStyle = "#000";
-    //context.fillText(name, startX + (i+1)*gap + (i * barWidth), chartHeight + 10, 200);		
-    //context.fillText(values[0]+"%", startX + (i+1)*gap + (i * barWidth), chartHeight + 20, 200);	
-    //context.fillText(values[1]+"RUB", startX + (i+1)*gap + (i * barWidth), chartHeight + 30, 200);	
+    drawRectangle(context,startX + (i+1)*gap + (i * barWidth) ,(chartHeight - height*factor),barWidth,height*factor,true);	
   }
 }
-// drawLine - draws a line on a canvas context from the start point to the end point 
 function drawLine(contextO, startx, starty, endx, endy) {
   contextO.beginPath();
   contextO.moveTo(startx, starty);
@@ -440,7 +422,6 @@ function drawLine(contextO, startx, starty, endx, endy) {
   contextO.stroke();
 }
 
-// drawRectangle - draws a rectangle on a canvas context using the dimensions specified
 function drawRectangle(contextO, x, y, w, h, fill) {			
   contextO.beginPath();
   contextO.rect(x, y, w, h);
