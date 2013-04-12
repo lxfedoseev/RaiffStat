@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/scroll" 
-	android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
 
-<TableLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/main_layout">"
+     
+	<TableLayout
+    	android:id="@+id/table"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" >
+        android:layout_centerInParent="true" >
 
        <TableRow
             android:id="@+id/tableRow1"
@@ -64,8 +66,25 @@
 	        android:paddingTop="5dp"
 	        android:textSize="20sp"
 	        android:text="@string/str_categories" />
-        
+        	
         </TableRow>
+	</TableLayout>
 
-</TableLayout>
-</ScrollView>
+
+	<RelativeLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_below="@+id/table">
+	        
+	       <TextView 
+			 android:id="@+id/notification"
+			 android:layout_width="wrap_content"
+			 android:layout_height="wrap_content"
+			 android:textSize="12sp"
+			 android:layout_alignParentBottom="true"
+			 android:layout_centerInParent="true"
+			 android:layout_marginBottom="10dp"/>
+	       
+	</RelativeLayout>
+
+</RelativeLayout>

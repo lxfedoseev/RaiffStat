@@ -112,12 +112,6 @@ public class ReportListAll extends SherlockListFragment {
 	@Override
 	public void onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu,
 			MenuInflater inflater) {
-		if(bundleEmpty){
-			MenuItem periodItem = menu.add(Menu.NONE, PERIOD_ID, 0, R.string.menu_period);
-			//periodItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-			periodItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-		}
-    
 		MenuItem summaryItem = menu.add(Menu.NONE, SUMMARY_ID, 0, R.string.menu_summary);
 		//summaryItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 		summaryItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
@@ -127,6 +121,12 @@ public class ReportListAll extends SherlockListFragment {
 	    //sortItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 	    sortItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
+		if(bundleEmpty){
+			MenuItem periodItem = menu.add(Menu.NONE, PERIOD_ID, 0, R.string.menu_period);
+			//periodItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+			periodItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+		}
+		
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 	

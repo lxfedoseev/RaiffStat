@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -31,6 +32,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.Menu;
@@ -48,6 +50,7 @@ public class ReportSummary extends SherlockListActivity {
 	private GraphView mGraph;
 	private String dayFrom;
 	private String dayTo;
+	private ProgressDialog progressBar;
 	static final int SHARE_ID = Menu.FIRST;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,17 +78,7 @@ public class ReportSummary extends SherlockListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
     		case SHARE_ID:
-    			// TODO: with progress bar
-    			ReportHtml rep = new ReportHtml(this, dayFrom, dayTo, mHead, mBar);
-    			if(rep.saveHtml()){
-    				Intent shareIntent = new Intent();
-    				shareIntent.setAction(Intent.ACTION_SEND);
-    				shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(rep.getFile()));
-    				shareIntent.setType("text/html");
-    				startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.click_share)));
-    			}else{
-    				
-    			}
+    			doShareWithProgressBar();
     			return true;
     		default:
     			return super.onOptionsItemSelected(item);
@@ -99,6 +92,43 @@ public class ReportSummary extends SherlockListActivity {
 		doInitHead();
 		doInitGraph();
 		setListAdapter(new MyCustomAdapter(this, mHead, mBar, mGraph));
+	}
+	
+	private void doShareWithProgressBar(){
+		progressBar = new ProgressDialog(this);
+		progressBar.setCancelable(false);
+		progressBar.setMessage(getResources().getString(R.string.progress_working));
+		progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progressBar.setProgress(0);
+		progressBar.show();
+		
+		new Thread(new Runnable() {
+			public void run() {
+				final ReportHtml rep = new ReportHtml(getBaseContext(), dayFrom, dayTo, mHead, mBar);
+    			if(rep.saveHtml()){
+    				progressBar.dismiss();
+    				ReportSummary.this.runOnUiThread(new Runnable() {
+    					@Override
+    					public void run() {
+    						Intent shareIntent = new Intent();
+    	    				shareIntent.setAction(Intent.ACTION_SEND);
+    	    				shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(rep.getFile()));
+    	    				shareIntent.setType("text/html");
+    	    				startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.click_share)));
+    					}
+    				});
+    			}else{
+    				progressBar.dismiss();
+    				ReportSummary.this.runOnUiThread(new Runnable() {
+    					@Override
+    					public void run() {
+    						Toast.makeText(getBaseContext(), getBaseContext().getResources().getString(R.string.toast_exp_failed), 
+    									Toast.LENGTH_LONG).show();
+    					}
+    				});
+    			}	  
+		}
+		}).start();
 	}
 	
 	private void doInitHead(){

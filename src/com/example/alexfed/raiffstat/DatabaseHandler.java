@@ -424,7 +424,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return transactionList;
     }
 
-  
+    // Getting transactions Count
+    public int getUncategorizedTransactionsCount() {
+        String countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
+        		" WHERE " + " ( " + KEY_EXP_CATEGORY + "=" + StaticValues.EXPENSE_CATEGORY_UNKNOWN + " ) " +
+        		" AND " + " ( " + KEY_TYPE +"=" + StaticValues.TRANSACTION_TYPE_EXPENSE+ " ) ";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+        int ret = cursor.getCount();
+        cursor.close();
+        db.close();
+        // return count
+        return ret;
+    }
+    
     public List<TransactionEntry> getTransactionsDateInterval(long dateStart, long dateEnd){
     	String countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
     			" WHERE " + " ( " + KEY_DATE_TIME + " >= ? )" + " AND " + " ( " + KEY_DATE_TIME + " <= ? )" +

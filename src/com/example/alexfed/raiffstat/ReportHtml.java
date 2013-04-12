@@ -13,7 +13,6 @@ import java.util.List;
 
 import android.content.Context;
 import android.os.Environment;
-import android.widget.Toast;
 
 public class ReportHtml {
 	private final String LOG = "ReportHtml";
@@ -40,7 +39,7 @@ public class ReportHtml {
 	    if (Environment.MEDIA_MOUNTED.equals(state)) {
 	    	
 	    	if(!createDirIfNotExists(StaticValues.DIR_NAME)){
-	    		Toast.makeText(mContext, mContext.getResources().getString(R.string.toast_dir_failed), Toast.LENGTH_LONG).show();
+	    		//Toast.makeText(mContext, mContext.getResources().getString(R.string.toast_dir_failed), Toast.LENGTH_LONG).show();
 	    		return false;
 	    	}
 			
@@ -58,18 +57,18 @@ public class ReportHtml {
 	    		doWriteHtmlEnd(out);
 	    		
 	    		out.close(); 
-	    		Toast.makeText(mContext, 
+	    		/*Toast.makeText(mContext, 
 	    				mContext.getResources().getString(R.string.str_file) + " " + fName  + " " +
-	    						mContext.getResources().getString(R.string.str_created), Toast.LENGTH_LONG).show();
+	    						mContext.getResources().getString(R.string.str_created), Toast.LENGTH_LONG).show();*/
 	    	}catch(Exception e){
 	    		myLog.LOGD(LOG, "Error 01");
 	    		myLog.LOGD(LOG, e.getMessage());
-	    		Toast.makeText(mContext, mContext.getResources().getString(R.string.toast_exp_failed), Toast.LENGTH_LONG).show();
+	    		//Toast.makeText(mContext, mContext.getResources().getString(R.string.toast_exp_failed), Toast.LENGTH_LONG).show();
 	    		return false;
 	    	}
 	    	
 	    }else {
-	    	Toast.makeText(mContext, mContext.getResources().getString(R.string.toast_no_storage), Toast.LENGTH_LONG).show();
+	    	//Toast.makeText(mContext, mContext.getResources().getString(R.string.toast_no_storage), Toast.LENGTH_LONG).show();
 	    	return false;
 	    }
 		

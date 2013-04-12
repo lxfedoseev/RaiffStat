@@ -62,6 +62,7 @@
     <string name="str_date_time">Date and Time</string>
     <string name="str_type">Type</string>
     <string name="str_remainder">Remainder</string>
+    <string name="str_has_uncategorized">There are places with unassigned category</string>
     
     <string name="click_delete">Delete</string>
     <string name="click_rename">Rename</string>

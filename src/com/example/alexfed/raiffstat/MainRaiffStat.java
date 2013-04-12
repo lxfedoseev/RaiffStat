@@ -28,6 +28,7 @@ import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
@@ -41,12 +42,14 @@ public class MainRaiffStat extends SherlockActivity {
 	private int impExpItemIndex = 0;
 	private String dirName = "RaiffStat";
 	private int itemIndex = 0;
+	private TextView mNotification;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setTheme(R.style.Theme_Sherlock_Light_DarkActionBar);
 		setContentView(R.layout.activity_main);
 		setButtons();
+		mNotification = (TextView) findViewById(R.id.notification);
 	}
 
 
@@ -55,6 +58,16 @@ public class MainRaiffStat extends SherlockActivity {
 		// TODO Auto-generated method stub
 		return super.onCreateOptionsMenu(menu);
 	}
+	
+	
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		setNotification();
+	}
+
 
 	private void setButtons(){
 		
@@ -97,6 +110,21 @@ public class MainRaiffStat extends SherlockActivity {
     			startActivity(categoriesActivity);
 			}
 		});
+	}
+	
+	private void setNotification(){
+		String nText = new String();
+		DatabaseHandler db = new DatabaseHandler(this);
+		if(db.getTransactionsCount() == 0){
+			nText = getResources().getString(R.string.str_no_data);
+		}else if(db.getUncategorizedTransactionsCount() > 0){
+			nText = getResources().getString(R.string.str_has_uncategorized);
+		}else{
+			nText = "";
+		}
+		
+		db.close();
+		mNotification.setText(nText);
 	}
 	
 	private void importExport(){		  
@@ -159,7 +187,13 @@ public class MainRaiffStat extends SherlockActivity {
 		if(initProgressBar()){
 			new Thread(new Runnable() {
 				  public void run() {
-					  importSms(); 
+					  importSms();
+					  MainRaiffStat.this.runOnUiThread(new Runnable() {
+	    					@Override
+	    					public void run() {
+	    						setNotification();
+	    					}
+					  });
 				  }
 			}).start();
 		}
@@ -425,7 +459,13 @@ public class MainRaiffStat extends SherlockActivity {
 		
 		new Thread(new Runnable() {
 			public void run() {
-				importSmsFromCSV(localFileName);		  
+				importSmsFromCSV(localFileName);
+				MainRaiffStat.this.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						setNotification();
+					}
+			  });
 		}
 		}).start();
 	}
@@ -499,5 +539,6 @@ public class MainRaiffStat extends SherlockActivity {
 		DatabaseHandler db = new DatabaseHandler(this);
 		db.clearAll();
 		db.close();
+		setNotification();
 	}
 }
