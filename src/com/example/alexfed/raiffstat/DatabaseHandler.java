@@ -453,6 +453,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	String countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
     			" WHERE " + " ( " + KEY_DATE_TIME + " >= ? )" + " AND " + " ( " + KEY_DATE_TIME + " <= ? )" +
     			" AND " + " ( " + KEY_TYPE + " =?" + " OR " + KEY_TYPE + " =?" + " ) ";
+    	
+    	/*String countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
+    			" WHERE " + " ( " + KEY_DATE_TIME + " BETWEEN " + " ? " + " AND " + " ? " + " ) " +
+    			" AND " + " ( " + KEY_TYPE + " =?" + " OR " + KEY_TYPE + " =?" + " ) ";*/
     		
     		if(sortType == StaticValues.SORT_BY_AMMOUNT)
     			countQuery += " ORDER BY " + KEY_AMOUNT;
