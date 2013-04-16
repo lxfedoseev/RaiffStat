@@ -1,6 +1,8 @@
 package com.example.alexfed.raiffstat;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.content.ContentValues;
@@ -401,7 +403,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	Cursor cursor = db.rawQuery(countQuery, args);
     	
     	// looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) { 
             do {
             	TransactionEntry t = new TransactionEntry(); 
                 t.setID(cursor.getInt(0));
@@ -447,6 +449,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     
     public List<TransactionEntry> getTransactionsDateInterval(long dateStart, long dateEnd, 
     																	int sortType, boolean isDesc){
+    	
     	String countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
     			" WHERE " + " ( " + KEY_DATE_TIME + " >= ? )" + " AND " + " ( " + KEY_DATE_TIME + " <= ? )" +
     			" AND " + " ( " + KEY_TYPE + " =?" + " OR " + KEY_TYPE + " =?" + " ) ";

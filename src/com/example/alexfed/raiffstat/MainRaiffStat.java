@@ -36,6 +36,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.android.vending.billing.IInAppBillingService;
 
 public class MainRaiffStat extends SherlockActivity {
@@ -49,6 +51,9 @@ public class MainRaiffStat extends SherlockActivity {
 	private int itemIndex = 0;
 	private TextView mNotification;
 	IInAppBillingService mService;
+	
+	static final int ABOUT_ID = Menu.FIRST;
+	static final int DONATION_ID = Menu.FIRST+1;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -65,11 +70,28 @@ public class MainRaiffStat extends SherlockActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
-		// TODO Auto-generated method stub
+		
+		MenuItem aboutItem = menu.add(Menu.NONE, ABOUT_ID, 0, R.string.str_about);
+		aboutItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		
+		MenuItem donationItem = menu.add(Menu.NONE, DONATION_ID, 0, R.string.str_donation);
+		donationItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		
 		return super.onCreateOptionsMenu(menu);
 	}
 	
-	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case ABOUT_ID:
+			return true;
+		case DONATION_ID: 
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
 
 	@Override
 	protected void onResume() {

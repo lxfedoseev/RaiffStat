@@ -63,6 +63,7 @@
     <string name="str_type">Type</string>
     <string name="str_remainder">Remainder</string>
     <string name="str_has_uncategorized">There are places with unassigned category</string>
+    <string name="str_donation">Donation</string>
     
     <string name="click_delete">Delete</string>
     <string name="click_rename">Rename</string>

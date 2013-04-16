@@ -252,7 +252,7 @@ public class ReportSummary extends SherlockListActivity {
 		}
 		db.close();
 		
-		mGraph = new LineGraphView(this, "%"){  
+		mGraph = new LineGraphView(this, ""){  
 			   @Override  
 			   protected String formatLabel(double value, boolean isValueX) {  
 			      if (isValueX) {
@@ -290,9 +290,7 @@ public class ReportSummary extends SherlockListActivity {
 		 mGraph.setManualYAxisBounds(maxVal, 0);
 		 mGraph.getGraphViewStyle().setHorizontalLabelsColor(Color.BLACK); 
 		 mGraph.getGraphViewStyle().setVerticalLabelsColor(Color.BLACK);
-		 //mGraph.setShowLegend(true); 
-		 //mGraph.setLegendAlign(GraphView.LegendAlign.TOP);  
-		 //mGraph.setLegendWidth(200);
+		 mGraph.getGraphViewStyle().setDrawVerticalLines(false);
 	}
 	
 	private float convertDpToPixel(float dp,Context context){
