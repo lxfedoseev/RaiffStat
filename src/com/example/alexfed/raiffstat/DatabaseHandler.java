@@ -17,7 +17,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	private static final String LOG = "DatabaseHandler";
 	// All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 13;
+    private static final int DATABASE_VERSION = 14;
  
     // Database Name
     private static final String DATABASE_NAME = "raiffDB";
@@ -56,7 +56,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_TRANSACTIONS_TABLE = "CREATE TABLE " + TABLE_TRANSACTIONS + "("
-                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_DATE_TIME + " TEXT,"
+                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_DATE_TIME + " INTEGER,"
                 + KEY_AMOUNT + " REAL," 
                 + KEY_AMOUNT_CURR + " TEXT," 
                 + KEY_REMAINDER + " REAL," 
@@ -111,7 +111,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
  
         ContentValues values = new ContentValues();
-        values.put(KEY_DATE_TIME, String.valueOf(t.getDateTime()) );
+        values.put(KEY_DATE_TIME, t.getDateTime() );
         values.put(KEY_AMOUNT, t.getAmount()); 
         values.put(KEY_AMOUNT_CURR, t.getAmountCurr());
         values.put(KEY_REMAINDER, t.getRemainder()); 
@@ -154,7 +154,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         	//Create new transaction
         	SQLiteDatabase db = this.getWritableDatabase();
 	        ContentValues values = new ContentValues();
-	        values.put(KEY_DATE_TIME, String.valueOf(t.getDateTime()) );
+	        values.put(KEY_DATE_TIME, t.getDateTime() );
 	        values.put(KEY_AMOUNT, t.getAmount()); 
 	        values.put(KEY_AMOUNT_CURR, t.getAmountCurr());
 	        values.put(KEY_REMAINDER, t.getRemainder()); 
@@ -218,7 +218,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor != null)
             cursor.moveToFirst();
  
-        TransactionEntry t = new TransactionEntry(cursor.getInt(0), Long.valueOf(cursor.getString(1)), 
+        TransactionEntry t = new TransactionEntry(cursor.getInt(0), cursor.getLong(1), 
         		cursor.getDouble(2), cursor.getString(3), cursor.getDouble(4), cursor.getString(5),
         		cursor.getString(6), cursor.getString(7), 
         		cursor.getInt(8), cursor.getInt(9));
@@ -263,7 +263,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             do {
             	TransactionEntry t = new TransactionEntry(); 
                 t.setID(cursor.getInt(0));
-                t.setDateTime(Long.valueOf(cursor.getString(1)) );
+                t.setDateTime(cursor.getLong(1) );
                 t.setAmount(cursor.getDouble(2));
                 t.setAmountCurr(cursor.getString(3));
                 t.setRemainder(cursor.getDouble(4));
@@ -313,7 +313,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
  
         ContentValues values = new ContentValues();
-        values.put(KEY_DATE_TIME, String.valueOf(t.getDateTime())); 
+        values.put(KEY_DATE_TIME, t.getDateTime()); 
         values.put(KEY_AMOUNT, t.getAmount());
         values.put(KEY_AMOUNT_CURR, t.getAmountCurr());
         values.put(KEY_REMAINDER, t.getRemainder());
@@ -407,7 +407,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             do {
             	TransactionEntry t = new TransactionEntry(); 
                 t.setID(cursor.getInt(0));
-                t.setDateTime(Long.valueOf(cursor.getString(1)) );
+                t.setDateTime(cursor.getLong(1) );
                 t.setAmount(cursor.getDouble(2));
                 t.setAmountCurr(cursor.getString(3));
                 t.setRemainder(cursor.getDouble(4));
@@ -449,8 +449,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     
     public List<TransactionEntry> getTransactionsDateInterval(long dateStart, long dateEnd, 
     																	int sortType, boolean isDesc){
-    	
-    	myLog.LOGE(LOG, "DateStart: " + dateStart + "    DateEnd: " + dateEnd); 
     	
     	String countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
     			" WHERE " + " ( " + KEY_DATE_TIME + " >= ? )" + " AND " + " ( " + KEY_DATE_TIME + " <= ? )" +
@@ -521,7 +519,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	Cursor cursor = db.rawQuery(countQuery, null);
     	
     	if (cursor.moveToFirst()) {
-    		date = Long.valueOf(cursor.getString(0));
+    		date = cursor.getLong(0);
         }
     	cursor.close();
     	db.close();
