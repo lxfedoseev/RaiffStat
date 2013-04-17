@@ -84,6 +84,9 @@ public class MainRaiffStat extends SherlockActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case ABOUT_ID:
+			AboutDialog about = new AboutDialog(this);
+			about.setTitle(R.string.str_about);
+			about.show();
 			return true;
 		case DONATION_ID: 
 			return true;

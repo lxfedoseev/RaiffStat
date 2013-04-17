@@ -106,6 +106,13 @@
     <string name="dialog_period_end">Period end</string>
     <string name="dialog_no_category">Without category</string>
 	<string name="dialog_new_category">New</string>
+	<string name="dialog_about_info">&lt;h3&gt;RaiffStat&lt;/h3&gt;
+		Version 0.1&lt;br&gt;
+		Automatical expense&lt;br&gt; 
+		control for clients of&lt;br&gt; 
+		Raiffeisen Bank Russia&lt;br&gt;&lt;br&gt;
+		&lt;b&gt;Email us: somebody@gmail.com&lt;/b&gt;&lt;br&gt;&lt;br&gt;
+	</string>
 	
 	<string name="progress_sms_scanning">Scanning SMS ...</string>
 	<string name="progress_csv_scanning">Scanning file ...</string>
