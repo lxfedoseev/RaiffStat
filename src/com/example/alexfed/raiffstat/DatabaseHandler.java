@@ -450,6 +450,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public List<TransactionEntry> getTransactionsDateInterval(long dateStart, long dateEnd, 
     																	int sortType, boolean isDesc){
     	
+    	myLog.LOGE(LOG, "DateStart: " + dateStart + "    DateEnd: " + dateEnd); 
+    	
     	String countQuery = "SELECT  * FROM " + TABLE_TRANSACTIONS + 
     			" WHERE " + " ( " + KEY_DATE_TIME + " >= ? )" + " AND " + " ( " + KEY_DATE_TIME + " <= ? )" +
     			" AND " + " ( " + KEY_TYPE + " =?" + " OR " + KEY_TYPE + " =?" + " ) ";

@@ -88,9 +88,7 @@ public class ReportListAll extends SherlockListFragment {
         super.onActivityCreated(savedInstanceState);
         // We have a menu item to show in action bar.
         setHasOptionsMenu(true);
-        if(!bundleEmpty){
-        	inflateList();
-        }
+        inflateList();
 	}
 
 	/* (non-Javadoc)
