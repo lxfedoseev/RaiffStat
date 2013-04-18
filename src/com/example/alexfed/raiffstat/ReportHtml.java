@@ -179,8 +179,14 @@ public class ReportHtml {
 			int i=0;
 			for(SummaryBarEntry b:mBar){
 				names += "names[" + i + "] = \"" + b.getName() + "\";\r\n";
-				data += "data[" + i + "] = \"" + b.getPercent() + "," + b.getAmount() + "," 
+				
+				if(b.getPercent() == 0.0){
+				data += "data[" + i + "] = \"" + "0.9" + "," + b.getAmount() + "," 
 							+ String.format("#%06X", (0xFFFFFF & b.getColor())) + "\";\r\n";
+				}else{
+					data += "data[" + i + "] = \"" + b.getPercent() + "," + b.getAmount() + "," 
+							+ String.format("#%06X", (0xFFFFFF & b.getColor())) + "\";\r\n";
+				}
 				i++;
 			}
 			out.write(names);
@@ -196,9 +202,15 @@ public class ReportHtml {
 		try{
 			out.write(mContext.getResources().getString(R.string.html_bar_table_begin));
 			for(SummaryBarEntry b:mBar){
+				if(b.getPercent() == 0.0){
 				out.write(String.format(mContext.getResources().getString(R.string.html_bar_table_row), 
 						String.format("#%06X", (0xFFFFFF & b.getColor())),
-						b.getName(), b.getPercent() + "%", b.getAmount() + " " + StaticValues.CURR_RUB));
+						b.getName(), "<1%", b.getAmount() + " " + StaticValues.CURR_RUB));
+				}else{
+					out.write(String.format(mContext.getResources().getString(R.string.html_bar_table_row), 
+							String.format("#%06X", (0xFFFFFF & b.getColor())),
+							b.getName(), b.getPercent() + "%", b.getAmount() + " " + StaticValues.CURR_RUB));
+				}
 			}
 			out.write(mContext.getResources().getString(R.string.html_bar_table_end));
 		}catch(IOException e){

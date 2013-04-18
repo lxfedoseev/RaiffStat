@@ -2,6 +2,7 @@ package com.example.alexfed.raiffstat;
 
 public class StaticValues {
 	public static String VERSION = "0.1";
+	public static String EMAIL = "somebody@gmail.com";
 	
 	public static String RAIFF_ADDRESS = "Raiffeisen";
 	

@@ -231,19 +231,22 @@ public class ReportSummary extends SherlockListActivity {
 			GraphViewData[] data = new GraphViewData[2];
 			data[0] = new GraphViewData(i+1, 0);
 			data[1] = new GraphViewData(i+1, percents);
+			
+			percents = percents*10;
 			percents = Math.round(percents);
+			percents /=10;
 			
 			double rndSum = (Double)entry.getValue() * 100;
 			rndSum = Math.round(rndSum);
 			rndSum /=100;
 			
-			if(percents < 0.1){
-				mBar.add(new SummaryBarEntry(catColor, catName, 0.1, rndSum));
-				catName = catName + " < 0.1%";
+			if(percents < 1){
+				mBar.add(new SummaryBarEntry(catColor, catName, 0.0, rndSum));
+				catName = catName + " < 1%";
 			}else{
-				int per = (int) percents;
-				mBar.add(new SummaryBarEntry(catColor, catName, (double)per, rndSum));
-				catName = catName + " " + per + "%";
+//				/int per = (int) percents;
+				mBar.add(new SummaryBarEntry(catColor, catName, percents, rndSum));
+				catName = catName + " " + percents + "%";
 			}
 			sers[i] = new GraphViewSeries(catName, 
 					new GraphViewSeries.GraphViewSeriesStyle(catColor, thickness), data);
@@ -448,7 +451,11 @@ public class ReportSummary extends SherlockListActivity {
 	                break;
 	            case TYPE_BAR_INFO:
 	            	holderBar.name.setText(mBarData.get(position-5).getName());
-	            	holderBar.percent.setText(mBarData.get(position-5).getPercent().toString()+"%");
+	            	if(mBarData.get(position-5).getPercent() == 0.0){
+	            		holderBar.percent.setText("<1%");
+	            	}else{
+	            		holderBar.percent.setText(mBarData.get(position-5).getPercent().toString()+"%");
+	            	}
 	            	holderBar.amount.setText(mBarData.get(position-5).getAmount().toString() + " " + StaticValues.CURR_RUB);
 	            	holderBar.color.setBackgroundColor(mBarData.get(position-5).getColor());
 	                break;
