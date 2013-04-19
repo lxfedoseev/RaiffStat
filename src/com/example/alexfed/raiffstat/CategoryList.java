@@ -1,8 +1,8 @@
 package com.example.alexfed.raiffstat;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import yuku.ambilwarna.AmbilWarnaDialog;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -203,7 +203,7 @@ public class CategoryList extends SherlockListActivity {
 		  public void onClick(DialogInterface dialog, int whichButton) {
 		    String value = input.getText().toString();
 		    value = value.trim();
-		    if(!value.isEmpty()){	
+		    if(/*!value.isEmpty()*/ value.length() != 0){	
 		    	DatabaseHandler db = new DatabaseHandler(context);
 		    	CategoryEntry c = db.getCategory(categories.get(localPos).getID());
 		    	c.setName(value);
@@ -240,7 +240,7 @@ public class CategoryList extends SherlockListActivity {
 		  public void onClick(DialogInterface dialog, int whichButton) {
 		    String value = input.getText().toString();
 		    value = value.trim();
-		    if(!value.isEmpty()){	
+		    if(/*!value.isEmpty()*/ value.length() != 0){	
 		    	catName = value;
 		    	colorDlgType = COLOR_DIALOG_NEW;
 				AmbilWarnaDialog dialogColor = new AmbilWarnaDialog(context, 0xff00ff00 ,new ColorChangedListener());

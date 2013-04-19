@@ -3,6 +3,7 @@ package com.example.alexfed.raiffstat;
 import java.util.ArrayList;
 import java.util.List;
 
+import yuku.ambilwarna.AmbilWarnaDialog;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -191,7 +192,7 @@ public class PlacesList extends SherlockListActivity{
 			  public void onClick(DialogInterface dialog, int whichButton) {
 			    String value = input.getText().toString();
 			    value = value.trim();
-			    if(!value.isEmpty()){	
+			    if(/*!value.isEmpty()*/ value.length() != 0){	
 			    	catName = value;
 					AmbilWarnaDialog dialogColor = new AmbilWarnaDialog(context, 0xff00ff00 ,new ColorChangedListener());
 					dialogColor.show();

@@ -547,7 +547,7 @@ public class MainRaiffStat extends SherlockActivity {
 			DataInputStream in = new DataInputStream(fstream);
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
 			  
-			String strLine;
+			String strLine; 
 			//Read File Line By Line
 			while ((strLine = br.readLine()) != null)   {	  
 				
