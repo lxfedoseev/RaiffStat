@@ -404,9 +404,9 @@ public class MainRaiffStat extends SherlockActivity {
 				    		t.getAmountCurr() + StaticValues.DELIMITER +
 				    		t.getRemainder() + StaticValues.DELIMITER +
 				    		t.getRemainderCurr() + StaticValues.DELIMITER +
-				    		t.getPlace() + StaticValues.DELIMITER +
 				    		t.getCard() + StaticValues.DELIMITER +
-				    		t.getType() + "\r\n");
+				    		t.getType() + StaticValues.DELIMITER +
+				    		t.getPlace() + "\r\n");
 	    			out.flush();
 	    		}
 	    		out.close(); 

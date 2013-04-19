@@ -124,9 +124,15 @@ public class RaiffParser {
     			this._amount_curr = tokens[3].trim();
     			this._remainder = Double.parseDouble(tokens[4].trim());
     			this._remainder_curr = tokens[5].trim();
-    			this._place = tokens[6].trim();
-    			this._card = tokens[7].trim();
-    			this._type = Integer.parseInt(tokens[8].trim());
+    			this._card = tokens[6].trim();
+    			this._type = Integer.parseInt(tokens[7].trim());
+    			
+    			this._place = "";
+    			for(int i=8; i<tokens.length; i++){
+    				this._place += tokens[i] + ",";
+    			}
+    			this._place = this._place.substring(0, this._place.length()-1); // remove last comma ","
+	
     			this._exp_category = StaticValues.EXPENSE_CATEGORY_UNKNOWN;
     			
     			return true;
@@ -169,7 +175,7 @@ public class RaiffParser {
     	String delims = "[:]+"; 
 		String[] tokens = str.split(delims);
 		if(tokens.length>1){
-			this._place = tokens[1].trim().replace(StaticValues.DELIMITER, " ");//need to remove "," to support CSV
+			this._place = tokens[1].trim();//.replace(StaticValues.DELIMITER, " ");//need to remove "," to support CSV
 		}else{
 			throw new Exception("tokens.length<=1");
 		}
