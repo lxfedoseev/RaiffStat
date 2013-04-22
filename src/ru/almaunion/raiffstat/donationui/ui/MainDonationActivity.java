@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.example.alexfed.raiffstat.AppProperties;
 import com.example.alexfed.raiffstat.R;
 import com.example.alexfed.raiffstat.myLog;
 
@@ -21,8 +22,18 @@ public class MainDonationActivity extends AlmaUnionActivity implements MainMenu 
     }
 
     @Override
-    public void onPurchaseItemClick(View v) {
-        navigate().toPurchasePassportActivityForResult();
+    public void onPurchaseItemClick01(View v) {
+        navigate().toPurchasePassportActivityForResult(AppProperties.DONATION_AMOUNT_01);
+    }
+    
+    @Override
+    public void onPurchaseItemClick02(View v) {
+        navigate().toPurchasePassportActivityForResult(AppProperties.DONATION_AMOUNT_02);
+    }
+    
+    @Override
+    public void onPurchaseItemClick03(View v) {
+        navigate().toPurchasePassportActivityForResult(AppProperties.DONATION_AMOUNT_03);
     }
 
     @Override
@@ -39,13 +50,13 @@ public class MainDonationActivity extends AlmaUnionActivity implements MainMenu 
 
     private void dealWithSuccessfulPurchase() {
         myLog.LOGD(LOG, "Passport purchased");
-        popToast("Passport purchased");
+        popToast(getBaseContext().getResources().getString(R.string.toast_thanks));
         //passportImage.setVisibility(View.VISIBLE);
     }
 
     private void dealWithFailedPurchase() {
     	myLog.LOGD(LOG, "Passport purchase failed");
-        popToast("Failed to purchase passport");
+        popToast(getBaseContext().getResources().getString(R.string.toast_donation_failed));
     }
     
 }

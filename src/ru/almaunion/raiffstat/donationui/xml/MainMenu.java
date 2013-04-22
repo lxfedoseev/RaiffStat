@@ -4,6 +4,8 @@ import android.view.View;
 
 public interface MainMenu {
 	
-	void onPurchaseItemClick(View v);
+	void onPurchaseItemClick01(View v);
+	void onPurchaseItemClick02(View v);
+	void onPurchaseItemClick03(View v);
 	
 }

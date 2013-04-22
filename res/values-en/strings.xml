@@ -64,7 +64,9 @@
     <string name="str_remainder">Remainder</string>
     <string name="str_has_uncategorized">There are places with unassigned category</string>
     <string name="str_donation">Donation</string>
-    <string name="str_donate_01">Donate 33 rubles</string>
+    <string name="str_donate_01">$1</string>
+    <string name="str_donate_02">$3</string>
+    <string name="str_donate_03">$5</string>
     <string name="str_donation_msg">You can support the project development by donating some amount of money on your choice</string>
     
     <string name="click_delete">Delete</string>
@@ -89,6 +91,8 @@
 	<string name="toast_one_value">Only one value</string>
 	<string name="toast_no_values">No values</string>
 	<string name="toast_no_sms">There is no SMS from</string>
+	<string name="toast_thanks">Operation is successful. Thank you</string>
+	<string name="toast_donation_failed">Operation is unsuccessful</string>
 	
 	<string name="ctx_new_place_name">Input new place name</string>
 	<string name="ctx_place_name">Input place name</string>

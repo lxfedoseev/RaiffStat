@@ -20,8 +20,9 @@ public class Navigator {
         activity.startActivity(intent);
     }
 
-    public void toPurchasePassportActivityForResult() {
+    public void toPurchasePassportActivityForResult(int amount) {
         Intent intent = new Intent(activity, PurchaseDonationActivity.class);
+        intent.putExtra("donation_amount", amount);
         activity.startActivityForResult(intent, REQUEST_PASSPORT_PURCHASE);
     }
 }

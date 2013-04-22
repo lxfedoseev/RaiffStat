@@ -9,9 +9,21 @@
     android:text="@string/str_donation_msg" />
 
   <Button
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:onClick="onPurchaseItemClick"
+    android:onClick="onPurchaseItemClick01"
     android:text="@string/str_donate_01" />
+  
+  <Button
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:onClick="onPurchaseItemClick02"
+    android:text="@string/str_donate_02" />
+  
+  <Button
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:onClick="onPurchaseItemClick03"
+    android:text="@string/str_donate_03" />
 
 </LinearLayout>

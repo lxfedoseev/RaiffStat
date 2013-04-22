@@ -63,8 +63,10 @@
     <string name="str_type">Тип</string>
     <string name="str_remainder">Отстаток</string>
     <string name="str_has_uncategorized">Имеются места без назначенной категории</string>
-    <string name="str_donation">Пожертвование</string>
-    <string name="str_donate_01">Пожертвовать 33 рубля</string>
+    <string name="str_donation">Поддержать</string>
+    <string name="str_donate_01">$1</string>
+    <string name="str_donate_02">$3</string>
+    <string name="str_donate_03">$5</string>
     <string name="str_donation_msg">Вы можете поддержать дальнейшую разработку и улучшение приложения, пожертвовав небольшую сумму на Ваш выбор</string>
     
     <string name="click_delete">Удалить</string>
@@ -89,6 +91,8 @@
 	<string name="toast_one_value">Всего одно значение</string>
 	<string name="toast_no_values">Нет значаний</string>
 	<string name="toast_no_sms">У вас нет СМС от</string>
+	<string name="toast_thanks">Операция завершена удачно. Спасибо</string>
+	<string name="toast_donation_failed">Операция завершилась неудачно</string>
 	
 	<string name="ctx_new_place_name">Введите новое название места</string>
 	<string name="ctx_place_name">Введите название места</string>
