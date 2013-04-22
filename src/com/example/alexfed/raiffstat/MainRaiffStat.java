@@ -15,20 +15,17 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ru.almaunion.raiffstat.donationui.ui.StartUpActivity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.IBinder;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -38,7 +35,6 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.android.vending.billing.IInAppBillingService;
 
 public class MainRaiffStat extends SherlockActivity {
 	
@@ -50,7 +46,6 @@ public class MainRaiffStat extends SherlockActivity {
 	private String dirName = "RaiffStat";
 	private int itemIndex = 0;
 	private TextView mNotification;
-	IInAppBillingService mService;
 	
 	static final int ABOUT_ID = Menu.FIRST;
 	static final int DONATION_ID = Menu.FIRST+1;
@@ -59,9 +54,6 @@ public class MainRaiffStat extends SherlockActivity {
 		super.onCreate(savedInstanceState);
 		setTheme(R.style.Theme_Sherlock_Light_DarkActionBar);
 		setContentView(R.layout.activity_main);
-		
-		bindService(new Intent("com.android.vending.billing.InAppBillingService.BIND"),
-		                mServiceConn, Context.BIND_AUTO_CREATE);
 		
 		setButtons();
 		mNotification = (TextView) findViewById(R.id.notification);
@@ -89,6 +81,8 @@ public class MainRaiffStat extends SherlockActivity {
 			about.show();
 			return true;
 		case DONATION_ID: 
+			Intent donationActivity = new Intent(getBaseContext(), StartUpActivity.class);
+			startActivity(donationActivity);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -103,30 +97,6 @@ public class MainRaiffStat extends SherlockActivity {
 		setNotification();
 	}
 
-	
-	@Override
-	protected void onDestroy() {
-		// TODO Auto-generated method stub
-		super.onDestroy();
-		if (mServiceConn != null) {
-	        unbindService(mServiceConn);
-	    }
-	}
-
-
-	ServiceConnection mServiceConn = new ServiceConnection() {
-		   @Override
-		   public void onServiceDisconnected(ComponentName name) {
-		       mService = null;
-		   }
-
-		   @Override
-		   public void onServiceConnected(ComponentName name, 
-		      IBinder service) {
-		       mService = IInAppBillingService.Stub.asInterface(service);
-		   }
-	};
-		
 	private void setButtons(){
 		
 		Button btnReport = (Button) findViewById(R.id.button_report);

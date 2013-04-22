@@ -59,6 +59,22 @@
               android:screenOrientation="portrait">
         </activity>
         
+    	<activity android:name="ru.almaunion.raiffstat.donationui.ui.StartUpActivity"
+      			android:label="@string/str_donation"
+      			android:screenOrientation="portrait">
+      	</activity>
+      	
+    	<activity android:name="ru.almaunion.raiffstat.donationui.ui.MainDonationActivity"
+      			android:label="@string/str_donation"
+      			android:screenOrientation="portrait">
+      	</activity>
+    	
+    	<activity android:name="ru.almaunion.raiffstat.donationui.ui.PurchaseDonationActivity"
+      			android:label="@string/str_donation"
+      			android:screenOrientation="portrait">
+      	</activity>
+      	
+        
     </application>
 
 </manifest>

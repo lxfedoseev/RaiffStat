@@ -64,6 +64,8 @@
     <string name="str_remainder">Remainder</string>
     <string name="str_has_uncategorized">There are places with unassigned category</string>
     <string name="str_donation">Donation</string>
+    <string name="str_donate_01">Donate 33 rubles</string>
+    <string name="str_donation_msg">You can support the project development by donating some amount of money on your choice</string>
     
     <string name="click_delete">Delete</string>
     <string name="click_rename">Rename</string>

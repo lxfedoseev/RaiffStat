@@ -64,6 +64,8 @@
     <string name="str_remainder">Отстаток</string>
     <string name="str_has_uncategorized">Имеются места без назначенной категории</string>
     <string name="str_donation">Пожертвование</string>
+    <string name="str_donate_01">Пожертвовать 33 рубля</string>
+    <string name="str_donation_msg">Вы можете поддержать дальнейшую разработку и улучшение приложения, пожертвовав небольшую сумму на Ваш выбор</string>
     
     <string name="click_delete">Удалить</string>
     <string name="click_rename">Переименовать</string>
