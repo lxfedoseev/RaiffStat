@@ -954,14 +954,6 @@ containing a value of this type.
         public static final int list_background2=0x7f020086;
         public static final int list_background3=0x7f020087;
         public static final int outcome_logo=0x7f020088;
-        public static final int square_blue_dark=0x7f020089;
-        public static final int square_blue_light=0x7f02008a;
-        public static final int square_green_dark=0x7f02008b;
-        public static final int square_green_light=0x7f02008c;
-        public static final int square_red_dark=0x7f02008d;
-        public static final int square_red_light=0x7f02008e;
-        public static final int square_yellow_dark=0x7f02008f;
-        public static final int square_yellow_light=0x7f020090;
     }
     public static final class id {
         public static final int abs__action_bar=0x7f050023;
