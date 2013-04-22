@@ -1,4 +1,4 @@
-package com.example.alexfed.raiffstat;
+package ru.almaunion.raiffstat;
 
 import java.util.ArrayList;
 import java.util.List;

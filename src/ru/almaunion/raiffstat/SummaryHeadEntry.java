@@ -1,4 +1,4 @@
-package com.example.alexfed.raiffstat;
+package ru.almaunion.raiffstat;
 
 public class SummaryHeadEntry {
 	//private variables

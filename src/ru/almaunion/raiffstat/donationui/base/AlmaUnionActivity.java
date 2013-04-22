@@ -1,11 +1,11 @@
 package ru.almaunion.raiffstat.donationui.base;
 
+import ru.almaunion.raiffstat.R;
 import ru.almaunion.raiffstat.donationui.utils.Navigator;
 import ru.almaunion.raiffstat.donationui.utils.Toaster;
 import android.os.Bundle;
 
 import com.actionbarsherlock.app.SherlockActivity;
-import com.example.alexfed.raiffstat.R;
 
 public class AlmaUnionActivity extends SherlockActivity {
    

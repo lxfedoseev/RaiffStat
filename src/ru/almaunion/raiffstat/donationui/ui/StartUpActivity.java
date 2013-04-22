@@ -1,12 +1,12 @@
 package ru.almaunion.raiffstat.donationui.ui;
 
+import ru.almaunion.raiffstat.myLog;
 import ru.almaunion.raiffstat.donationui.base.PurchaseActivity;
 
 import android.os.Bundle;
 
 import com.android.vending.billing.util.IabResult;
 import com.android.vending.billing.util.IabHelper.OnIabSetupFinishedListener;
-import com.example.alexfed.raiffstat.myLog;
 
 public class StartUpActivity extends PurchaseActivity implements OnIabSetupFinishedListener {
    

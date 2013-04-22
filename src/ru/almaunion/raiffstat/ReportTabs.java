@@ -1,10 +1,9 @@
-package com.example.alexfed.raiffstat;
+package ru.almaunion.raiffstat;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -16,7 +15,6 @@ import android.widget.TabHost;
 import android.widget.TabWidget;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 
 public class ReportTabs extends SherlockFragmentActivity{
 

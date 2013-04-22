@@ -1,4 +1,4 @@
-package com.example.alexfed.raiffstat;
+package ru.almaunion.raiffstat;
 
 import java.text.DateFormat;
 import java.text.ParseException;

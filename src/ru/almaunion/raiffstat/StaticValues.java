@@ -1,4 +1,4 @@
-package com.example.alexfed.raiffstat;
+package ru.almaunion.raiffstat;
 
 public class StaticValues {
 	public static String VERSION = "0.1";

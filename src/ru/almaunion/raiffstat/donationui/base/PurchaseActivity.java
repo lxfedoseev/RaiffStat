@@ -1,5 +1,8 @@
 package ru.almaunion.raiffstat.donationui.base;
 
+import ru.almaunion.raiffstat.AppProperties;
+import ru.almaunion.raiffstat.R;
+import ru.almaunion.raiffstat.myLog;
 import ru.almaunion.raiffstat.donationui.domain.items.Donation;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,9 +12,6 @@ import com.android.vending.billing.util.IabHelper.OnIabPurchaseFinishedListener;
 import com.android.vending.billing.util.IabHelper.OnIabSetupFinishedListener;
 import com.android.vending.billing.util.IabResult;
 import com.android.vending.billing.util.Purchase;
-import com.example.alexfed.raiffstat.AppProperties;
-import com.example.alexfed.raiffstat.R;
-import com.example.alexfed.raiffstat.myLog;
 
 
 

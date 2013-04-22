@@ -1,15 +1,14 @@
 package ru.almaunion.raiffstat.donationui.ui;
 
+import ru.almaunion.raiffstat.AppProperties;
+import ru.almaunion.raiffstat.R;
+import ru.almaunion.raiffstat.myLog;
 import ru.almaunion.raiffstat.donationui.base.AlmaUnionActivity;
 import ru.almaunion.raiffstat.donationui.utils.Navigator;
 import ru.almaunion.raiffstat.donationui.xml.MainMenu;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-
-import com.example.alexfed.raiffstat.AppProperties;
-import com.example.alexfed.raiffstat.R;
-import com.example.alexfed.raiffstat.myLog;
 
 
 public class MainDonationActivity extends AlmaUnionActivity implements MainMenu {

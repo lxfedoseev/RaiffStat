@@ -1,13 +1,13 @@
 package ru.almaunion.raiffstat.donationui.ui;
 
+import ru.almaunion.raiffstat.AppProperties;
+import ru.almaunion.raiffstat.R;
 import ru.almaunion.raiffstat.donationui.base.PurchaseActivity;
 import ru.almaunion.raiffstat.donationui.domain.items.Donation;
 import android.os.Bundle;
 
 import com.android.vending.billing.util.IabResult;
 import com.android.vending.billing.util.Purchase;
-import com.example.alexfed.raiffstat.AppProperties;
-import com.example.alexfed.raiffstat.R;
 
 public class PurchaseDonationActivity extends PurchaseActivity {
 
