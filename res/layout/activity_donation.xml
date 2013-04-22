@@ -1,29 +1,49 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:orientation="vertical" >
+  android:background="@drawable/icn_screen">
 
   <TextView
+    android:id="@+id/donation_info"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="@string/str_donation_msg" />
+    android:text="@string/str_donation_msg"
+    android:gravity="center"
+    android:layout_centerHorizontal="true"
+    android:layout_centerVertical="true"
+    android:layout_marginBottom="20dp"/>
 
   <Button
+    android:id="@+id/donation_btn01"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:onClick="onPurchaseItemClick01"
-    android:text="@string/str_donate_01" />
+    android:text="@string/str_donate_01" 
+    android:layout_above="@+id/donation_btn02"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:layout_marginBottom="10dp"/>
   
   <Button
+    android:id="@+id/donation_btn02"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:onClick="onPurchaseItemClick02"
-    android:text="@string/str_donate_02" />
+    android:text="@string/str_donate_02"
+    android:layout_above="@+id/donation_btn03"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp" 
+    android:layout_marginBottom="10dp"/>
   
   <Button
+    android:id="@+id/donation_btn03"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:onClick="onPurchaseItemClick03"
-    android:text="@string/str_donate_03" />
+    android:text="@string/str_donate_03"
+    android:layout_alignParentBottom="true"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:layout_marginBottom="20dp"/>
 
-</LinearLayout>
+</RelativeLayout>
