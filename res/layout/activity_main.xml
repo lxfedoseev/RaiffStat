@@ -26,7 +26,8 @@
 	        android:paddingRight="5dp"
 	        android:paddingBottom="5dp"
 	        android:textSize="20sp"
-	        android:text="@string/report_name" />
+	        android:text="@string/report_name"
+	        android:textStyle="italic" />
         
 	        <Button
 	        android:id="@+id/button_data"
@@ -37,7 +38,8 @@
 	        android:paddingLeft="5dp"
 	        android:paddingBottom="5dp"
 	        android:textSize="20sp"
-	        android:text="@string/str_data" />
+	        android:text="@string/str_data"
+	        android:textStyle="italic" />
                 
         </TableRow>
 
@@ -55,7 +57,8 @@
 	        android:paddingRight="5dp"
 	        android:paddingTop="5dp"
 	        android:textSize="20sp"
-	        android:text="@string/places_name" />
+	        android:text="@string/places_name" 
+	        android:textStyle="italic"/>
         
 	        <Button
 	        android:id="@+id/button_categories"
@@ -66,7 +69,8 @@
 	        android:paddingLeft="5dp"
 	        android:paddingTop="5dp"
 	        android:textSize="20sp"
-	        android:text="@string/str_categories" />
+	        android:text="@string/str_categories" 
+	        android:textStyle="italic"/>
         	
         </TableRow>
 	</TableLayout>
@@ -84,7 +88,8 @@
 			 android:textSize="12sp"
 			 android:layout_alignParentBottom="true"
 			 android:layout_centerInParent="true"
-			 android:layout_marginBottom="10dp"/>
+			 android:layout_marginBottom="10dp"
+			 android:textStyle="italic"/>
 	       
 	</RelativeLayout>
 
