@@ -11,7 +11,8 @@
         android:textSize="16sp" 
         android:layout_toLeftOf="@+id/check"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="5dp">
+        android:layout_marginLeft="5dp"
+        android:textStyle="bold">
     </TextView>
 
     <CheckBox
@@ -29,10 +30,11 @@
         android:layout_width="wrap_content"
         android:layout_height="20dip"
         android:text="@+id/category"
-        android:textSize="14sp" 
+        android:textSize="12sp" 
         android:layout_below="@+id/place"
         android:layout_marginBottom="5dp"
-        android:layout_toLeftOf="@+id/check">
+        android:layout_marginLeft="5dp"
+        android:textStyle="italic">
     </TextView>
 
 </RelativeLayout>

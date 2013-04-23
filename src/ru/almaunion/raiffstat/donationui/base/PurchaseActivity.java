@@ -64,9 +64,12 @@ public abstract class PurchaseActivity extends AlmaUnionActivity implements OnIa
      */
     @Override
     public void onIabPurchaseFinished(IabResult result, Purchase info) {
+    	myLog.LOGD(LOG, "Is Failure ? : " + result.isFailure());
         if (result.isFailure()) {
             dealWithPurchaseFailed(result);
-        } else if (Donation.SKU.equals(info.getSku())) {
+        } else if (Donation.SKU_DONATION_01.equals(info.getSku()) || 
+        		Donation.SKU_DONATION_02.equals(info.getSku()) || 
+        		Donation.SKU_DONATION_03.equals(info.getSku()) ) {
             dealWithPurchaseSuccess(result, info);
         }
         finish();

@@ -79,7 +79,7 @@ import org.json.JSONException;
 public class IabHelper {
 
     // Is debug logging enabled?
-    boolean mDebugLog = false;
+    boolean mDebugLog = true;
     String mDebugTag = "SIAPv3";
 
     // Is setup done?

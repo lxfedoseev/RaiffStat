@@ -64,7 +64,7 @@
       			android:screenOrientation="portrait">
       	</activity>
       	
-    	<activity android:name="ru.almaunion.raiffstat.donationui.ui.MainDonationActivity"
+    	<activity android:name="ru.almaunion.raiffstat.donationui.ui.MainDonationActivity" 
       			android:label="@string/str_donation"
       			android:screenOrientation="portrait">
       	</activity>

@@ -30,12 +30,13 @@ public class PurchaseDonationActivity extends PurchaseActivity {
     @Override
     protected void dealWithIabSetupSuccess() {
     	// TODO:
+    	//purchaseItem(Donation.SKU);
     	if(donationAmount == AppProperties.DONATION_AMOUNT_01){
-    		purchaseItem(Donation.SKU);
+    		purchaseItem(Donation.SKU_DONATION_01);
     	}else if(donationAmount == AppProperties.DONATION_AMOUNT_02){
-    		purchaseItem(Donation.SKU);
+    		purchaseItem(Donation.SKU_DONATION_02);
     	}else  if(donationAmount == AppProperties.DONATION_AMOUNT_03){
-    		purchaseItem(Donation.SKU);
+    		purchaseItem(Donation.SKU_DONATION_03);
     	}
         
     }
