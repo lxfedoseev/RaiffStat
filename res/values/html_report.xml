@@ -45,7 +45,7 @@
 	</string>
 	
     <string name="html_main_table_begin">&lt;div&gt;\r\n
-    &lt;table style=\"width: 1024px; height: 30px;\" border=\"1\" cellpadding=\"8\" cellspacing=\"1\"&gt;\r\n
+    &lt;table style=\"width: 1024px; height: 30px;\" border=\"0\" cellpadding=\"2\" cellspacing=\"1\"&gt;\r\n
       &lt;tbody&gt;\r\n
     </string>
     
@@ -55,7 +55,7 @@
    &lt;br&gt;\r\n  
     </string>
     
-    <string name="html_main_table_title_row"> &lt;tr bgcolor=\"#000000\"&gt;\r\n
+    <string name="html_main_table_title_row"> &lt;tr bgcolor=\"#0000FF\"&gt;\r\n
 	  &lt;th align=\"center\"&gt;\r\n
             &lt;div style=\"text-align: center;\"&gt;\r\n
                 &lt;span style=\"font-size: 11px; color: rgb(255, 255, 255); font-family: Verdana;\"&gt;\r\n
@@ -206,7 +206,7 @@ function drawBarChart(context, names, data, startX, barWidth, chartHeight, numMa
   var markerValue = 0;\r\n
   for (var i=0; i &lt;= numMarkers; i++) {\r\n
     if(i==numMarkers) markerValue = maxPercent;\r\n		
-    context.fillText(markerValue, (startX - 5), (chartHeight - stepNum*i+10), 50);\r\n
+    context.fillText(markerValue+\"%\", (startX - 5), (chartHeight - stepNum*i+10), 50);\r\n
     drawLine(context, startX, (chartHeight - stepNum*i), NUM*(gap+barWidth)+startX+20, (chartHeight - stepNum*i));\r\n
     markerValue += step;\r\n
     markerValue *= 100;\r\n

@@ -83,9 +83,9 @@
 <br>
     
   <div>
-    <table style="width: 1024px; height: 30px;" border="1" cellpadding="8" cellspacing="1">
+    <table style="width: 1024px; height: 30px;" border="0" cellpadding="2" cellspacing="1">
       <tbody>
-        <tr bgcolor="#000000">
+        <tr bgcolor="#0000FF">
 	  <th align="center" width="2.5%">
             <div style="text-align: center;">
                 <span style="font-size: 11px; color: rgb(255, 255, 255); font-family: Verdana;">
@@ -144,7 +144,7 @@
           </th>
         </tr>
 
-	<tr bgcolor="#DBFFF7">
+	<tr bgcolor="#EAEAEA">
           <td align="center" width="2.5%">
               <div style="text-align: center;">
                 <span style="font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;">
@@ -263,7 +263,7 @@
           </td>
 	</tr>
 
-	 <tr bgcolor="#DBFFF7">
+	 <tr bgcolor="#EAEAEA">
           <td align="center" width="2.5%">
               <div style="text-align: center;">
                 <span style="font-size: 11px; color: rgb(0, 0, 0); font-family: Verdana;">
@@ -397,7 +397,7 @@ function drawBarChart(context, names, data, startX, barWidth, chartHeight, numMa
   var markerValue = 0;
   for (var i=0; i <= numMarkers; i++) {
     if(i==numMarkers) markerValue = maxPercent;		
-    context.fillText(markerValue, (startX - 5), (chartHeight - stepNum*i+10), 50);
+    context.fillText(markerValue+"%", (startX - 5), (chartHeight - stepNum*i+10), 50);
     drawLine(context, startX, (chartHeight - stepNum*i), NUM*(gap+barWidth)+startX+20, (chartHeight - stepNum*i));
     markerValue += step;
     markerValue *= 100;

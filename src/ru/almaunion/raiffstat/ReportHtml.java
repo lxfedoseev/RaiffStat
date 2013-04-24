@@ -129,9 +129,9 @@ public class ReportHtml {
 			String type;
 			for(TransactionEntry t:trs){
 				if((i & 1) == 0){ //even
-					rowColor = "#DBFFF7";
-				}else{//odd
 					rowColor = "#FFFFFF";
+				}else{//odd
+					rowColor = "#EAEAEA";
 				}
 				
 				if(t.getType() == StaticValues.TRANSACTION_TYPE_EXPENSE){
