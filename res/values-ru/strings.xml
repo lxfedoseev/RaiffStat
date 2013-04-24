@@ -68,7 +68,7 @@
 	<string name="toast_pars_failed">Ошибка анализатора</string>
 	<string name="toast_one_value">Всего одно значение</string>
 	<string name="toast_no_values">Нет значаний</string>
-	<string name="toast_no_sms">У вас нет СМС от</string>
+	<string name="toast_no_sms">У вас нет SMS от</string>
 	<string name="toast_thanks">Операция завершена удачно. Спасибо</string>
 	<string name="toast_donation_failed">Операция завершилась неудачно</string>
 	
@@ -80,7 +80,7 @@
 	<string name="dialog_sort_by_amount">По сумме</string>
 	<string name="dialog_sort_by_place">По алфавиту</string>
 	<string name="dialog_sort_type">Тип сортировки</string>
-	<string name="dialog_sms_import">Импорт из СМС</string>
+	<string name="dialog_sms_import">Импорт из SMS</string>
 	<string name="dialog_csv_export">Экспорт в файл</string>
     <string name="dialog_csv_import">Импорт из файла</string>
     <string name="dialog_edit_category">Исправить категорию</string>

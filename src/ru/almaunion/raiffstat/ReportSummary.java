@@ -265,12 +265,12 @@ public class ReportSummary extends SherlockListActivity {
 			    	  return dateString;*/
 			    	  return "";
 			      } else {
-			    	  /*double result = value * 10; 
+			    	  double result = value * 10; 
 			    	  result = Math.round(result);
 			    	  result = result / 10;
-			          return ""+result; */
+			          return ""+result+"%"; 
 			    	  
-			          return super.formatLabel(value, isValueX);
+			          //return super.formatLabel(value, isValueX);
 			    	  //return "";
 			      }
 			   }  
