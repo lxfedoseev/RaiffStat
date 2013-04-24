@@ -4,29 +4,14 @@
     <string name="app_name">RaiffStat</string>
     <string name="hello_world">Привет мир!</string>
     <string name="report_name">Отчет</string>
-    <string name="terminals_name">Терминалы</string>
     <string name="places_name">Места</string>
-    <string name="place_detailed">Места подробно</string>
     <string name="exp_categories">Категории расходов</string>
-    <string name="distrib_categories">Распределение по категориям</string>
     
-    <string name="spinner_all">Выбрать все</string>
-    
-    <string name="menu_settings">Настройки</string>
     <string name="menu_clear_db">Очистить базу</string>
-    <string name="menu_query">Опросить базу</string>
     <string name="menu_summary">Отчет</string>
-    <string name="menu_manage_terminals">Терминалы</string>
-    <string name="menu_make_place">Объединить</string>
-    <string name="menu_manage_places">Места</string>
-    <string name="menu_exclude_from_place">Исключить</string>
     <string name="menu_add">Добавить</string>
     <string name="menu_sort">Сортировать</string>
-    <string name="menu_graph">График</string>
-    <string name="menu_import_export">Импорт/Экспорт</string>
-    <string name="menu_categories">Категории расходов</string>
     <string name="menu_period">Задайте период</string>
-    <string name="menu_totally">Итого</string>
     
     <string name="str_place">Место</string>
     <string name="str_period">Период</string>
@@ -34,7 +19,6 @@
     <string name="str_amount">Сумма</string>
     <string name="str_tr_number">Число транзакций</string>
     <string name="str_forbidden">запрещено</string>
-    <string name="str_forbidden_empty_place">Название места не может быть пустым</string>
     <string name="str_spent">Расход средств</string>
     <string name="str_earned">Приход средств</string>
     <string name="str_no_data">Нет данных</string>
@@ -44,17 +28,13 @@
     <string name="str_category">Категория</string>
     <string name="str_forbidden_empty_category">Название категории не может быть пустым</string>
     <string name="str_category_undefined">Категория неопределена</string>
-    <string name="str_comma_usage">Использование запятых</string>
     <string name="str_data">Данные</string>
     <string name="str_about">О программе</string>
     <string name="str_week">Неделя</string>
     <string name="str_month">Месяц</string>
     <string name="str_year">Год</string>
     <string name="str_period">Период</string>
-    <string name="str_from">с: </string>
-    <string name="str_to">по: </string>
     <string name="str_select_category">Выберите категорию</string>
-    <string name="str_categories">Категории</string>
     <string name="str_period_no_data">Нет данных на запрашиваемый период</string>
     <string name="str_period_use_menu">Воспользуйтесь меню, чтобы задать желаемый период</string>
     <string name="str_no_categories">Нет категорий</string>
@@ -68,15 +48,13 @@
     <string name="str_donate_02">$3</string>
     <string name="str_donate_03">$5</string>
     <string name="str_donation_msg">Вы можете поддержать дальнейшую разработку и улучшение приложения, пожертвовав небольшую сумму на Ваш выбор</string>
+    <string name="str_categories">Категории</string>
     
     <string name="click_delete">Удалить</string>
-    <string name="click_rename">Переименовать</string>
     <string name="click_edit">Редактировать</string>
-	<string name="click_ctx_dialog_title">Контекстное меню</string>
 	<string name="click_edit_name">Изменить название</string>
 	<string name="click_edit_color">Изменить цвет</string>
 	<string name="click_assign_category">Назначить</string>
-	<string name="click_remove_category">Убрать</string>
 	<string name="click_share">Отправить</string>
 	
 	<string name="toast_nothing_selected">Ничего не выбрано</string>
@@ -94,8 +72,6 @@
 	<string name="toast_thanks">Операция завершена удачно. Спасибо</string>
 	<string name="toast_donation_failed">Операция завершилась неудачно</string>
 	
-	<string name="ctx_new_place_name">Введите новое название места</string>
-	<string name="ctx_place_name">Введите название места</string>
 	<string name="ctx_category_name">Введите название категории</string>
 	
 	<string name="dialog_ok">Готово</string>
@@ -121,15 +97,9 @@
 		&lt;b&gt;%2$s&lt;/b&gt;&lt;br&gt;
 	</string>
     
-	<string name="progress_sms_scanning">Сканирую СМС ...</string>
+	<string name="progress_sms_scanning">Сканирую SMS ...</string>
 	<string name="progress_csv_scanning">Сканирую файл ...</string>
 	<string name="progress_working">Работаю ...</string>
-	
-	<string name="btn_apply">Применить</string>
-	
-	<string name="settings_bg_color_confirm">Подтвердить цвет фона</string>
-	<string name="settings_default_color_confirm">Подтвердить цвет по умолчанию</string>
-	<string name="settings_bg_color_dialog">Диалог выбора цвета фона</string>
 	
 	<string name="category_food">Продукты питания</string>
 	<string name="category_health">Здоровье</string>
