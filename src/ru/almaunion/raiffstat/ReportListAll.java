@@ -343,7 +343,7 @@ public class ReportListAll extends SherlockListFragment {
                 holder.date_time = (TextView) convertView.findViewById(R.id.date_time);
                 holder.place = (TextView) convertView.findViewById(R.id.place);
                 holder.amount = (TextView) convertView.findViewById(R.id.amount);
-                //holder.type = (TextView) convertView.findViewById(R.id.type);
+                holder.remainder = (TextView) convertView.findViewById(R.id.remainder);
                 holder.type = (ImageView) convertView.findViewById(R.id.type);
 
                 convertView.setTag(holder);
@@ -361,7 +361,7 @@ public class ReportListAll extends SherlockListFragment {
             TextView date_time;
             TextView amount;
             TextView card;
-            //TextView type;
+            TextView remainder;
             ImageView type;
         }
         
@@ -376,10 +376,11 @@ public class ReportListAll extends SherlockListFragment {
         		holder.type.setImageDrawable(context.getResources().getDrawable(R.drawable.outcome_logo));
         	}
         	
-        	holder.date_time.setText(dayString+"\r\n"+timeString); 
+        	holder.date_time.setText(dayString+" "+timeString); 
         	holder.place.setText(entry.getPlace());
             holder.card.setText(context.getResources().getString(R.string.str_card) + ": " + entry.getCard());                
             holder.amount.setText(entry.getAmount() + " " + entry.getAmountCurr());
+            holder.remainder.setText(entry.getRemainder() + " " + entry.getRemainderCurr());
         }
     }
 

@@ -8,11 +8,11 @@
 		<TextView 
 		  android:id="@+id/place"
 		  android:layout_width="fill_parent"
-		  android:layout_height="42dip"
-		  android:textSize="16sp" 
-          android:layout_marginLeft="7dp"
-          android:layout_marginRight="7dp"
-          android:layout_marginTop="7dp"/>
+		  android:layout_height="24dip"
+		  android:textSize="14sp" 
+          android:layout_marginLeft="5dp"
+          android:layout_marginRight="5dp"
+          android:layout_marginTop="5dp"/>
 		
 	    <TextView 
 			  android:id="@+id/card"
@@ -20,51 +20,54 @@
 			  android:layout_height="wrap_content"
 			  android:layout_below="@+id/place"
 			  android:layout_alignParentLeft="true"
-			  android:paddingLeft="7dp"
+			  android:paddingLeft="5dp"
               android:paddingRight="5dp"
-			  android:textSize="14sp"/>
-<!--  	    
-	    <TextView 
-			  android:id="@+id/type"
-			  android:layout_width="wrap_content"
-			  android:layout_height="wrap_content"
-			  android:layout_toRightOf="@+id/card"
-              android:layout_below="@+id/place"
-              android:paddingLeft="5dp"
-              android:paddingRight="1dp"
-			  android:textSize="14sp" 
-			  android:textColor="#800000"/>
--->
-		<ImageView
-		      android:id="@+id/type"
-		      android:layout_width="wrap_content"
-		      android:layout_height="wrap_content"
-		      android:layout_toRightOf="@+id/card"
-              android:layout_below="@+id/place"
-              android:paddingLeft="5dp"
-              android:paddingRight="1dp"
-              android:paddingTop="4dp"
-		      android:src="@drawable/outcome_logo"/>	  
-		          
-	    <TextView 
-			  android:id="@+id/amount"
-			  android:layout_width="wrap_content"
-			  android:layout_height="wrap_content"
-			  android:layout_below="@+id/place"
-			  android:layout_toRightOf="@+id/type"
-              android:paddingRight="5dp"
-              android:paddingLeft="1dp"
-			  android:textSize="14sp"/>
-            
+			  android:textSize="12sp"/>
+	    
+	                
 		  <TextView 
 			  android:id="@+id/date_time"
 			  android:layout_width="wrap_content"
 			  android:layout_height="wrap_content"
 			  android:layout_alignParentRight="true"
 			  android:layout_below="@+id/place"
-			  android:paddingRight="7dp"
+			  android:paddingRight="5dp"
 			  android:paddingLeft="5dp"
-			  android:paddingBottom="7dp"
+			  android:paddingBottom="5dp"
 			  android:textSize="12sp" />
+
+		<ImageView
+		      android:id="@+id/type"
+		      android:layout_width="wrap_content"
+		      android:layout_height="wrap_content"
+              android:layout_below="@+id/card"
+              android:paddingLeft="5dp"
+              android:paddingRight="1dp"
+              android:paddingTop="7dp"
+		      android:src="@drawable/outcome_logo"/>	  
+		          
+	    <TextView 
+			  android:id="@+id/amount"
+			  android:layout_width="wrap_content"
+			  android:layout_height="wrap_content"
+			  android:layout_below="@+id/card"
+			  android:layout_toRightOf="@+id/type"
+              android:paddingRight="5dp"
+              android:paddingLeft="1dp"
+              android:paddingTop="5dp"
+			  android:textSize="16sp"
+			  android:textStyle="bold"/>
+	    
+	    <TextView 
+			  android:id="@+id/remainder"
+			  android:layout_width="wrap_content"
+			  android:layout_height="wrap_content"
+			  android:layout_alignParentRight="true"
+			  android:layout_below="@+id/card"
+			  android:paddingRight="5dp"
+			  android:paddingLeft="5dp"
+			  android:paddingTop="5dp"
+			  android:textSize="16sp"/>
+
 
 </RelativeLayout>

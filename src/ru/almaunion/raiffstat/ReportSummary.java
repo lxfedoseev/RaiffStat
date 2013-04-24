@@ -168,9 +168,9 @@ public class ReportSummary extends SherlockListActivity {
 			double rndSum = sum.get(s) * 100;
 			rndSum = Math.round(rndSum);
 			rndSum /=100;
-			message += ""+rndSum+ " " + s + "\r\n"; 
+			message += rndSum+ " " + s + "\n"; 
 		}
-		message = message.substring(0, message.length()-2); // remove last "\r\n"
+		message = message.substring(0, message.length()-1); // remove last "\n"
 		
 		mHead.add(new SummaryHeadEntry(getResources().getString(R.string.str_spent), message));
 		
@@ -180,9 +180,9 @@ public class ReportSummary extends SherlockListActivity {
 				double rndSum = sumIncom.get(s) * 100;
 				rndSum = Math.round(rndSum);
 				rndSum /=100;
-				message += ""+rndSum+ " " + s + "\r\n"; 
+				message += rndSum+ " " + s + "\n"; 
 			}
-			message = message.substring(0, message.length()-2); // remove last "\r\n"
+			message = message.substring(0, message.length()-1); // remove last "\n"
 		}else{
 			message = "0";
 		}
