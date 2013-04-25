@@ -63,6 +63,7 @@ public class PlacesList extends SherlockListActivity{
 		public boolean onCreateOptionsMenu(Menu menu) {
 		  MenuItem assignItem = menu.add(Menu.NONE, ASSIGN_ID, 0, R.string.click_assign_category);
 		  assignItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM); 
+		  assignItem.setIcon(R.drawable.icn_assign);
 		  return true;
 		}
 	  
