@@ -97,6 +97,7 @@ public class CategoryList extends SherlockListActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuItem addItem = menu.add(Menu.NONE, ADD_ID, 0, R.string.menu_add);
 		addItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		addItem.setIcon(R.drawable.icn_assign);
 		return true;
 	}
 	

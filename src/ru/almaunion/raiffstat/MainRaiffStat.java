@@ -65,9 +65,11 @@ public class MainRaiffStat extends SherlockActivity {
 		
 		MenuItem aboutItem = menu.add(Menu.NONE, ABOUT_ID, 0, R.string.str_about);
 		aboutItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		aboutItem.setIcon(R.drawable.icn_about);
 		
 		MenuItem donationItem = menu.add(Menu.NONE, DONATION_ID, 0, R.string.str_donation);
 		donationItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		donationItem.setIcon(R.drawable.icn_donation);
 		
 		return super.onCreateOptionsMenu(menu);
 	}
