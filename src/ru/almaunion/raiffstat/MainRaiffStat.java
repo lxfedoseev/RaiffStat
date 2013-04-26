@@ -38,7 +38,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 public class MainRaiffStat extends SherlockActivity {
 	
-	private final String LOG = "MainRaiffStat";
+	private final String LOG = "MainRaiffStat"; 
 	private ProgressDialog progressBar;
 	private int progressBarStatus = 0;
 	private Handler progressBarHandler = new Handler();
