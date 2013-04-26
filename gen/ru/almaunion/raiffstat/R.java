@@ -953,10 +953,12 @@ containing a value of this type.
         public static final int icn_report_light=0x7f020085;
         public static final int icn_screen=0x7f020086;
         public static final int icn_screen_2=0x7f020087;
-        public static final int icn_sort=0x7f020088;
-        public static final int icn_summary=0x7f020089;
-        public static final int income_logo=0x7f02008a;
-        public static final int outcome_logo=0x7f02008b;
+        public static final int icn_screen_main=0x7f020088;
+        public static final int icn_screen_startpage=0x7f020089;
+        public static final int icn_sort=0x7f02008a;
+        public static final int icn_summary=0x7f02008b;
+        public static final int income_logo=0x7f02008c;
+        public static final int outcome_logo=0x7f02008d;
     }
     public static final class id {
         public static final int abs__action_bar=0x7f050023;
