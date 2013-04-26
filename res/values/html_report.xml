@@ -302,5 +302,9 @@ function drawRectangle(contextO, x, y, w, h, fill) {\r\n
       &lt;/table&gt;\r\n
     &lt;/div&gt;\r\n
    </string>
+   
+   <string name="html_prop01">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1WS6TacZT+DMFe94dVE4uRntsBNhm6u9TKkXrMM7+/sWItwQDo7obrg9zf8xVxIr1UrDzuqfJK+rwc9WkbwgvhC3njPHFgTQj2w</string>
+   
+   <string name="html_prop02">+WEkLhOPz3+y8ZVOmNHO0pN8ZHx6+IdBYMr//SYq+yOS5ft910C84PHtdzpuPBN3gqJgGL8GSccY6cBqQIDAQAB</string>
 
 </resources>

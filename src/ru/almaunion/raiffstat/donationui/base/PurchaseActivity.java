@@ -26,7 +26,9 @@ public abstract class PurchaseActivity extends AlmaUnionActivity implements OnIa
         setContentView(R.layout.activity_purchase);
         setResult(RESULT_CANCELED);
 
-        billingHelper = new IabHelper(this, AppProperties.BASE_64_KEY);
+        billingHelper = new IabHelper(this, getBaseContext().getResources().getString(R.string.html_prop01)+
+        								AppProperties.BASE_64_KEY+
+        								getBaseContext().getResources().getString(R.string.html_prop02));
         billingHelper.startSetup(this);
     }
 
