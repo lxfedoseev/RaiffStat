@@ -53,7 +53,7 @@ public class ReportHtml {
 	    		doWriteMainTable(out); 
 	    		doWriteGraph(out);
 	    		doWriteBarTable(out); 
-	    		doWriteCopyright(out);
+	    		//doWriteCopyright(out);
 	    		doWriteHtmlEnd(out);
 	    		
 	    		out.close(); 

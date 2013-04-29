@@ -7,11 +7,11 @@
     <string name="places_name">Места</string>
     <string name="exp_categories">Категории расходов</string>
     
-    <string name="menu_clear_db">Очистить базу</string>
+    <string name="menu_clear_db">Очистить</string>
     <string name="menu_summary">Отчет</string>
     <string name="menu_add">Добавить</string>
-    <string name="menu_sort">Сортировать</string>
-    <string name="menu_period">Задайте период</string>
+    <string name="menu_sort">Сортировка</string>
+    <string name="menu_period">Задать период</string>
     
     <string name="str_place">Место</string>
     <string name="str_period">Период</string>
@@ -66,7 +66,6 @@
 	<string name="toast_no_files">Файлы отсутствуют</string>
 	<string name="toast_imp_failed">Ошибка импорта</string>
 	<string name="toast_pars_failed">Ошибка анализатора</string>
-	<string name="toast_one_value">Всего одно значение</string>
 	<string name="toast_no_values">Нет значаний</string>
 	<string name="toast_no_sms">У вас нет SMS от</string>
 	<string name="toast_thanks">Операция завершена удачно. Спасибо</string>
@@ -80,9 +79,9 @@
 	<string name="dialog_sort_by_amount">По сумме</string>
 	<string name="dialog_sort_by_place">По алфавиту</string>
 	<string name="dialog_sort_type">Тип сортировки</string>
-	<string name="dialog_sms_import">Импорт из SMS</string>
-	<string name="dialog_csv_export">Экспорт в файл</string>
-    <string name="dialog_csv_import">Импорт из файла</string>
+	<string name="dialog_sms_import">Сканировать SMS</string>
+	<string name="dialog_csv_export">Записать в файл</string>
+    <string name="dialog_csv_import">Сканировать файл</string>
     <string name="dialog_edit_category">Исправить категорию</string>
 	<string name="dialog_period_start">Дата начала периода</string>
     <string name="dialog_period_end">Дата окончания периода</string>
@@ -90,7 +89,7 @@
     <string name="dialog_new_category">Новая</string>
     <string name="dialog_about_info">&lt;h3&gt;RaiffStat&lt;/h3&gt;
 		Версия %1$s&lt;br&gt;&lt;br&gt;
-		Автоматический контроль&lt;br&gt; 
+		Автоматизированный контроль&lt;br&gt; 
 		расходов для клиентов&lt;br&gt; 
 		Райффайзенбанк Россия&lt;br&gt;&lt;br&gt;
 		&lt;b&gt;Напишите нам&lt;/b&gt;&lt;br&gt; 

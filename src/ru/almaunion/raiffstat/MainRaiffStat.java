@@ -162,8 +162,8 @@ public class MainRaiffStat extends SherlockActivity {
 
 		  final CharSequence[] choiceList;
 		  CharSequence[] choiceListLocal = {getResources().getString(R.string.dialog_sms_import),
+				  								getResources().getString(R.string.dialog_csv_import),
 					  							getResources().getString(R.string.dialog_csv_export),
-					  							getResources().getString(R.string.dialog_csv_import),
 					  							getResources().getString(R.string.menu_clear_db)};
 		  choiceList = choiceListLocal;
 
@@ -186,10 +186,10 @@ public class MainRaiffStat extends SherlockActivity {
 							importSmsWithProgressBar();
 							break;
 						case 1:
-							doExportToCSV();
+							doImportFromCSV();
 							break;
 						case 2:
-							doImportFromCSV();
+							doExportToCSV();
 							break;
 						case 3:
 							clearDB();

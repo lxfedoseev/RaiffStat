@@ -231,8 +231,8 @@ public class ReportListAll extends SherlockListFragment {
 	}
 	
 	  private void doSort(){
-		  if(transactions.size()<2){
-			  Toast.makeText(activity, getResources().getString(R.string.toast_one_value), 
+		  if(transactions.size()<1){
+			  Toast.makeText(activity, getResources().getString(R.string.toast_no_values), 
 					  Toast.LENGTH_LONG).show();
 			  return;
 		  }
