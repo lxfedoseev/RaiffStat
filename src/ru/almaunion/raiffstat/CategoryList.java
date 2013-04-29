@@ -62,7 +62,6 @@ public class CategoryList extends SherlockListActivity {
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setTheme(R.style.Theme_Sherlock_Light_DarkActionBar);
 		context = this;
@@ -74,7 +73,6 @@ public class CategoryList extends SherlockListActivity {
 	
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		inflateList();
 	}

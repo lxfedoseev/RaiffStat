@@ -94,7 +94,6 @@ public class MainRaiffStat extends SherlockActivity {
 
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		setNotification();
 	}
@@ -300,15 +299,8 @@ public class MainRaiffStat extends SherlockActivity {
 	                	mergeTransactionToDB(prs);
 	                }else{
 	                	//Something went wrong
-	                	//TODO: add this strbody to problem SMS table of DB to be sent later to the developer
 	                	myLog.LOGE(LOG, "Problem message: " + strbody);
-	                	//TODO: remove Toast, using now only for test
-	                	/*RaiffStat.this.runOnUiThread(new Runnable() {
-	    					@Override
-	    					public void run() {
-	    						Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_pars_failed), Toast.LENGTH_SHORT).show();
-	    				}
-	    			});*/
+
 	                }
 	                
 	                progressBarStatus++;
@@ -430,7 +422,6 @@ public class MainRaiffStat extends SherlockActivity {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
 				itemIndex = which;
 			}
 		});
@@ -438,7 +429,6 @@ public class MainRaiffStat extends SherlockActivity {
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
 					if(itemIndex > -1){
 						importSmsFromFileWithProgressBar(choiceList[itemIndex]);
 					}else{
@@ -450,7 +440,6 @@ public class MainRaiffStat extends SherlockActivity {
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
 				}
 			});
 			  
@@ -537,13 +526,6 @@ public class MainRaiffStat extends SherlockActivity {
                 }else{
                 	//Something went wrong.
                 	myLog.LOGE(LOG, "Problem message: " + strLine);
-                	//TODO: remove Toast, using now only for test
-                	/*RaiffStat.this.runOnUiThread(new Runnable() {
-    					@Override
-    					public void run() {
-    						Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_pars_failed), Toast.LENGTH_SHORT).show();
-    				}
-    			});*/
                 }
                 
                 progressBarStatus++;

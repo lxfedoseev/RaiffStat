@@ -29,7 +29,6 @@ public class PurchaseDonationActivity extends PurchaseActivity {
 
     @Override
     protected void dealWithIabSetupSuccess() {
-    	// TODO:
     	//purchaseItem(Donation.SKU);
     	if(donationAmount == AppProperties.DONATION_AMOUNT_01){
     		purchaseItem(Donation.SKU_DONATION_01);

@@ -138,7 +138,6 @@ public class RaiffParser {
     			return true;
     			
     		}catch (Exception e) {
-				// TODO: handle exception
     			return false;
 			}
     	}
@@ -156,7 +155,6 @@ public class RaiffParser {
 		String[] tokens = str.split(delims);
 		if(tokens.length>1){
 			try{
-				//TODO: what if it is neither RUB not USD not EUR (has not 3 letters)
 				tokens[1] = tokens[1].trim();
 				strLocal = tokens[1].substring(0, tokens[1].length()-3); //cut "RUB", "USD", "EUR" in the end
 				this._amount = Double.parseDouble(strLocal.replace(',', '.'));
@@ -189,7 +187,6 @@ public class RaiffParser {
 		String[] tokens = str.split(delims);
 		if(tokens.length>1){
 			try{
-				//TODO: what if it is neither RUB not USD not EUR (has not 3 letters)
 				tokens[1] = tokens[1].trim();
 				strLocal = tokens[1].substring(0, tokens[1].length()-3); //cut "RUB", "USD", "EUR" in the end
 				this._remainder = Double.parseDouble(strLocal.replace(',', '.'));
@@ -211,7 +208,6 @@ public class RaiffParser {
 		String[] tokens = str.split(delims);
 		if(tokens.length>1){
 			try{
-				//TODO: what if it is neither RUB not USD not EUR (has not 3 letters)
 				tokens[1] = tokens[1].trim();
 				strLocal = tokens[1].substring(0, tokens[1].length()-3); //cut "RUB", "USD", "EUR" in the end
 				this._amount = Double.parseDouble(strLocal.replace(',', '.'));

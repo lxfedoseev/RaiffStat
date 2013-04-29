@@ -53,7 +53,6 @@ public class ReportListAll extends SherlockListFragment {
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		activity = getActivity();	
 		sortType = StaticValues.SORT_BY_DATE;

@@ -41,7 +41,6 @@ public class PlacesList extends SherlockListActivity{
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setTheme(R.style.Theme_Sherlock_Light_DarkActionBar);
 		setContentView(R.layout.activity_raiff_report);
@@ -54,7 +53,6 @@ public class PlacesList extends SherlockListActivity{
 	
 	  @Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		inflateList();
 	}
@@ -154,7 +152,6 @@ public class PlacesList extends SherlockListActivity{
 		  alert.setSingleChoiceItems(choiceList, -1, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
 					itemIndex = which;
 				}
 		  });
