@@ -208,11 +208,11 @@ public class ReportListAll extends SherlockListFragment {
 	
 	private void doSummary(){
     	if(dayFrom == null || dayTo == null){
-    		//TODO: toast something
+    		Toast.makeText(activity, getResources().getString(R.string.toast_period_not_set), Toast.LENGTH_LONG).show();
     		return;
     	}
     	if(transactions.isEmpty()){
-    		//TODO: toast something
+    		Toast.makeText(activity, getResources().getString(R.string.toast_period_no_data), Toast.LENGTH_LONG).show();
     		return;
     	}
     	DatabaseHandler db = new DatabaseHandler(activity);

@@ -70,6 +70,8 @@
 	<string name="toast_no_sms">У вас нет SMS от</string>
 	<string name="toast_thanks">Операция завершена удачно. Спасибо</string>
 	<string name="toast_donation_failed">Операция завершилась неудачно</string>
+	<string name="toast_period_not_set">Период времени не задан</string>
+	<string name="toast_period_no_data">Нет данных на заданный период времени</string>
 	
 	<string name="ctx_category_name">Введите название категории</string>
 	

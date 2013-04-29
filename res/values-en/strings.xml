@@ -70,6 +70,8 @@
 	<string name="toast_no_sms">There is no SMS from</string>
 	<string name="toast_thanks">Operation is successful. Thank you</string>
 	<string name="toast_donation_failed">Operation is unsuccessful</string>
+	<string name="toast_period_not_set">Time period is not set</string>
+	<string name="toast_period_no_data">No data for requied time period</string>
 	
 	<string name="ctx_category_name">Input category name</string>
 	
