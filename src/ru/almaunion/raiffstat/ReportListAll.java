@@ -372,9 +372,9 @@ public class ReportListAll extends SherlockListFragment {
         	String timeString = new SimpleDateFormat("HH:mm:ss").format(new Date(longDate));
         	
         	if(entry.getType() == StaticValues.TRANSACTION_TYPE_INCOME){
-        		holder.type.setImageDrawable(context.getResources().getDrawable(R.drawable.income_logo));
+        		holder.type.setImageDrawable(context.getResources().getDrawable(R.drawable.icn_in));
         	}else{//expense
-        		holder.type.setImageDrawable(context.getResources().getDrawable(R.drawable.outcome_logo));
+        		holder.type.setImageDrawable(context.getResources().getDrawable(R.drawable.icn_out));
         	}
         	
         	holder.date_time.setText(dayString+" "+timeString); 

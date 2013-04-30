@@ -9,45 +9,47 @@
     android:layout_height="wrap_content"
     android:text="@string/str_donation_msg"
     android:gravity="center"
-    android:layout_centerHorizontal="true"
-    android:layout_centerVertical="true"
-    android:layout_marginBottom="20dp"
+    android:layout_marginBottom="5dp"
     android:layout_marginLeft="20dp"
     android:layout_marginRight="20dp"
+    android:layout_marginTop="20dp"
     android:textSize="15sp"
     android:textStyle="italic"/>
 
-  <Button
+  <ImageButton
     android:id="@+id/donation_btn01"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:onClick="onPurchaseItemClick01"
-    android:text="@string/str_donate_01" 
     android:layout_above="@+id/donation_btn02"
     android:layout_marginLeft="20dp"
     android:layout_marginRight="20dp"
-    android:layout_marginBottom="10dp"/>
+    android:layout_marginBottom="10dp"
+    android:background="@drawable/icn_onedollar"
+    android:layout_centerHorizontal="true"/>
   
-  <Button
+  <ImageButton
     android:id="@+id/donation_btn02"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:onClick="onPurchaseItemClick02"
-    android:text="@string/str_donate_02"
     android:layout_above="@+id/donation_btn03"
     android:layout_marginLeft="20dp"
     android:layout_marginRight="20dp" 
-    android:layout_marginBottom="10dp"/>
+    android:layout_marginBottom="10dp"
+    android:background="@drawable/icn_threedollars"
+    android:layout_centerHorizontal="true"/>
   
-  <Button
+  <ImageButton
     android:id="@+id/donation_btn03"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:onClick="onPurchaseItemClick03"
-    android:text="@string/str_donate_03"
     android:layout_alignParentBottom="true"
     android:layout_marginLeft="20dp"
     android:layout_marginRight="20dp"
-    android:layout_marginBottom="20dp"/>
+    android:layout_marginBottom="20dp"
+    android:background="@drawable/icn_fivedollars"
+    android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

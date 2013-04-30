@@ -70,6 +70,7 @@ public class ReportSummary extends SherlockListActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 	  MenuItem shareItem = menu.add(Menu.NONE, SHARE_ID, 0, R.string.click_share);
 	  shareItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+	  shareItem.setIcon(R.drawable.icn_share);
 	  return true;
 	}
 	
