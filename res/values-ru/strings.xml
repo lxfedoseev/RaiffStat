@@ -66,7 +66,7 @@
 	<string name="toast_no_files">Файлы отсутствуют</string>
 	<string name="toast_imp_failed">Ошибка импорта</string>
 	<string name="toast_pars_failed">Ошибка анализатора</string>
-	<string name="toast_no_values">Нет значаний</string>
+	<string name="toast_no_values">Нет значений</string>
 	<string name="toast_no_sms">У вас нет SMS от</string>
 	<string name="toast_thanks">Операция завершена удачно. Спасибо</string>
 	<string name="toast_donation_failed">Операция завершилась неудачно</string>
