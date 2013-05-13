@@ -43,8 +43,7 @@
               android:layout_below="@+id/card"
               android:paddingLeft="5dp"
               android:paddingRight="1dp"
-              android:paddingTop="7dp"
-		      android:src="@drawable/outcome_logo"/>	  
+              android:paddingTop="7dp"/>	  
 		          
 	    <TextView 
 			  android:id="@+id/amount"
