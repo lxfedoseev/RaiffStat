@@ -1,8 +1,8 @@
 package ru.almaunion.raiffstat;
 
 public class StaticValues {
-	public static String VERSION = "0.1";
-	public static String EMAIL = "almaunion@gmail.com";
+	public static String VERSION = "1.0";
+	public static String EMAIL = "info@almaunion.ru";
 	
 	public static String RAIFF_ADDRESS = "Raiffeisen";
 	
