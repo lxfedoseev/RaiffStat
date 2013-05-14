@@ -4,7 +4,7 @@ import android.util.Log;
 
 public class myLog {
 
-	private static boolean ENABLE_LOG = true;
+	private static boolean ENABLE_LOG = false;
 	
 	public static void LOGD(String tag, String message){
 		if(ENABLE_LOG){
