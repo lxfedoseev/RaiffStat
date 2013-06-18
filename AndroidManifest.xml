@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ru.almaunion.raiffstat"
+    package="ru.almaunion.statraiff"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -18,7 +18,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="ru.almaunion.raiffstat.MainRaiffStat"
+            android:name="ru.almaunion.statraiff.MainRaiffStat"
             android:label="@string/app_name" 
             android:screenOrientation="portrait">
             <intent-filter>
@@ -28,48 +28,48 @@
             </intent-filter>
         </activity>
         
-        <activity android:name="ru.almaunion.raiffstat.ReportListAll"
+        <activity android:name="ru.almaunion.statraiff.ReportListAll"
               android:label="@string/report_name"
               android:screenOrientation="portrait">
         </activity>
         
-        <activity android:name="ru.almaunion.raiffstat.PlacesList"
+        <activity android:name="ru.almaunion.statraiff.PlacesList"
               android:label="@string/places_name"
               android:screenOrientation="portrait">
         </activity>
         
-        <receiver android:name="ru.almaunion.raiffstat.SMSReceiver" android:enabled="true">
+        <receiver android:name="ru.almaunion.statraiff.SMSReceiver" android:enabled="true">
 	      <intent-filter>
 	        <action android:name="android.provider.Telephony.SMS_RECEIVED" />
 	      </intent-filter>
     	</receiver>
         
-        <activity android:name="ru.almaunion.raiffstat.CategoryList" 
+        <activity android:name="ru.almaunion.statraiff.CategoryList" 
               android:label="@string/exp_categories"
               android:screenOrientation="portrait">
         </activity>
         
-    	<activity android:name="ru.almaunion.raiffstat.ReportTabs"   
+    	<activity android:name="ru.almaunion.statraiff.ReportTabs"   
               android:label="@string/report_name"
               android:screenOrientation="portrait">
         </activity>
         
-    	<activity android:name="ru.almaunion.raiffstat.ReportSummary" 
+    	<activity android:name="ru.almaunion.statraiff.ReportSummary" 
               android:label="@string/report_name"
               android:screenOrientation="portrait">
         </activity>
         
-    	<activity android:name="ru.almaunion.raiffstat.donationui.ui.StartUpActivity"
+    	<activity android:name="ru.almaunion.statraiff.donationui.ui.StartUpActivity"
       			android:label="@string/str_donation"
       			android:screenOrientation="portrait">
       	</activity>
       	
-    	<activity android:name="ru.almaunion.raiffstat.donationui.ui.MainDonationActivity" 
+    	<activity android:name="ru.almaunion.statraiff.donationui.ui.MainDonationActivity" 
       			android:label="@string/str_donation"
       			android:screenOrientation="portrait">
       	</activity>
     	
-    	<activity android:name="ru.almaunion.raiffstat.donationui.ui.PurchaseDonationActivity"
+    	<activity android:name="ru.almaunion.statraiff.donationui.ui.PurchaseDonationActivity"
       			android:label="@string/str_donation"
       			android:screenOrientation="portrait">
       	</activity>
