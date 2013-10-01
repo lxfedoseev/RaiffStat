@@ -1,10 +1,11 @@
 package ru.almaunion.statraiff;
 
 public class StaticValues {
-	public static String VERSION = "1.0";
-	public static String EMAIL = "info@almaunion.ru";
+	public static String VERSION = "1.1";
+	public static String EMAIL = "almaunion@gmail.com";
 	
 	public static String RAIFF_ADDRESS = "Raiffeisen";
+	//public static String RAIFF_ADDRESS = "5555";
 	
 	//Transaction types
 	public static int TRANSACTION_TYPE_UNKNOWN = 0;

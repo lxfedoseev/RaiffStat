@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -18,9 +19,13 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,13 +67,66 @@ public class ReportListAll extends SherlockListFragment {
 			dayFrom = bundle.getString("day_from");
 			dayTo = bundle.getString("day_to");
 		}
+		
 	}
+	
 	
 	@Override public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         // We have a menu item to show in action bar.
         setHasOptionsMenu(true);
         inflateList();
+        setClickListeners();
+	}
+
+	void setClickListeners(){
+		ListView lv = getListView();
+		
+		lv.setOnItemLongClickListener( 
+	    		new AdapterView.OnItemLongClickListener(){ 
+	    		@Override 
+	    		public boolean onItemLongClick(AdapterView<?> av, View v, int pos, long id) { 
+	    			onLongListItemClick(v,pos,id); 
+	    		    return false; 
+	    		} 
+	    }); 
+		
+	}
+	
+	protected void onLongListItemClick(View v, int pos, long id) { 
+		final int localPos = pos;
+		final String[] items = new String [] {
+        		getResources().getString(R.string.click_remove)
+        };
+        
+        ArrayAdapter<String> stringAdapter  = new ArrayAdapter<String> (activity, android.R.layout.select_dialog_item,items);
+        AlertDialog.Builder builder     = new AlertDialog.Builder(activity);
+        
+        builder.setTitle(getResources().getString(R.string.dialog_remove_transaction));
+        builder.setAdapter( stringAdapter, new DialogInterface.OnClickListener() {
+            public void onClick( DialogInterface dialog, int item ) {
+            	
+            	switch (item){
+				case 0:
+					doRemoveTransaction(localPos);
+					break;
+				default:
+					//do nothing
+					break;
+			}	
+            }
+        } );
+ 
+        final AlertDialog dialog = builder.create();
+		dialog.show();
+	} 
+	
+	private void doRemoveTransaction(int pos){
+		final int localPos = pos;
+		DatabaseHandler db = new DatabaseHandler(activity);
+		db.deleteTransaction(transactions.get(localPos));
+		db.close();
+		inflateList();
 	}
 
 	/* (non-Javadoc)
@@ -110,6 +168,7 @@ public class ReportListAll extends SherlockListFragment {
 		}
 		
 		super.onCreateOptionsMenu(menu, inflater);
+		inflateList();
 	}
 	
 	@Override

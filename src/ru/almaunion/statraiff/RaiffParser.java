@@ -35,6 +35,9 @@ public class RaiffParser {
     	String delims;
     	String[] tokens;
     	if(body.toLowerCase().startsWith("balans")){//Income
+    		//Examples:
+    		//Balans vashey karty *7716 umenshilsya 23/09/2013 na:5934,37RUR. Dostupny Ostatok: 6481,05RUR. Raiffeisenbank
+    		//Balans vashey karty *7716 popolnilsya 23/09/2013 na:4000,55RUR. Dostupny Ostatok: 7777,05RUR. Raiffeisenbank
     		boolean smthIsWrong = false;
     		delims = "[.]+";
     		tokens = body.split(delims);
@@ -42,8 +45,18 @@ public class RaiffParser {
     			try{
 	    			parseIncomeCardAndAmount(tokens[0]);
 	    			parseRemainder(tokens[1]);
-	    			this._type = StaticValues.TRANSACTION_TYPE_INCOME;
-	    			this._place = context.getResources().getString(R.string.str_earned);
+	    			
+	    			if(body.contains("popolnilsya")){
+	    				this._type = StaticValues.TRANSACTION_TYPE_INCOME;
+	    				this._place = context.getResources().getString(R.string.str_earned);
+	    			}else if(body.contains("umenshilsya")){
+	    				this._type = StaticValues.TRANSACTION_TYPE_EXPENSE;
+	    				this._place = context.getResources().getString(R.string.str_spent);
+	    			}else{
+	    				this._type = StaticValues.TRANSACTION_TYPE_UNKNOWN;
+	    				this._place = context.getResources().getString(R.string.str_unknown);
+	    			}
+	    			
 	    			return true;
     			}catch (Exception e) {
     				smthIsWrong = true;

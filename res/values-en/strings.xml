@@ -21,6 +21,7 @@
     <string name="str_forbidden">is forbidden</string>
     <string name="str_spent">Payment</string>
     <string name="str_earned">Income</string>
+    <string name="str_unknown">Unknown</string>
     <string name="str_no_data">No Data</string>
     <string name="str_file">File</string>
     <string name="str_created">created</string>
@@ -51,6 +52,7 @@
     <string name="str_categories">Categories</string>
     
     <string name="click_delete">Delete</string>
+    <string name="click_remove">Remove</string>
     <string name="click_edit">Edit</string>
 	<string name="click_edit_name">Edit name</string>
 	<string name="click_edit_color">Edit color</string>
@@ -85,6 +87,7 @@
 	<string name="dialog_csv_export">Write to file</string>
     <string name="dialog_csv_import">Scan file</string>
     <string name="dialog_edit_category">Edit category</string>
+    <string name="dialog_remove_transaction">Remove transaction</string>
     <string name="dialog_period_start">Period begin</string>
     <string name="dialog_period_end">Period end</string>
     <string name="dialog_no_category">Without category</string>

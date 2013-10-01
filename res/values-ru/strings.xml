@@ -21,6 +21,7 @@
     <string name="str_forbidden">Запрещено</string>
     <string name="str_spent">Расход средств</string>
     <string name="str_earned">Приход средств</string>
+    <string name="str_unknown">Неизвестно</string>
     <string name="str_no_data">Нет данных</string>
     <string name="str_file">Файл</string>
     <string name="str_created">создан</string>
@@ -51,6 +52,7 @@
     <string name="str_categories">Категории</string>
     
     <string name="click_delete">Удалить</string>
+    <string name="click_remove">Удалить</string>
     <string name="click_edit">Редактировать</string>
 	<string name="click_edit_name">Изменить название</string>
 	<string name="click_edit_color">Изменить цвет</string>
@@ -85,6 +87,7 @@
 	<string name="dialog_csv_export">Записать в файл</string>
     <string name="dialog_csv_import">Сканировать файл</string>
     <string name="dialog_edit_category">Исправить категорию</string>
+    <string name="dialog_remove_transaction">Удалить транзакцию</string>
 	<string name="dialog_period_start">Дата начала периода</string>
     <string name="dialog_period_end">Дата окончания периода</string>
     <string name="dialog_no_category">Без категории</string>
