@@ -194,6 +194,14 @@ public class RaiffParser {
     
     private void parseRemainder(String str) throws Exception{
 
+    	String copy = str;
+    	int count = copy.length() - copy.replace(".", "").length();
+    	if(count > 1){
+    		char[] chars = str.toCharArray();
+    		chars[str.indexOf(".")] = ',';
+    		str = String.valueOf(chars);
+    	}
+    	
     	String strLocal = "";
     	
     	String delims = "[:.]+"; 
