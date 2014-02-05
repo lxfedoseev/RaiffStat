@@ -1,6 +1,7 @@
 package ru.almaunion.statraiff;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import android.content.ContentValues;
@@ -9,6 +10,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
+import android.util.Log;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
@@ -173,10 +175,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	SQLiteDatabase db = this.getReadableDatabase();
     	boolean ret = false;
     	
-        Cursor cursor = db.query(TABLE_TRANSACTIONS, new String[] { KEY_ID, KEY_DATE_TIME, 
+    	Calendar c = Calendar.getInstance();
+    	c.setTimeInMillis(t.getDateTime());
+    	c.add(Calendar.SECOND, StaticValues.TIME_GAP);
+    	long after = c.getTime().getTime();
+    	
+    	c.setTimeInMillis(t.getDateTime());
+    	c.add(Calendar.SECOND, (-1)*StaticValues.TIME_GAP);
+    	long before = c.getTime().getTime();
+    	
+    	Cursor cursor = db.query(TABLE_TRANSACTIONS, new String[] { KEY_ID, KEY_DATE_TIME, 
         		KEY_AMOUNT, KEY_AMOUNT_CURR, KEY_REMAINDER, KEY_REMAINDER_CURR, KEY_PLACE, 
         		KEY_CARD, KEY_TYPE, KEY_EXP_CATEGORY }, 
-                "( " + KEY_DATE_TIME + "=? ) " + " AND " +
+                "( " + KEY_DATE_TIME + ">=? ) " + " AND " +
+                "( " + KEY_DATE_TIME + "<=? ) " + " AND " +
                 "( " + KEY_AMOUNT + "=? ) " + " AND " +
                 "( " + KEY_AMOUNT_CURR + "=? ) " + " AND " +
                 "( " + KEY_REMAINDER + "=? ) " + " AND " +
@@ -185,7 +197,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 "( " + KEY_CARD + "=? ) " + " AND " +
                 "( " + KEY_TYPE + "=? ) ",
                 new String[] { 
-        		String.valueOf(t.getDateTime()),
+        		String.valueOf(before),
+        		String.valueOf(after),
         		String.valueOf(t.getAmount()),
         		t.getAmountCurr(),
         		String.valueOf(t.getRemainder()),
@@ -193,7 +206,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         		t.getPlace(),
         		t.getCard(),
         		String.valueOf(t.getType())}, null, null, null, null);
-
+    	
         if(cursor.getCount() > 0)
         	ret = true;
         else
