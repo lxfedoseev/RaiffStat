@@ -1,6 +1,7 @@
 package ru.almaunion.statraiff;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -30,8 +31,10 @@ public class SMSReceiver extends BroadcastReceiver {
                 msgs[i] = SmsMessage.createFromPdu((byte[])pdus[i]);                
                 if(sender.equals(""))
                 	sender = msgs[i].getOriginatingAddress();  
-                if(date == 0)
-                	date = msgs[i].getTimestampMillis();
+                if(date == 0){
+                	//date = msgs[i].getTimestampMillis();
+                	date = Calendar.getInstance().getTimeInMillis();
+                }
                 message += msgs[i].getMessageBody().toString();        
             }
             String dateString = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date(date));

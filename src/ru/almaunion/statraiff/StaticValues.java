@@ -31,5 +31,5 @@ public class StaticValues {
 	public static String DIR_NAME = "RaiffStat";
 	public static String HTML_REPORT_PREFIX = "RaiffStat_Report_";
 	
-	public static int TIME_GAP = 30;//30 seconds gap for time difference
+	public static int TIME_GAP = 5;//5 seconds gap for time difference
 }
