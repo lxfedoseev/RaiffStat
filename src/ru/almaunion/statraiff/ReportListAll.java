@@ -9,13 +9,13 @@ import java.util.Date;
 import java.util.List;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +23,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -44,7 +43,7 @@ public class ReportListAll extends SherlockListFragment {
 	private String dayTo;
 	private int sortItemIndex = 0;
 	private int sortType;
-	private boolean bundleEmpty = true;
+	private boolean isPeriod = true;
 	private FragmentActivity activity;
 	private DatePicker datePicker;
 	private TextView mTextEmpty;
@@ -59,18 +58,34 @@ public class ReportListAll extends SherlockListFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		activity = getActivity();	
-		sortType = StaticValues.SORT_BY_DATE;
-        Bundle bundle = getArguments();
-		bundleEmpty = bundle ==null;
-		if(!bundleEmpty){
-			dayFrom = bundle.getString("day_from");
-			dayTo = bundle.getString("day_to");
+		activity = getActivity();
+		Bundle bundle = getArguments();
+
+		if(savedInstanceState != null && !savedInstanceState.isEmpty()){
+			sortType = savedInstanceState.getInt("sort_type");
+			dayFrom = savedInstanceState.getString("day_from");
+			dayTo = savedInstanceState.getString("day_to");
+			isPeriod = savedInstanceState.getBoolean("period");
+		}else{
+	        sortType = StaticValues.SORT_BY_DATE;
+	        isPeriod = bundle.getBoolean("period");
+			if(!isPeriod){
+				dayFrom = bundle.getString("day_from");
+				dayTo = bundle.getString("day_to");
+			}
 		}
-		
 	}
 	
-	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		super.onSaveInstanceState(outState);
+		outState.putInt("sort_type", sortType);
+		outState.putString("day_from", dayFrom);
+		outState.putString("day_to", dayTo);
+		outState.putBoolean("period", isPeriod);
+	}
+
 	@Override public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         // We have a menu item to show in action bar.
@@ -160,7 +175,7 @@ public class ReportListAll extends SherlockListFragment {
 	    sortItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 	    sortItem.setIcon(R.drawable.icn_sort);
 
-		if(bundleEmpty){
+		if(isPeriod){
 			MenuItem periodItem = menu.add(Menu.NONE, PERIOD_ID, 0, R.string.menu_period);
 			//periodItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 			periodItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
@@ -241,9 +256,9 @@ public class ReportListAll extends SherlockListFragment {
 		getListView().setDivider(null);
 		queryDateIntervalPlace(convertStringDate(dayFrom+ " 00:00:00"), convertStringDate(dayTo+ " 23:59:59"));
 		setListAdapter(new ReportListAdapter(activity, transactions));
-		if(transactions.isEmpty() && !bundleEmpty){
+		if(transactions.isEmpty() && !isPeriod){
 			mTextEmpty.setText(R.string.str_period_no_data);
-		}else if(bundleEmpty){
+		}else if(isPeriod){
 			mTextEmpty.setText(R.string.str_period_use_menu); 
 		}
 	}

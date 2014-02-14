@@ -46,6 +46,7 @@ public class MainRaiffStat extends SherlockActivity {
 	private String dirName = "RaiffStat";
 	private int itemIndex = 0;
 	private TextView mNotification;
+	AboutDialog aboutDlg;
 	
 	static final int ABOUT_ID = Menu.FIRST;
 	static final int DONATION_ID = Menu.FIRST+1;
@@ -57,6 +58,11 @@ public class MainRaiffStat extends SherlockActivity {
 		
 		setButtons();
 		mNotification = (TextView) findViewById(R.id.notification);
+		if(savedInstanceState != null && !savedInstanceState.isEmpty() && savedInstanceState.getBoolean("about_showing")){
+			aboutDlg = new AboutDialog(this);
+			aboutDlg.setTitle(R.string.str_about);
+			aboutDlg.show();
+		}
 	}
 
 
@@ -78,9 +84,9 @@ public class MainRaiffStat extends SherlockActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case ABOUT_ID:
-			AboutDialog about = new AboutDialog(this);
-			about.setTitle(R.string.str_about);
-			about.show();
+			aboutDlg = new AboutDialog(this);
+			aboutDlg.setTitle(R.string.str_about);
+			aboutDlg.show();
 			return true;
 		case DONATION_ID: 
 			Intent donationActivity = new Intent(getBaseContext(), StartUpActivity.class);
@@ -91,6 +97,13 @@ public class MainRaiffStat extends SherlockActivity {
 		}
 	}
 
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		super.onSaveInstanceState(outState);
+		if(aboutDlg != null)
+			outState.putBoolean("about_showing", aboutDlg.isShowing());
+	}
 
 	@Override
 	protected void onResume() {
@@ -243,6 +256,7 @@ public class MainRaiffStat extends SherlockActivity {
 	    	Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_no_sms) + " " + StaticValues.RAIFF_ADDRESS, Toast.LENGTH_LONG).show(); 
 	    	return false;
 	    }
+	    
 		progressBar = new ProgressDialog(this);
 		progressBar.setCancelable(false);
 		progressBar.setMessage(getResources().getString(R.string.progress_sms_scanning));

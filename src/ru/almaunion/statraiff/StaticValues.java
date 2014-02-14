@@ -4,8 +4,8 @@ public class StaticValues {
 	public static String VERSION = "1.1";
 	public static String EMAIL = "almaunion@gmail.com";
 	
-	public static String RAIFF_ADDRESS = "Raiffeisen";
-	//public static String RAIFF_ADDRESS = "5555";
+	//public static String RAIFF_ADDRESS = "Raiffeisen";
+	public static String RAIFF_ADDRESS = "5555";
 	
 	//Transaction types
 	public static int TRANSACTION_TYPE_UNKNOWN = 0;

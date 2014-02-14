@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/main_layout"
+    android:background="@drawable/icn_screen_main">
+     
+	<TableLayout
+    	android:id="@+id/table"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" >
+
+       <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+        
+	        <Button
+	        android:id="@+id/button_report"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:drawableTop="@color/report_selector"
+	        android:background="@android:color/transparent"
+	        android:paddingRight="5dp"
+	        android:paddingBottom="5dp"
+	        android:textSize="20sp"
+	        android:text="@string/report_name"
+	        android:textStyle="italic" />
+        
+	        <Button
+	        android:id="@+id/button_data"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:drawableTop="@color/data_selector"
+	        android:background="@android:color/transparent"
+	        android:paddingRight="5dp"
+	        android:paddingBottom="5dp"
+	        android:textSize="20sp"
+	        android:text="@string/str_data"
+	        android:textStyle="italic" />
+	        
+	        <Button
+	        android:id="@+id/button_places"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:drawableTop="@color/places_selector"
+	        android:background="@android:color/transparent"
+	        android:paddingRight="5dp"
+	        android:paddingTop="5dp"
+	        android:textSize="20sp"
+	        android:text="@string/places_name" 
+	        android:textStyle="italic"/>
+        
+	        <Button
+	        android:id="@+id/button_categories"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:drawableTop="@color/categories_selector"
+	        android:background="@android:color/transparent"
+	        android:paddingRight="5dp"
+	        android:paddingTop="5dp"
+	        android:textSize="20sp"
+	        android:text="@string/str_categories" 
+	        android:textStyle="italic"/>
+                
+        </TableRow>
+	</TableLayout>
+
+
+	<RelativeLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_below="@+id/table">
+	        
+	       <TextView 
+			 android:id="@+id/notification"
+			 android:layout_width="wrap_content"
+			 android:layout_height="wrap_content"
+			 android:textSize="12sp"
+			 android:layout_alignParentBottom="true"
+			 android:layout_centerInParent="true"
+			 android:layout_marginBottom="10dp"
+			 android:textStyle="italic"/>
+	       
+	</RelativeLayout>
+
+</RelativeLayout>

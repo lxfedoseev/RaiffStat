@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TabHost;
@@ -30,7 +31,7 @@ public class ReportTabs extends SherlockFragmentActivity{
         setContentView(R.layout.fragment_tabs_pager);
         mTabHost = (TabHost)findViewById(android.R.id.tabhost);
         mTabHost.setup();
-        
+       
         mViewPager = (ViewPager)findViewById(R.id.pager);
 
         mTabsAdapter = new TabsAdapter(this, mTabHost, mViewPager);
@@ -38,28 +39,33 @@ public class ReportTabs extends SherlockFragmentActivity{
         String dayTo = getCurrentDate();
         
         String dayFrom = getOneWeekBefore();
-        Bundle dates = new Bundle();
-        dates.putString("day_from", dayFrom);
-        dates.putString("day_to", dayTo);  
+        Bundle info = new Bundle();
+        info.putString("day_from", dayFrom);
+        info.putString("day_to", dayTo);
+        info.putBoolean("period", false);
         mTabsAdapter.addTab(mTabHost.newTabSpec("week").setIndicator(getResources().getString(R.string.str_week)),
-        		ReportListAll.class, dates);
+        		ReportListAll.class, info);
         
         dayFrom = getOneMonthBefore();
-        dates = new Bundle();
-        dates.putString("day_from", dayFrom);
-        dates.putString("day_to", dayTo);
+        info = new Bundle();
+        info.putString("day_from", dayFrom);
+        info.putString("day_to", dayTo);
+        info.putBoolean("period", false);
         mTabsAdapter.addTab(mTabHost.newTabSpec("month").setIndicator(getResources().getString(R.string.str_month)),
-        		ReportListAll.class, dates);
+        		ReportListAll.class, info);
         
         dayFrom = getOneYearBefore();
-        dates = new Bundle();
-        dates.putString("day_from", dayFrom);
-        dates.putString("day_to", dayTo);
+        info = new Bundle();
+        info.putString("day_from", dayFrom);
+        info.putString("day_to", dayTo);
+        info.putBoolean("period", false);
         mTabsAdapter.addTab(mTabHost.newTabSpec("year").setIndicator(getResources().getString(R.string.str_year)),
-        		ReportListAll.class, dates);
+        		ReportListAll.class, info);
         
+        info = new Bundle();
+        info.putBoolean("period", true);
         mTabsAdapter.addTab(mTabHost.newTabSpec("period").setIndicator(getResources().getString(R.string.str_period)),
-        		ReportListAll.class, null);
+        		ReportListAll.class, info);
 
         //setSelectedTabColor();
         
@@ -68,13 +74,12 @@ public class ReportTabs extends SherlockFragmentActivity{
         }
 	}
 
-
 	@Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("tab", mTabHost.getCurrentTabTag());
     }
-	
+
 	private String getCurrentDate(){
         Calendar c = Calendar.getInstance();
         int month = c.get(Calendar.MONTH)+1;
