@@ -33,6 +33,7 @@ public class PlacesList extends SherlockListActivity{
 	OnNavigationListener mOnNavigationListener;
 	private String catName;
 	private TextView mTextEmpty;
+	private SherlockListActivity activity;
 	
 	static final int ASSIGN_ID = Menu.FIRST;
 
@@ -44,6 +45,7 @@ public class PlacesList extends SherlockListActivity{
 		super.onCreate(savedInstanceState);
 		setTheme(R.style.Theme_Sherlock_Light_DarkActionBar);
 		setContentView(R.layout.activity_raiff_report);
+		activity = PlacesList.this;
 		mTextEmpty = (TextView) findViewById(android.R.id.empty);
 		//context = getBaseContext();
 		context = this;
@@ -159,6 +161,7 @@ public class PlacesList extends SherlockListActivity{
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					if(itemIndex > -1){
+						//StaticValues.lockScreenRotation(activity);
 						assignCategoryWithProgressBar(idList.get(itemIndex));
 					}else{
 						Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_nothing_selected), Toast.LENGTH_LONG).show(); 
@@ -257,6 +260,7 @@ public class PlacesList extends SherlockListActivity{
 							inflateList();
 						}
 					});
+				    //StaticValues.unlockScreenRotation(activity);
 						  
 			}
 			}).start();

@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ru.almaunion.statraiff"
     android:versionCode="8"
-    android:versionName="1.1" >
+    android:versionName="1.2" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -18,8 +18,8 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="ru.almaunion.statraiff.MainRaiffStat"
-            android:label="@string/app_name">
+            android:name="ru.almaunion.statraiff.MainRaiffStat" 
+            android:label="@string/app_name"> 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,11 +28,13 @@
         </activity>
         
         <activity android:name="ru.almaunion.statraiff.ReportListAll"
-              android:label="@string/report_name">
+              android:label="@string/report_name"
+              android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
         
         <activity android:name="ru.almaunion.statraiff.PlacesList"
-              android:label="@string/places_name">
+              android:label="@string/places_name"
+              android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
         
         <receiver android:name="ru.almaunion.statraiff.SMSReceiver" android:enabled="true">
@@ -42,27 +44,33 @@
     	</receiver>
         
         <activity android:name="ru.almaunion.statraiff.CategoryList" 
-              android:label="@string/exp_categories">
+              android:label="@string/exp_categories"
+              android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
         
     	<activity android:name="ru.almaunion.statraiff.ReportTabs"  
-              android:label="@string/report_name">
+              android:label="@string/report_name"
+              android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
         
     	<activity android:name="ru.almaunion.statraiff.ReportSummary" 
-              android:label="@string/report_name">
+              android:label="@string/report_name"
+              android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
         
     	<activity android:name="ru.almaunion.statraiff.donationui.ui.StartUpActivity"
-      			android:label="@string/str_donation">
+      			android:label="@string/str_donation"
+      			android:configChanges="keyboardHidden|orientation|screenSize">
       	</activity>
       	
     	<activity android:name="ru.almaunion.statraiff.donationui.ui.MainDonationActivity" 
-      			android:label="@string/str_donation">
+      			android:label="@string/str_donation"
+      			android:configChanges="keyboardHidden|orientation|screenSize">
       	</activity>
     	
     	<activity android:name="ru.almaunion.statraiff.donationui.ui.PurchaseDonationActivity"
-      			android:label="@string/str_donation">
+      			android:label="@string/str_donation"
+      			android:configChanges="keyboardHidden|orientation|screenSize">
       	</activity>
       	
         

@@ -47,6 +47,7 @@ public class MainRaiffStat extends SherlockActivity {
 	private int itemIndex = 0;
 	private TextView mNotification;
 	AboutDialog aboutDlg;
+	private SherlockActivity activity;
 	
 	static final int ABOUT_ID = Menu.FIRST;
 	static final int DONATION_ID = Menu.FIRST+1;
@@ -55,6 +56,7 @@ public class MainRaiffStat extends SherlockActivity {
 		super.onCreate(savedInstanceState);
 		setTheme(R.style.Theme_Sherlock_Light_DarkActionBar);
 		setContentView(R.layout.activity_main);
+		activity = this;
 		
 		setButtons();
 		mNotification = (TextView) findViewById(R.id.notification);
@@ -236,6 +238,7 @@ public class MainRaiffStat extends SherlockActivity {
 	    						setNotification();
 	    					}
 					  });
+					  StaticValues.unlockScreenRotation(activity);
 				  }
 			}).start();
 		}
@@ -257,6 +260,7 @@ public class MainRaiffStat extends SherlockActivity {
 	    	return false;
 	    }
 	    
+		StaticValues.lockScreenRotation(activity);
 		progressBar = new ProgressDialog(this);
 		progressBar.setCancelable(false);
 		progressBar.setMessage(getResources().getString(R.string.progress_sms_scanning));
@@ -483,6 +487,7 @@ public class MainRaiffStat extends SherlockActivity {
 	
 	private void importSmsFromFileWithProgressBar(CharSequence fileName){
 		final CharSequence localFileName = fileName;
+		StaticValues.lockScreenRotation(activity);
 		progressBar = new ProgressDialog(this);
 		progressBar.setCancelable(false);
 		progressBar.setMessage(getResources().getString(R.string.progress_csv_scanning));
@@ -498,7 +503,8 @@ public class MainRaiffStat extends SherlockActivity {
 					public void run() {
 						setNotification();
 					}
-			  });
+				});
+				StaticValues.unlockScreenRotation(activity);
 		}
 		}).start();
 	}

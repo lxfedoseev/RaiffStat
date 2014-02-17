@@ -51,11 +51,13 @@ public class ReportSummary extends SherlockListActivity {
 	private String dayFrom;
 	private String dayTo;
 	private ProgressDialog progressBar;
+	private SherlockListActivity activity;
 	static final int SHARE_ID = Menu.FIRST;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setTheme(R.style.Theme_Sherlock_Light_DarkActionBar);
+		activity = ReportSummary.this;
 		dayFrom = getIntent().getStringExtra("day_from");
 		dayTo = getIntent().getStringExtra("day_to");
 	}
@@ -78,6 +80,7 @@ public class ReportSummary extends SherlockListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
     		case SHARE_ID:
+    			//StaticValues.lockScreenRotation(activity);
     			doShareWithProgressBar();
     			return true;
     		default:
@@ -125,8 +128,9 @@ public class ReportSummary extends SherlockListActivity {
     						Toast.makeText(getBaseContext(), getBaseContext().getResources().getString(R.string.toast_exp_failed), 
     									Toast.LENGTH_LONG).show();
     					}
-    				});
-    			}	  
+    				});	
+    			}
+    			//StaticValues.unlockScreenRotation(activity);
 		}
 		}).start();
 	}

@@ -55,6 +55,7 @@ public class CategoryList extends SherlockListActivity {
 	private int position;
 	private ProgressDialog progressBar;
 	private TextView mTextEmpty;
+	private SherlockListActivity activity;
 	
 	static final int ADD_ID = Menu.FIRST;
 	/* (non-Javadoc)
@@ -64,6 +65,7 @@ public class CategoryList extends SherlockListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setTheme(R.style.Theme_Sherlock_Light_DarkActionBar);
+		activity = CategoryList.this;
 		context = this;
 		setContentView(R.layout.activity_raiff_report);
 		mTextEmpty = (TextView) findViewById(android.R.id.empty);
@@ -92,7 +94,7 @@ public class CategoryList extends SherlockListActivity {
 	}
 	
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu) { 
 		MenuItem addItem = menu.add(Menu.NONE, ADD_ID, 0, R.string.menu_add);
 		addItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 		addItem.setIcon(R.drawable.icn_add);
@@ -134,6 +136,7 @@ public class CategoryList extends SherlockListActivity {
 					doEditCategoryColor(localPos);
 					break;
 				case 2:
+					//StaticValues.lockScreenRotation(activity);
 					deleteCategoryWithProgressBar(localPos);
 					break;
 				default:
@@ -156,7 +159,7 @@ public class CategoryList extends SherlockListActivity {
 		progressBar.setProgress(0);
 		progressBar.show();
 		  
-		  new Thread(new Runnable() {
+		  new Thread(new Runnable() { 
 				public void run() {
 					DatabaseHandler db = new DatabaseHandler(context);
 					db.deleteCategory(categories.get(localPos));
@@ -174,7 +177,7 @@ public class CategoryList extends SherlockListActivity {
 							inflateList();
 						}
 					});
-						  
+				    //StaticValues.unlockScreenRotation(activity);	  
 			}
 			}).start();
 	}

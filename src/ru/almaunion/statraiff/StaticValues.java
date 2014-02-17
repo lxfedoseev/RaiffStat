@@ -1,11 +1,15 @@
 package ru.almaunion.statraiff;
 
+import android.app.Activity;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
+
 public class StaticValues {
-	public static String VERSION = "1.1";
+	public static String VERSION = "1.2";
 	public static String EMAIL = "almaunion@gmail.com";
 	
-	//public static String RAIFF_ADDRESS = "Raiffeisen";
-	public static String RAIFF_ADDRESS = "5555";
+	public static String RAIFF_ADDRESS = "Raiffeisen";
+	//public static String RAIFF_ADDRESS = "5555";
 	
 	//Transaction types
 	public static int TRANSACTION_TYPE_UNKNOWN = 0;
@@ -32,4 +36,39 @@ public class StaticValues {
 	public static String HTML_REPORT_PREFIX = "RaiffStat_Report_";
 	
 	public static int TIME_GAP = 5;//5 seconds gap for time difference
+	
+	public static void lockScreenRotation(Activity activity){
+		
+		switch (activity.getResources().getConfiguration().orientation){
+        case Configuration.ORIENTATION_PORTRAIT:
+            if(android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.FROYO){
+            	activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            } else {
+                int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+	            if(rotation == android.view.Surface.ROTATION_90|| rotation == android.view.Surface.ROTATION_180){
+	            	activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT);
+	            } else {
+	                	activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+	            }
+            }   
+        break;
+
+        case Configuration.ORIENTATION_LANDSCAPE:
+            if(android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.FROYO){
+            	activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            } else {
+                int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+                if(rotation == android.view.Surface.ROTATION_0 || rotation == android.view.Surface.ROTATION_90){
+                	activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                } else {
+                	activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
+                }
+            }
+        break;
+		}
+	}
+	
+	public static void unlockScreenRotation(Activity activity){
+		activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+	}
 }
