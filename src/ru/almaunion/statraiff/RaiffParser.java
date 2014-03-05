@@ -39,12 +39,21 @@ public class RaiffParser {
     		//Balans vashey karty *7716 umenshilsya 23/09/2013 na:5934,37RUR. Dostupny Ostatok: 6481,05RUR. Raiffeisenbank
     		//Balans vashey karty *7716 popolnilsya 23/09/2013 na:4000,55RUR. Dostupny Ostatok: 7777,05RUR. Raiffeisenbank
     		boolean smthIsWrong = false;
-    		delims = "[.]+";
+    		delims = "[.;]+";
     		tokens = body.split(delims);
     		if(tokens.length>2){
     			try{
 	    			parseIncomeCardAndAmount(tokens[0]);
-	    			parseRemainder(tokens[1]);
+	    			if(tokens.length>3){
+	    				//Sometimes it comes as
+	    				//Balans vashey karty *2113 popolnilsya 05/03/2014 na:3480,00RUB.Mesto: null;Dostupny Ostatok: 67491,94RUR. Raiffeisenbank
+	    				parseRemainder(tokens[2]);
+	    			}
+	    			else{
+	    				//Most commonly it comes as
+	    				//Balans vashey karty *2113 popolnilsya 20/01/2014 na:87000,00RUB.Dostupny Ostatok: 102448,86RUR. Raiffeisenbank
+	    				parseRemainder(tokens[1]);
+	    			}
 	    			
 	    			if(body.contains("popolnilsya")){
 	    				this._type = StaticValues.TRANSACTION_TYPE_INCOME;
