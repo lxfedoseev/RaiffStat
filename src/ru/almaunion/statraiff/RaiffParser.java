@@ -100,7 +100,7 @@ public class RaiffParser {
     	
     	delims = "[;]+"; 
 		tokens = body.split(delims);
-		if(tokens.length>4){	
+		if(tokens.length>=4){	
 			
 			if(tokens[1].toLowerCase().startsWith("otkaz")){ // Denial
 			//Karta *1527;Otkaz: otkaz v avtorizacii;Summa:343,00RUB;Data:19/10/2012;Mesto: APTEKA RADUGA ST. PETERSBUR;Dostupny Ostatok: 51978,87RUB.Raiffeisenbank
@@ -120,6 +120,17 @@ public class RaiffParser {
 					parseAmount(tokens[1]);
 					parsePlace(tokens[3]);
 					parseRemainder(tokens[4]);
+					this._type = StaticValues.TRANSACTION_TYPE_EXPENSE;
+					return true;
+				}catch (Exception e) {
+				}
+				try{
+					//Try to parse this format:
+					//Karta *2113; Provedena tranzakcija:RU/ST-PETERSBURG/RBA ATM 14381; Summa:1900.00 RUR Data:26/06/2014; Dostupny Ostatok: 58236.74 RUR. Raiffeisenbank
+					parseCard(tokens[0]);
+					parsePlace(tokens[1]);
+					parseAmount2(tokens[2]);
+					parseRemainder(tokens[3]);
 					this._type = StaticValues.TRANSACTION_TYPE_EXPENSE;
 					return true;
 				}catch (Exception e) {
@@ -191,11 +202,33 @@ public class RaiffParser {
 		}
     }
     
+    private void parseAmount2(String str) throws Exception{
+    	//Summa:1900.00 RUR Data:26/06/2014
+    	String delims = "[\\s:]+"; 
+		String[] tokens = str.trim().split(delims);
+		if(tokens.length>2){
+			try{
+				this._amount = Double.parseDouble(tokens[1].trim().replace(',', '.'));
+				this._amount_curr = tokens[2].trim();
+				if(this._amount_curr.equalsIgnoreCase("rur"))
+					this._amount_curr = StaticValues.CURR_RUB;
+			}catch (Exception e) {
+				throw e;
+			}
+		}else{
+			throw new Exception("tokens.length<=1");
+		}
+    }
+    
     private void parsePlace(String str) throws Exception{
     	String delims = "[:]+"; 
 		String[] tokens = str.split(delims);
 		if(tokens.length>1){
-			this._place = tokens[1].trim();//.replace(StaticValues.DELIMITER, " ");//need to remove "," to support CSV
+			this._place = "";
+			for(int i=1; i<tokens.length; i++){
+				this._place += tokens[i] + " ";
+			}
+			this._place.trim();
 		}else{
 			throw new Exception("tokens.length<=1");
 		}
