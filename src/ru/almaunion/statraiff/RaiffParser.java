@@ -228,7 +228,7 @@ public class RaiffParser {
 			for(int i=1; i<tokens.length; i++){
 				this._place += tokens[i] + " ";
 			}
-			this._place.trim();
+			this._place = this._place.trim();
 		}else{
 			throw new Exception("tokens.length<=1");
 		}
