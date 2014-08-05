@@ -89,6 +89,37 @@ public class RaiffParser {
     					}
     					return true;
     				}catch (Exception e) {  
+					}try{
+						//Try to process this kind of messages:
+						//Balans vashego scheta #3936 popolnilsya 05/08/2014 na 3480.00 RUR. Dostupny ostatok 19821.18 RUR. Raiffeisenbank
+						delims = "[\\s]+";
+						tokens = body.split(delims);
+						if(body.contains("popolnilsya")){
+		    				this._type = StaticValues.TRANSACTION_TYPE_INCOME;
+		    				this._place = context.getResources().getString(R.string.str_earned);
+		    			}else if(body.contains("umenshilsya")){
+		    				this._type = StaticValues.TRANSACTION_TYPE_EXPENSE;
+		    				this._place = context.getResources().getString(R.string.str_spent);
+		    			}else{
+		    				this._type = StaticValues.TRANSACTION_TYPE_UNKNOWN;
+		    				this._place = context.getResources().getString(R.string.str_unknown);
+		    			}
+						if(tokens.length>12){
+							this._card = tokens[3].trim();
+							this._amount =  Double.parseDouble(tokens[7].trim().replace(',', '.'));
+							this._amount_curr = tokens[8].substring(0, tokens[8].length()-1);
+							if(this._amount_curr.equalsIgnoreCase("rur"))
+								this._amount_curr = StaticValues.CURR_RUB;
+							
+							this._remainder =  Double.parseDouble(tokens[11].trim().replace(',', '.'));
+							this._remainder_curr = tokens[12].substring(0, tokens[12].length()-1);
+							if(this._remainder_curr.equalsIgnoreCase("rur"))
+								this._remainder_curr = StaticValues.CURR_RUB;
+						}else{
+							throw new Exception("tokens.length<=12");
+						}
+						return true;
+					}catch (Exception e) {
 						return false;
 					}
     				
