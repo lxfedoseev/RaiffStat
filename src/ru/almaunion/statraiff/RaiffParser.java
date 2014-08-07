@@ -120,10 +120,78 @@ public class RaiffParser {
 						}
 						return true;
 					}catch (Exception e) {
+						//return false;
+					}try{
+						// Balans scheta karty *2113 na 08/07/2014: 22693.01 RUR. Provedeno po schety 07/07/2014: - 30.00 RUR. Raiffeisenbank
+						delims = "[\\s]+";
+						tokens = body.split(delims);
+						if(tokens[12].trim().equalsIgnoreCase("+")){
+		    				this._type = StaticValues.TRANSACTION_TYPE_INCOME;
+		    				this._place = context.getResources().getString(R.string.str_earned);
+		    			}else if(tokens[12].trim().equalsIgnoreCase("-")){
+		    				this._type = StaticValues.TRANSACTION_TYPE_EXPENSE;
+		    				this._place = context.getResources().getString(R.string.str_spent);
+		    			}else{
+		    				this._type = StaticValues.TRANSACTION_TYPE_UNKNOWN;
+		    				this._place = context.getResources().getString(R.string.str_unknown);
+		    			}
+						if(tokens.length>14){
+							this._card = tokens[3].trim();
+							this._amount =  Double.parseDouble(tokens[13].trim().replace(',', '.'));
+							this._amount_curr = tokens[14].substring(0, tokens[14].length()-1);
+							if(this._amount_curr.equalsIgnoreCase("rur"))
+								this._amount_curr = StaticValues.CURR_RUB;
+							
+							this._remainder =  Double.parseDouble(tokens[6].trim().replace(',', '.'));
+							this._remainder_curr = tokens[7].substring(0, tokens[7].length()-1);
+							if(this._remainder_curr.equalsIgnoreCase("rur"))
+								this._remainder_curr = StaticValues.CURR_RUB;
+						}else{
+							throw new Exception("tokens.length<=14");
+						}
+						return true;
+					}catch (Exception e) {
 						return false;
 					}
     				
     			}
+    		}else{
+    			return false;
+    		}
+    	}
+    	
+    	if(body.toLowerCase().startsWith("provedeno")){//New format
+    		// Provedeno po schety 06/08/2014: - 3025.00 RUR. Balans scheta karty *2113 na 07/08/2014: 15763.98 RUR. Raiffeisenbank
+    		delims = "[\\s]+";
+    		tokens = body.split(delims);
+    		if(tokens.length>14){
+    			try{
+    				this._card = tokens[10].trim();
+        			this._amount =  Double.parseDouble(tokens[5].trim().replace(',', '.'));
+        			this._amount_curr = tokens[6].substring(0, tokens[6].length()-1);
+					if(this._amount_curr.equalsIgnoreCase("rur"))
+						this._amount_curr = StaticValues.CURR_RUB;
+					
+					this._remainder =  Double.parseDouble(tokens[13].trim().replace(',', '.'));
+					this._remainder_curr = tokens[14].substring(0, tokens[14].length()-1);
+					if(this._remainder_curr.equalsIgnoreCase("rur"))
+						this._remainder_curr = StaticValues.CURR_RUB;
+					
+					if(tokens[4].trim().equalsIgnoreCase("-")){
+						this._type = StaticValues.TRANSACTION_TYPE_EXPENSE;
+	    				this._place = context.getResources().getString(R.string.str_spent);
+					}else if(tokens[4].trim().equalsIgnoreCase("+")){
+						this._type = StaticValues.TRANSACTION_TYPE_INCOME;
+	    				this._place = context.getResources().getString(R.string.str_earned);
+					}else{
+						this._type = StaticValues.TRANSACTION_TYPE_UNKNOWN;
+	    				this._place = context.getResources().getString(R.string.str_unknown);
+					}
+					return true;
+    			}catch (Exception e) {
+					return false;
+				}
+    			
     		}else{
     			return false;
     		}
