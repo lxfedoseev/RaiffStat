@@ -233,6 +233,17 @@ public class RaiffParser {
 					this._type = StaticValues.TRANSACTION_TYPE_EXPENSE;
 					return true;
 				}catch (Exception e) {
+				}
+				try{
+					//Try to parse this format:
+					//Karta *2113; Pokupka: RU/SANKT-PETERBU/APTEKA FIALKA; 305.00 RUR; Data: 28/10/2014; Dostupny Ostatok: 57654.20 RUR. Raiffeisenbank
+					parseCard(tokens[0]);
+					parsePlace(tokens[1]);
+					parseAmount3(tokens[2]);
+					parseRemainder(tokens[4]);
+					this._type = StaticValues.TRANSACTION_TYPE_EXPENSE;
+					return true;
+				}catch (Exception e) {
 					return false;
 				}
 			}
@@ -309,6 +320,24 @@ public class RaiffParser {
 			try{
 				this._amount = Double.parseDouble(tokens[1].trim().replace(',', '.'));
 				this._amount_curr = tokens[2].trim();
+				if(this._amount_curr.equalsIgnoreCase("rur"))
+					this._amount_curr = StaticValues.CURR_RUB;
+			}catch (Exception e) {
+				throw e;
+			}
+		}else{
+			throw new Exception("tokens.length<=1");
+		}
+    }
+    
+    private void parseAmount3(String str) throws Exception{
+    	//305.00 RUR
+    	String delims = "[\\s]+"; 
+		String[] tokens = str.trim().split(delims);
+		if(tokens.length>1){
+			try{
+				this._amount = Double.parseDouble(tokens[0].trim().replace(',', '.'));
+				this._amount_curr = tokens[1].trim();
 				if(this._amount_curr.equalsIgnoreCase("rur"))
 					this._amount_curr = StaticValues.CURR_RUB;
 			}catch (Exception e) {
