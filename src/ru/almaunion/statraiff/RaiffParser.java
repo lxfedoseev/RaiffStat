@@ -245,6 +245,18 @@ public class RaiffParser {
 					this._type = StaticValues.TRANSACTION_TYPE_EXPENSE;
 					return true;
 				}catch (Exception e) {
+				}
+				try{
+					//Try to parse this format:
+					//Karta *4151; Provedena tranzakcija: 1388.50 RUB; Data: 14/06/2015; OKEY Dostupny Ostatok: 273519.58 RUB. Raiffeisenbank
+					parseCard(tokens[0]);
+					parsePlace2(tokens[3]);
+					parseAmount4(tokens[1]);
+					parseRemainder2(tokens[3]);
+					this._type = StaticValues.TRANSACTION_TYPE_EXPENSE;
+					return true;
+				}
+				catch (Exception e) {
 					return false;
 				}
 			}
@@ -347,6 +359,24 @@ public class RaiffParser {
 		}
     }
     
+    private void parseAmount4(String str) throws Exception{
+    	//Provedena tranzakcija: 1388.50 RUB
+    	String delims = "[\\s:]+"; 
+		String[] tokens = str.trim().split(delims);
+		if(tokens.length>3){
+			try{
+				this._amount = Double.parseDouble(tokens[2].trim().replace(',', '.'));
+				this._amount_curr = tokens[3].trim();
+				if(this._amount_curr.equalsIgnoreCase("rur"))
+					this._amount_curr = StaticValues.CURR_RUB;
+			}catch (Exception e) {
+				throw e;
+			}
+		}else{
+			throw new Exception("tokens.length<=3");
+		}
+    }
+    
     private void parsePlace(String str) throws Exception{
     	String delims = "[:]+"; 
 		String[] tokens = str.split(delims);
@@ -356,6 +386,17 @@ public class RaiffParser {
 				this._place += tokens[i] + " ";
 			}
 			this._place = this._place.trim();
+		}else{
+			throw new Exception("tokens.length<=1");
+		}
+    }
+    
+    private void parsePlace2(String str) throws Exception{
+    	//OKEY Dostupny Ostatok: 273519.58 RUB. Raiffeisenbank
+    	String delims = "Dostupny Ostatok:";
+		String[] tokens = str.split(delims);
+		if(tokens.length>1){
+			this._place = tokens[0].trim();
 		}else{
 			throw new Exception("tokens.length<=1");
 		}
@@ -381,6 +422,45 @@ public class RaiffParser {
 				strLocal = tokens[1].substring(0, tokens[1].length()-3); //cut "RUB", "USD", "EUR" in the end
 				this._remainder = Double.parseDouble(strLocal.replace(',', '.'));
 				this._remainder_curr = tokens[1].substring(tokens[1].length()-3, tokens[1].length());
+				if(this._remainder_curr.equalsIgnoreCase("rur"))
+					this._remainder_curr = StaticValues.CURR_RUB;
+			}catch (Exception e) {
+				throw e;
+			}
+		}else{
+			throw new Exception("tokens.length<=1");
+		}
+    }
+    
+    private void parseRemainder2(String str) throws Exception{
+    	//OKEY Dostupny Ostatok: 273519.58 RUB. Raiffeisenbank
+    	String delims = "Dostupny Ostatok:";
+		String[] tokens = str.split(delims);
+		String rem;
+		if(tokens.length>1){
+			rem = tokens[1].trim();
+		}else{
+			throw new Exception("tokens.length<=1");
+		}
+    	
+		String copy = rem;
+		int count = copy.length() - copy.replace(".", "").length();
+    	if(count > 1){
+	   		char[] chars = rem.toCharArray();
+	    	chars[rem.indexOf(".")] = ',';
+	    	rem = String.valueOf(chars);
+    	}
+    	
+    	String strLocal = "";
+    	
+    	delims = "[.]+"; 
+		tokens = rem.split(delims);
+		if(tokens.length>1){
+			try{
+				tokens[0] = tokens[0].trim();
+				strLocal = tokens[0].substring(0, tokens[0].length()-3); //cut "RUB", "USD", "EUR" in the end
+				this._remainder = Double.parseDouble(strLocal.replace(',', '.'));
+				this._remainder_curr = tokens[0].substring(tokens[0].length()-3, tokens[0].length());
 				if(this._remainder_curr.equalsIgnoreCase("rur"))
 					this._remainder_curr = StaticValues.CURR_RUB;
 			}catch (Exception e) {
